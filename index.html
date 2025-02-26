@@ -21,10 +21,9 @@
           <a class="tablinks" href="https://sauros.xyz/">home</a>
           <a class="tablinks" href="https://projects.sauros.xyz/">projects</a>
         </div>
-        <div class="nav">
-          <a class="tablinks" onclick="open_tab(event, 'home')" id="default">home</a>
-          <a class="tablinks" onclick="open_tab(event, 'about')">about</a>
-          <a class="tablinks" onclick="open_tab(event, 'screenshots')">screenshots</a>
+        <div class="nav_column">
+          <a class="tablinks" href="/" id="default">home</a>
+          <a class="tablinks" href="/5e">5e</a>
         </div>
       </div>
   
@@ -130,6 +129,6 @@
       event.currentTarget.className += " active";
     }
 
-    document.getElementById("default").click();
+    open_tab("home");
   </script>
 </html>

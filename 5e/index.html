@@ -1,0 +1,71 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>saurOS</title>
+    <link rel="stylesheet" href="https://sauros.xyz/styles.css">
+  </head>
+  <body>
+    <div id="container">
+      <div id="headerArea">
+        <div class="header">
+          <p class="reference">art by <a href="https://twitter.com/zufoart/status/1389232842375376900" target="_blank">zufoart</a></p>
+        </div>
+        <div class="title">
+          <h1>saurOS</h1>
+          <p>the best linux distribution</p>
+        </div>
+        <div class="nav">
+          <a class="tablinks" href="https://sauros.xyz/">home</a>
+          <a class="tablinks" href="https://projects.sauros.xyz/">projects</a>
+        </div>
+        <div class="nav_column">
+          <a class="tablinks" href="/" id="default">home</a>
+          <a class="tablinks" href="/5e">5e</a>
+        </div>
+      </div>
+  
+      <div class="flex">
+        <main id="home" class="tabcontent active">
+          <h1><strong>5e</strong></h1>
+
+          <p>
+            <ul>
+                <li><a href="/5e/redwood">hegbast redwood</a></li>
+            </ul>
+          </p>
+        </main>
+
+        <aside id="rightSidebar">
+          <h2>updates</h2>
+          <div class="box">
+            <h3>last updated</h3>
+            <p>Tue, 16 Jul 2024</p>
+          </div>
+        </aside>
+
+      </div>
+      <footer id="footer">license information</footer>
+    </div>
+  </body>
+  <script>
+    function open_tab(event, tab) {
+      var i, tabcontent, tablinks;
+
+      tabcontent = document.getElementsByClassName("tabcontent");
+      for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+      }
+
+      tablinks = document.getElementsByClassName("tablinks");
+      for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+      }
+
+      document.getElementById(tab).style.display = "block";
+      event.currentTarget.className += " active";
+    }
+  </script>
+</html>

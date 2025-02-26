@@ -71,7 +71,9 @@ a {
 
   border-radius: 4px;
 }
-
+.column {
+  flex-direction: column;
+}
 .nav a {
   width: 100%;
   font-weight: 800;
