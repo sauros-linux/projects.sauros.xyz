@@ -1,0 +1,135 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>saurOS</title>
+    <link rel="stylesheet" href="https://sauros.xyz/styles.css">
+  </head>
+  <body>
+    <div id="container">
+      <div id="headerArea">
+        <div class="header">
+          <p class="reference">art by <a href="https://twitter.com/zufoart/status/1389232842375376900" target="_blank">zufoart</a></p>
+        </div>
+        <div class="title">
+          <h1>saurOS</h1>
+          <p>the best linux distribution</p>
+        </div>
+        <div class="nav">
+          <a class="tablinks" href="https://sauros.xyz/" id="default">home</a>
+          <a class="tablinks" href="https://projects.sauros.xyz/">projects</a>
+        </div>
+        <div class="nav">
+          <a class="tablinks" onclick="open_tab(event, 'home')" id="default">home</a>
+          <a class="tablinks" onclick="open_tab(event, 'about')">about</a>
+          <a class="tablinks" onclick="open_tab(event, 'screenshots')">screenshots</a>
+        </div>
+      </div>
+  
+      <div class="flex">
+        <main id="home" class="tabcontent">
+          <h1><strong>saurOS</strong>: your new favorite operating system</h1>
+          <p>
+            tired of windows? tired of distro-hopping? it's time to join the only linux distribution with a single user and no support: <strong>saurOS</strong>.
+          </p>
+
+          <p>
+            <strong><i>
+              want all the flexibility of arch linux but none of the bragging rights?
+              then this is the distro for you!
+            </i></strong>
+          </p>
+
+          <h2>features</h2>
+          <ul>
+            <li>bulbasaur art, make your system the most attractive</li>
+            <li>rolling release, always be up to date</li>
+            <li>tiling wm by default, be more productive</li>
+            <li>did i mention bulbasaur art?</li>
+            <li>oh yeah there's an installer</li>
+            <li>it's based of arch<sup>tm</sup> btw</li>
+            <li>we've got a bit of bulbasaur art</li>
+            <li>oh the wm is i3, forgot to mention that</li>
+            <li>bulbasaur art</li>
+          </ul>
+
+          <h2>DOWNLOAD TODAY</h2>
+          <a></a>
+
+          <h2>wait why haven't you downloaded it yet?</h2>
+          <p>this is innovation at it's finest, and it's free.</p>
+
+          <p>oh yeah, we have bulbasaur. i think i forgot to mention that</p>
+        </main>
+
+        <main id="about" class="tabcontent">
+          <h1>about saurOS</h1>
+          <h2>what even is saurOS?</h2>
+          <p>
+            saurOS was a project I did for a class in college. Effectively, it was (and still is) just a modified archiso with some nice little bits and bobs.
+          </p>
+
+          <h2>why bulbasaur?</h2>
+          <p>I like him.</p>
+
+          <h2>can i do <strong>X</strong> with this?</h2>
+          <p>
+            Do whatever you want except for sell it.
+            As a note, I do not own any of the pieces of artwork in the distribution nor do I own the copyright of Bulbasaur.
+            I may wish I did, but that is not the world we live in.
+            Keep that in mind if you want to do anything with this project.
+          </p>
+
+          <h2>why maintain this if it was a college project?</h2>
+          <p>
+            Well, for one it's funny. I'm not taking this seriously, and if anyone actually does then I'll be shocked.
+            If I do update this, the extent would just be adding more Bulbasaur art and updating the mirrors.
+            I likely won't be accepting pull requests, this is just my stupid little project and I don't intend on ever taking this seriously.
+          </p>
+
+          <h2>can i maintain it?</h2>
+          <p>
+            Why? This is my dumb joke, you can go get your own.
+          </p>
+        </main>
+
+        <main id="screenshots" class="tabcontent">
+          <h1>the only part of the site where you can see what you are getting yourself into</h1>
+          
+        </main>
+
+        <aside id="rightSidebar">
+          <h2>updates</h2>
+          <div class="box">
+            <h3>last updated</h3>
+            <p>Tue, 16 Jul 2024</p>
+          </div>
+        </aside>
+
+      </div>
+      <footer id="footer">license information</footer>
+    </div>
+  </body>
+  <script>
+    function open_tab(event, tab) {
+      var i, tabcontent, tablinks;
+
+      tabcontent = document.getElementsByClassName("tabcontent");
+      for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+      }
+
+      tablinks = document.getElementsByClassName("tablinks");
+      for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+      }
+
+      document.getElementById(tab).style.display = "block";
+      event.currentTarget.className += " active";
+    }
+
+    document.getElementById("default").click();
+  </script>
+</html>

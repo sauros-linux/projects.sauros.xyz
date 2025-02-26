@@ -1,0 +1,163 @@
+:root {
+  --header-image: url('https://sauros.xyz/img/header.jpg');
+
+  --lighter-green:  #8ddb2e;
+  --light-green:    #70ac26;
+  --green:          #3c754e;
+  --dark-green:     #264d0e;
+  --darker-green:   #172d09;
+}
+
+body {
+  font-family: Helvetica;
+  margin: 0;
+  background-color: var(--green);
+  color: #f9ffea;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+#container {
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
+a {
+  color: #81c1a1;
+  font-weight: bold;
+}
+
+.header {
+  position: relative;
+  width: 100%;
+  color: var(--darker-green);
+  height: 150px;
+  background-image: var(--header-image);
+  background-size: 100%;
+  background-position: center;
+  margin-top: 4px;
+
+  border-radius: 4px;
+}
+
+.reference {
+  margin: 0;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+
+  padding: 4px 8px;
+
+  background-color: var(--dark-green);
+  color: #f9ffea;
+
+  border-radius: 4px;
+}
+
+.title > * {
+  width: 100%;
+  text-align: center;
+}
+
+.nav {
+  display: flex;
+  background-color: var(--light-green);
+  padding: 0;
+  margin: 8px 0;
+  justify-content: space-evenly;
+  overflow: hidden;
+
+  border-radius: 4px;
+}
+
+.nav a {
+  width: 100%;
+  font-weight: 800;
+  text-decoration: none;
+  text-align: center;
+  line-height: 40px;
+  cursor: pointer;
+
+  color: #FFFFFF;
+  background-color: #2e4034;
+
+  transition: 0.1s all ease-in-out;
+}
+.nav a.active {
+  background-color: #81c1a1;
+}
+.nav a:hover {
+  background-color: var(--lighter-green);
+}
+
+.flex {
+  display: flex;
+
+  border: 3px solid #2e4034;
+  border-radius: 4px;
+
+  transition: 0.1s all ease-in-out;
+}
+.flex:hover {
+  border-color: var(--light-green);
+}
+
+main {
+  background-color: #1b1b1b;
+  flex: 1;
+  padding: 20px;
+  order: 2;
+}
+
+.tabcontent {
+  display: none;
+}
+
+#rightSidebar {
+  order: 3;
+  background-color: #5a856f;
+  width: 200px;
+  font-size: smaller;
+}
+#rightSidebar > h1,
+#rightSidebar > h2,
+#rightSidebar > h3 {
+  padding: 14px 8px 8px 8px;
+  margin: 0;
+}
+
+strong {
+  color: #81c1a1;
+}
+
+.box {
+  background-color: #81c1a1;
+  padding: 8px;
+  position: relative;
+}
+
+footer {
+  width: 100%;
+  height: 40px;
+  padding: 10px;
+  text-align: center;
+
+  background-color: rgba(0,0,0,0.0);
+}
+
+@media only screen and (max-width: 800px) {
+  .flex, .nav {
+    flex-wrap: wrap;
+  }
+
+  main {
+    order: 1;
+  }
+
+  #rightSidebar {
+    order: 3;
+    width: 100%;
+  }
+}
