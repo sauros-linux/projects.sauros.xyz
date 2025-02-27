@@ -1,5 +1,19 @@
 
-var character = "Hegbast Redwood";
+function fetchJSONData() {
+    fetch('https://projects.sauros.xyz/5e/redwood/redwood.json')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();  
+        })
+        .then(data => console.log(data))  
+        .catch(error => console.error('Failed to fetch data:', error));
+}
+
+var character_json = fetchJSONData();
+
+console.log(character_json);
 
 var attack = document.getElementsByClassName("attack");
 var to_hit = document.getElementsByClassName("to_hit");

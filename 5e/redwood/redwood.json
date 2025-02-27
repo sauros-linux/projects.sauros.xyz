@@ -1,0 +1,108 @@
+{
+    "name": "Hegbast Redwood",
+    "background": {
+        "name": "Hermit",
+        "description": "You spent your early years secluded in a hut or monastery located well beyond the outskirts of the nearest settlement. In those days, your only companions were the creatures of the forest and those who would occasionally visit to bring news of the outside world and supplies. The solitude allowed you to spend many hours pondering the mysteries of creation.",
+        "features": [
+            {
+                "name": "Skill Proficiencies",
+                "modifiers": [
+                    {
+                        "type": "proficiencies",
+                        "proficiencies": [
+                            "Medicine",
+                            "Religion",
+                            "Alchemist's Supplies"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "Background Feat",
+                "modifiers": [
+                    {
+                        "type": "feat",
+                        "feat": "healer_xphb"
+                    }
+                ]
+            },
+            {
+                "name": "Ability Score Increase",
+                "modifiers": [
+                    {
+                        "type": "asi",
+                        "asi": [
+                            { "con": 1, "wis": 2 }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "species": {
+        "name": "Fey Gnome",
+        "description": [
+            "A gnome's energy and enthusiasm for living shines through every inch of his or her tiny body.",
+            "A gnome that shared a lineage with ancient fey."
+        ],
+        "features": [
+            {
+                "name": "Darkvision",
+                "description": "Accustomed to life underground, you have superior vision in dark and dim conditions. You can see in dim light within 60 feet of you as if it were bright light, and in darkness as if it were dim light. You can't discern color in darkness, only shades of gray.",
+                "modifiers": [
+                    {
+                        "type": "sense",
+                        "sense": {
+                            "name": "Darkvision",
+                            "range": 60
+                        }
+                    }
+                ]
+            },
+            {
+                "name": "Gnome Cunning",
+                "description": "You have advantage on all Intelligence, Wisdom, and Charisma saving throws against magic.",
+                "modifiers": [
+                    {
+                        "type": "advantage",
+                        "advantage": [
+                            {
+                                "type": "save",
+                                "save": {
+                                    "stat": "int",
+                                    "condition": "Magic"
+                                }
+                            },
+                            {
+                                "type": "save",
+                                "save": {
+                                    "stat": "wis",
+                                    "condition": "Magic"
+                                }
+                            },
+                            {
+                                "type": "save",
+                                "save": {
+                                    "stat": "cha",
+                                    "condition": "Magic"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "Innate Raw Magic",
+                "description": "Your lineage grants you access to wild magic due to close ties with the Fey and the raw magic within. As a bonus action, you can cause a wild magic surge focused on you or a target creature. If the effect is positive, the attacker is affected, otherwise the target is affected. This can be used once, reset after completing a long rest."
+            }
+        ]
+    },
+    "abilities": {
+        "str": 8,
+        "dex": 13,
+        "con": 12,
+        "int": 14,
+        "wis": 15,
+        "cha": 10
+    }
+}
