@@ -31,9 +31,10 @@
                 "modifiers": [
                     {
                         "type": "asi",
-                        "asi": [
-                            { "con": 1, "wis": 2 }
-                        ]
+                        "asi": {
+                            "con": 1,
+                            "wis": 2
+                        }
                     }
                 ]
             }
