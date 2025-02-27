@@ -11,9 +11,16 @@ function fetchJSONData() {
         .catch(error => console.error('Failed to fetch data:', error));
 }
 
+function get_stat_modifier(num) {
+    return Math.floor((num - 10) / 2);
+}
+
 var character_json = fetchJSONData();
 
-console.log(character_json);
+for (let ability in character_json["abilities"]) {
+    document.getElementById(ability).innerText = character_json["abilities"][ability];
+    document.getElementById(ability + "_mod").innerText = get_stat_modifier(character_json["abilities"][ability]);
+}
 
 var attack = document.getElementsByClassName("attack");
 var to_hit = document.getElementsByClassName("to_hit");
