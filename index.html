@@ -22,8 +22,8 @@
           <a class="tablinks" href="https://projects.sauros.xyz/">projects</a>
         </div>
         <div class="nav column">
-          <a class="tablinks" href="/" id="default">home</a>
-          <a class="tablinks" href="/5e">5e</a>
+          <a class="tablinks" onclick="open_tab(event, 'home')" id="default">home</a>
+          <a class="tablinks" onclick="open_tab(event, '5e')">5e</a>
         </div>
       </div>
   
@@ -63,40 +63,14 @@
           <p>oh yeah, we have bulbasaur. i think i forgot to mention that</p>
         </main>
 
-        <main id="about" class="tabcontent">
-          <h1>about saurOS</h1>
-          <h2>what even is saurOS?</h2>
+        <main id="5e" class="tabcontent">
+          <h1><strong>5e</strong></h1>
+
           <p>
-            saurOS was a project I did for a class in college. Effectively, it was (and still is) just a modified archiso with some nice little bits and bobs.
+            <ul>
+                <li><a href="/5e/redwood">hegbast redwood</a></li>
+            </ul>
           </p>
-
-          <h2>why bulbasaur?</h2>
-          <p>I like him.</p>
-
-          <h2>can i do <strong>X</strong> with this?</h2>
-          <p>
-            Do whatever you want except for sell it.
-            As a note, I do not own any of the pieces of artwork in the distribution nor do I own the copyright of Bulbasaur.
-            I may wish I did, but that is not the world we live in.
-            Keep that in mind if you want to do anything with this project.
-          </p>
-
-          <h2>why maintain this if it was a college project?</h2>
-          <p>
-            Well, for one it's funny. I'm not taking this seriously, and if anyone actually does then I'll be shocked.
-            If I do update this, the extent would just be adding more Bulbasaur art and updating the mirrors.
-            I likely won't be accepting pull requests, this is just my stupid little project and I don't intend on ever taking this seriously.
-          </p>
-
-          <h2>can i maintain it?</h2>
-          <p>
-            Why? This is my dumb joke, you can go get your own.
-          </p>
-        </main>
-
-        <main id="screenshots" class="tabcontent">
-          <h1>the only part of the site where you can see what you are getting yourself into</h1>
-          
         </main>
 
         <aside id="rightSidebar">
@@ -129,6 +103,6 @@
       event.currentTarget.className += " active";
     }
 
-    open_tab("home");
+    document.getElementById("default").click();
   </script>
 </html>
