@@ -94,11 +94,6 @@ async function init() {
         character_json["background"]["features"].forEach(feature => {
             try {
                 feature["modifiers"].forEach(modifier => {
-                    
-                    if (modifier["type"] == "asi") {
-                        console.log(modifier);
-                    }
-
                     if (modifier["type"] == "asi" && ability in modifier["asi"]) {
                         base_score += modifier["asi"][ability];
                     }
