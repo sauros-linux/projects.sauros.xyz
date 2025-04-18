@@ -1,5 +1,15 @@
 {
     "name": "Orbeck",
+    "class": [
+        {
+            "name": "Rogue",
+            "level": 1
+        },
+        {
+            "name": "Wizard",
+            "level": 1
+        }
+    ],
     "background": {
         "name": "Spy",
         "description": "You are an experienced criminal with a history of breaking the law. You have spent a lot of time among other criminals and still have contacts within the criminal underworld. You’re far closer than most people to the world of murder, theft, and violence that pervades the underbelly of civilization, and you have survived up to this point by flouting the rules and regulations of society.",
@@ -36,15 +46,23 @@
         ]
     },
     "species": {
-        "name": "Fey Gnome",
+        "name": "Hobgoblin",
         "description": [
-            "A gnome's energy and enthusiasm for living shines through every inch of his or her tiny body.",
-            "A gnome that shared a lineage with ancient fey."
+            "Hobgoblins trace their origins to the ancient courts of the Feywild, where they first appeared with their goblin and bugbear kin. Many of them were driven from the Feywild by the conquering god Maglubiyet, who marshaled them as soldiers, but the fey realm left its mark; wherever they are in the multiverse, they continue to channel an aspect of the Feywild's rule of reciprocity, which creates a mystical bond between the giver and the receiver of a gift.",
+            "On some worlds, such bonds lead hobgoblins to form communities with deep ties to one another. In Eberron and the Forgotten Realms, vast hobgoblin legions have emerged, with ranks of devoted soldiers famed for their unity.",
+            "Hobgoblins are generally taller than their goblin cousins but not quite as big as bugbears. They have curved, pointed ears and noses that turn bright red or blue during displays of emotion."
         ],
         "features": [
             {
+                "name": "Creature Type",
+                "description": "You are a Humanoid. You are also considered a goblinoid for any prerequisite or effect that requires you to be a goblinoid.",
+                "modifiers": [
+
+                ]
+            },
+            {
                 "name": "Darkvision",
-                "description": "Accustomed to life underground, you have superior vision in dark and dim conditions. You can see in dim light within 60 feet of you as if it were bright light, and in darkness as if it were dim light. You can't discern color in darkness, only shades of gray.",
+                "description": "You can see in dim light within 60 feet of you as if it were bright light and in darkness as if it were dim light. You discern colors in that darkness only as shades of gray.",
                 "modifiers": [
                     {
                         "type": "sense",
@@ -56,8 +74,8 @@
                 ]
             },
             {
-                "name": "Gnome Cunning",
-                "description": "You have advantage on all Intelligence, Wisdom, and Charisma saving throws against magic.",
+                "name": "Fey Ancestry",
+                "description": "You have advantage on saving throws you make to avoid or end the charmed condition on yourself.",
                 "modifiers": [
                     {
                         "type": "advantage",
@@ -65,22 +83,7 @@
                             {
                                 "type": "save",
                                 "save": {
-                                    "stat": "int",
-                                    "condition": "Magic"
-                                }
-                            },
-                            {
-                                "type": "save",
-                                "save": {
-                                    "stat": "wis",
-                                    "condition": "Magic"
-                                }
-                            },
-                            {
-                                "type": "save",
-                                "save": {
-                                    "stat": "cha",
-                                    "condition": "Magic"
+                                    "condition": "Charmed"
                                 }
                             }
                         ]
@@ -88,8 +91,39 @@
                 ]
             },
             {
-                "name": "Innate Raw Magic",
-                "description": "Your lineage grants you access to wild magic due to close ties with the Fey and the raw magic within. As a bonus action, you can cause a wild magic surge focused on you or a target creature. If the effect is positive, the attacker is affected, otherwise the target is affected. This can be used once, reset after completing a long rest."
+                "name": "Fey Gift",
+                "description": [
+                    "You can use this trait to take the Help action as a bonus action, and you can do so a number of times equal to your proficiency bonus. You regain all expended uses when you finish a long rest.",
+                    "Starting at 3rd level, choose one of the options below each time you take the Help action with this trait:"
+                ],
+                "features": [
+                    {
+                        "name": "Hospitality",
+                        "description": "You and the creature you help each gain a number of temporary hit points equal to 1d6 plus your proficiency bonus."
+                    },
+                    {
+                        "name": "Passage",
+                        "description": "You and the creature you help each increase your walking speeds by 10 feet until the start of your next turn."
+                    },
+                    {
+                        "name": "Spite",
+                        "description": "Until the start of your next turn, the first time the creature you help hits a target with an attack roll, that target has disadvantage on the next attack roll it makes within the next minute."
+                    }
+                ]
+            },
+            {
+                "name": "Fortune from the Many",
+                "description": "If you miss with an attack roll or fail an ability check or a saving throw, you can draw on your bonds of reciprocity to gain a bonus to the roll equal to the number of allies you can see within 30 feet of you (maximum bonus of +3). You can use this trait a number of times equal to your proficiency bonus, and you regain all expended uses when you finish a long rest.",
+                "modifiers": [
+
+                ]
+            },
+            {
+                "name": "Languages",
+                "description": "You can speak, read, and write Common and one other language that you and your DM agree is appropriate for your character.",
+                "modifiers": [
+
+                ]
             }
         ]
     },
@@ -100,5 +134,18 @@
         "int": 15,
         "wis": 10,
         "cha": 8
-    }
+    },
+    "equipment": [
+        {
+            "type": "weapon",
+            "name": "Scimitar",
+            "damage": "1d6",
+            "damage_type": "Slashing",
+            "properties": [
+                "Finesse",
+                "Light",
+                "Nick"
+            ]
+        }
+    ]
 }

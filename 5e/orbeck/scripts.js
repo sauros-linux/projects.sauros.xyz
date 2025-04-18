@@ -1,4 +1,6 @@
 
+var character_json = {};
+
 async function getData(url) {
     try {
         const response = await fetch(url);
@@ -11,6 +13,14 @@ async function getData(url) {
     } catch (error) {
         console.error(error.message);
     }
+}
+
+function get_character_level() {
+    var level = 0;
+    for (let character_class in character_json["class"]) {
+        level += character_class["level"];
+    }
+    return level;
 }
 
 function get_stat_label(stat) {
@@ -32,6 +42,10 @@ function get_stat_label(stat) {
 
 function get_stat_modifier(num) {
     return Math.floor((num - 10) / 2);
+}
+
+function get_proficiency_bonus() {
+    return Math.round((get_character_level() + 1) / 4) + 1;
 }
 
 function get_roll(str, type = "normal") {
@@ -76,6 +90,12 @@ function get_roll_template(button, type = "normal") {
     }
 }
 
+function render_text(str) {
+    var result = str;
+    result = result.replace("@PB", `${get_proficiency_bonus()}`);
+    return result;
+}
+
 function send_roll(button, type = "normal") {
     window.postMessage({
         type: "custom20",
@@ -84,7 +104,8 @@ function send_roll(button, type = "normal") {
 }
 
 async function init() {
-    var character_json = await getData("https://projects.sauros.xyz/5e/orbeck/character.json");
+    character_json = await getData("https://projects.sauros.xyz/5e/orbeck/character.json");
+    var attacks = [];
 
     document.getElementById("name").innerText = character_json["name"];
 
@@ -115,11 +136,33 @@ async function init() {
             }
         });
 
+        character_json["equipment"].forEach(item => {
+            try {
+                if (item["type"] == "weapon") {
+                    attacks.push({
+                        "name": item["name"],
+                        "to_hit": "@str",
+                        "damage": "1d6+@str"
+                    });
+                }
+            } catch {
+                
+            }
+        });
+
         document.getElementById(ability).innerText = base_score;
 
         var mod = get_stat_modifier(base_score);
         document.getElementById(ability + "_mod").innerHTML = get_rollable_button(`${get_stat_label(ability)}`, (mod >= 0 ? "+" : "") + mod.toString());
         document.getElementById(ability + "_save").innerHTML = get_rollable_button(`${get_stat_label(ability)} Save`, (mod >= 0 ? "+" : "") + mod.toString());
+
+        attacks.forEach(attack => {
+            document.getElementById("attacks").innerHTML += `<tr>
+                    <td>${attack["name"]}</td>
+                    <td><button label="${attack["name"]} (To Hit)" class="rollable">${attack["to_hit"]}</button></td>
+                    <td><button label="${attack["name"]} (Damage)" class="rollable">${attack["damage"]}</button></td>
+                </tr>`;
+        });
     }
 
     var rollable_buttons = document.getElementsByClassName("rollable");
