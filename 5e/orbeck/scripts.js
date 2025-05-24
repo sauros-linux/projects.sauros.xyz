@@ -115,6 +115,7 @@ function send_roll(button, type = "normal") {
 
 function parse_character() {
     var attacks = [];
+    var spells = [];
 
     document.getElementById("name").innerText = character_json["name"];
 
@@ -140,9 +141,7 @@ function parse_character() {
                         base_score += modifier["asi"][ability];
                     }
                     else if (modifier["type"] == "speed") {
-                        for (let speed in modifier["speed"]) {
-                            document.getElementById("walk_speed").innerHTML = `${speed["name"]}: ${speed["speed"]} ft.`;
-                        }
+                        document.getElementById("walk_speed").innerText = `${modifier["speed"]["name"]}: ${modifier["speed"]["speed"]} ft.`;
                     }
                 });
             } catch {
@@ -197,6 +196,29 @@ function parse_character() {
                 <td>${attack["name"]}</td>
                 <td><button label="${attack["name"]} (To Hit)" class="rollable">${render_text(attack["to_hit"])}</button></td>
                 <td><button label="${attack["name"]} (Damage)" class="rollable">${render_text(attack["damage"])}</button></td>
+            </tr>`;
+    });
+    document.getElementById("attacks").children[0].innerHTML += `<tr><th colspan="3">SPELLS</th></tr>`;
+
+    character_json["class"].forEach(character_class => {
+        if ("spells" in character_class) {
+            var spellcasting_ability = character_class["features"].find((f) => f["name"] == "Spellcasting")["modifiers"][0]["spellcasting"]["ability"];
+
+            for (let spell in character_class["spells"]) {
+                spells.push({
+                    "name": spell["name"],
+                    "to_hit": "@PB+@str",
+                    "damage": "1+@str"
+                });
+            }
+        }
+    });
+
+    spells.forEach(spell => {
+        document.getElementById("attacks").children[0].innerHTML += `<tr>
+                <td>${spell["name"]}</td>
+                <td><button label="${spell["name"]} (To Hit)" class="rollable">${render_text(spell["to_hit"])}</button></td>
+                <td><button label="${spell["name"]} (Damage)" class="rollable">${render_text(spell["damage"])}</button></td>
             </tr>`;
     });
 

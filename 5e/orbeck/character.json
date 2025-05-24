@@ -8,6 +8,19 @@
         {
             "name": "Wizard",
             "level": 1,
+            "features": [
+                {
+                    "name": "Spellcasting",
+                    "modifiers": [
+                        {
+                            "type": "spellcasting",
+                            "spellcasting": {
+                                "ability": "int"
+                            }
+                        }
+                    ]
+                }
+            ],
             "spells": [
                 {
                     "name": "Blade Ward",
