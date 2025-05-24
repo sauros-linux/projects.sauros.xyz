@@ -17,10 +17,14 @@ async function getData(url) {
 
 function get_character_level() {
     var level = 0;
-    for (let character_class in character_json["class"]) {
-        level += character_class["level"];
+    for (var i = 0; i < character_json["class"].length; i++) {
+        level += character_json["class"][i]["level"];
     }
     return level;
+}
+
+function get_stat(stat) {
+    return parseInt(document.getElementById(stat).innerText);
 }
 
 function get_stat_label(stat) {
@@ -93,6 +97,12 @@ function get_roll_template(button, type = "normal") {
 function render_text(str) {
     var result = str;
     result = result.replace("@PB", `${get_proficiency_bonus()}`);
+    result = result.replace("@str", `${get_stat_modifier(get_stat("str"))}`);
+    result = result.replace("@dex", `${get_stat_modifier(get_stat("dex"))}`);
+    result = result.replace("@con", `${get_stat_modifier(get_stat("con"))}`);
+    result = result.replace("@int", `${get_stat_modifier(get_stat("int"))}`);
+    result = result.replace("@wis", `${get_stat_modifier(get_stat("wis"))}`);
+    result = result.replace("@cha", `${get_stat_modifier(get_stat("cha"))}`);
     return result;
 }
 
@@ -103,8 +113,7 @@ function send_roll(button, type = "normal") {
     }, "*")
 }
 
-async function init() {
-    character_json = await getData("https://projects.sauros.xyz/5e/orbeck/character.json");
+function parse_character() {
     var attacks = [];
 
     document.getElementById("name").innerText = character_json["name"];
@@ -130,40 +139,66 @@ async function init() {
                     if (modifier["type"] == "asi" && ability in modifier["asi"]) {
                         base_score += modifier["asi"][ability];
                     }
+                    else if (modifier["type"] == "speed") {
+                        for (let speed in modifier["speed"]) {
+                            document.getElementById("walk_speed").innerHTML = `${speed["name"]}: ${speed["speed"]} ft.`;
+                        }
+                    }
                 });
             } catch {
                 
             }
         });
 
-        character_json["equipment"].forEach(item => {
-            try {
-                if (item["type"] == "weapon") {
-                    attacks.push({
-                        "name": item["name"],
-                        "to_hit": "@str",
-                        "damage": "1d6+@str"
-                    });
-                }
-            } catch {
-                
-            }
-        });
+        
 
         document.getElementById(ability).innerText = base_score;
 
         var mod = get_stat_modifier(base_score);
         document.getElementById(ability + "_mod").innerHTML = get_rollable_button(`${get_stat_label(ability)}`, (mod >= 0 ? "+" : "") + mod.toString());
         document.getElementById(ability + "_save").innerHTML = get_rollable_button(`${get_stat_label(ability)} Save`, (mod >= 0 ? "+" : "") + mod.toString());
-
-        attacks.forEach(attack => {
-            document.getElementById("attacks").innerHTML += `<tr>
-                    <td>${attack["name"]}</td>
-                    <td><button label="${attack["name"]} (To Hit)" class="rollable">${attack["to_hit"]}</button></td>
-                    <td><button label="${attack["name"]} (Damage)" class="rollable">${attack["damage"]}</button></td>
-                </tr>`;
-        });
     }
+
+    document.getElementById("prof").innerHTML           = get_rollable_button(`Proficiency Bonus`, (get_proficiency_bonus() >= 0 ? "+" : "") + get_proficiency_bonus().toString());    
+    document.getElementById("inspiration").innerHTML    = get_rollable_button(`Proficiency Bonus`, (get_proficiency_bonus() >= 0 ? "+" : "") + get_proficiency_bonus().toString());
+
+    for (var i = 0; i < character_json["equipment"].length; i++) {
+        try {
+            var item = character_json["equipment"][i];
+            
+            if (item["type"] == "weapon") {
+                var attack_mod = "@str";
+                if (item["properties"].includes("Finesse")) {
+                    var str_score = get_stat("str");
+                    var dex_score = get_stat("dex");
+
+                    if (dex_score > str_score)
+                        attack_mod = "@dex";
+                }
+
+                attacks.push({
+                    "name": item["name"],
+                    "to_hit": "+" + attack_mod,
+                    "damage": "1d6+" + attack_mod
+                });
+            }
+        } catch {
+            
+        }
+    }
+    attacks.push({
+        "name": "Unarmed Strike",
+        "to_hit": "@PB+@str",
+        "damage": "1+@str"
+    });
+
+    attacks.forEach(attack => {
+        document.getElementById("attacks").children[0].innerHTML += `<tr>
+                <td>${attack["name"]}</td>
+                <td><button label="${attack["name"]} (To Hit)" class="rollable">${render_text(attack["to_hit"])}</button></td>
+                <td><button label="${attack["name"]} (Damage)" class="rollable">${render_text(attack["damage"])}</button></td>
+            </tr>`;
+    });
 
     var rollable_buttons = document.getElementsByClassName("rollable");
 
@@ -189,6 +224,11 @@ async function init() {
             document.body.appendChild(menu);
         });
     }
+}
+
+async function init() {
+    character_json = await getData("https://projects.sauros.xyz/5e/orbeck/character.json");
+    parse_character();
 }
 
 window.onload = init;

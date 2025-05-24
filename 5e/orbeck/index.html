@@ -6,7 +6,7 @@
         <link rel="stylesheet" href="styles.css"/>
     </head>
     <body>
-        <div style="display: flex;">
+        <div class="flex">
             <div>
                 <table>
                     <tr>
@@ -17,58 +17,58 @@
                 </table>
             </div>
         </div>
-        <div style="display: flex;">
-            <table>
-                <tr>
-                    <th colspan="6">ABILITY SCORES</th>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="stat">
-                            <span class="stat_label">STR</span>
-                            <span class="stat_modifier" id="str_mod"></span>
-                            <span class="stat_total" id="str"></span>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="stat">
-                            <span class="stat_label">DEX</span>
-                            <span class="stat_modifier" id="dex_mod"></span>
-                            <span class="stat_total" id="dex"></span>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="stat">
-                            <span class="stat_label">CON</span>
-                            <span class="stat_modifier" id="con_mod"></span>
-                            <span class="stat_total" id="con"></span>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="stat">
-                            <span class="stat_label">INT</span>
-                            <span class="stat_modifier" id="int_mod"></span>
-                            <span class="stat_total" id="int"></span>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="stat">
-                            <span class="stat_label">WIS</span>
-                            <span class="stat_modifier" id="wis_mod"></span>
-                            <span class="stat_total" id="wis"></span>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="stat">
-                            <span class="stat_label">CHA</span>
-                            <span class="stat_modifier" id="cha_mod"></span>
-                            <span class="stat_total" id="cha"></span>
-                        </div>
-                    </td>
-                </tr>
-            </table>
-        </div>
-        <div style="display: flex;">
+        <div class="flex">
+            <div style="flex-grow: 3;">
+                <table>
+                    <tr>
+                        <th colspan="6">ABILITY SCORES</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="stat">
+                                <span class="stat_label">STR</span>
+                                <span class="stat_modifier" id="str_mod"></span>
+                                <span class="stat_total" id="str"></span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="stat">
+                                <span class="stat_label">DEX</span>
+                                <span class="stat_modifier" id="dex_mod"></span>
+                                <span class="stat_total" id="dex"></span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="stat">
+                                <span class="stat_label">CON</span>
+                                <span class="stat_modifier" id="con_mod"></span>
+                                <span class="stat_total" id="con"></span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="stat">
+                                <span class="stat_label">INT</span>
+                                <span class="stat_modifier" id="int_mod"></span>
+                                <span class="stat_total" id="int"></span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="stat">
+                                <span class="stat_label">WIS</span>
+                                <span class="stat_modifier" id="wis_mod"></span>
+                                <span class="stat_total" id="wis"></span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="stat">
+                                <span class="stat_label">CHA</span>
+                                <span class="stat_modifier" id="cha_mod"></span>
+                                <span class="stat_total" id="cha"></span>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
             <div>
                 <table>
                     <tr>
@@ -111,80 +111,87 @@
                 <tr>
                     <th colspan="3">OFFENSE</th>
                 </tr>
-                <tr>
-                    <td>Silvered Quarterstaff</td>
-                    <td><button label="Silvered Quarterstaff (To Hit)" class="rollable">+2</button></td>
-                    <td><button label="Silvered Quarterstaff (Damage)" class="rollable">1d6-1</button></td>
-                </tr>
-                <tr>
-                    <td>Thorn Whip</td>
-                    <td><button label="Thorn Whip (To Hit)" class="rollable">+7</button></td>
-                    <td><button label="Thorn Whip (Damage)" class="rollable">2d6</button></td>
-                </tr>
-                <tr>
-                    <td>Guiding Bolt</td>
-                    <td><button label="Guiding Bolt (To Hit)" class="rollable">+7</button></td>
-                    <td><button label="Guiding Bolt (Damage)" class="rollable">4d6</button></td>
-                </tr>
             </table>
             <table>
                 <tr>
-                    <th colspan="">DEFENSE</th>
+                    <th colspan="5">DEFENSE</th>
                 </tr>
                 <tr>
-                    <td colspan="2">ARMOR CLASS</td>
-                    <td colspan="3">HIT POINTS</td>
-                    <td colspan="4">SAVING THROWS</td>
-                </tr>
-                <tr>
-                    <td colspan="2" rowspan="3">
-                        <span class="stat_modifier" id="armor_class">18</span>
-                    </td>
-                    <td rowspan="3">
-                        <div class="stat">
-                            <span class="stat_label">CURRENT</span>
-                            <span class="stat_modifier" id="current_hp">57</span>
-                        </div>
-                    </td>
-                    <td rowspan="3">
-                        <div class="stat">
-                            <span class="stat_label">MAX</span>
-                            <span class="stat_modifier" id="max_hp">58</span>
-                        </div>
-                    </td>
-                    <td rowspan="3">
-                        <div class="stat">
-                            <span class="stat_label">TEMP</span>
-                            <span class="stat_modifier" id="temp_hp">28</span>
-                        </div>
+                    <td>
+                        <table class="subtable">
+                            <tr>
+                                <th>ARMOR CLASS</th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span class="stat_modifier" id="armor_class">18</span>
+                                </td>
+                            </tr>
+                        </table>
                     </td>
                     <td colspan="2">
-                        <span class="stat_label">STR</span>
-                        <span class="stat_modifier" id="str_save"></span>
+                        <table class="subtable">
+                            <tr>
+                                <th colspan="3">HIT POINTS</th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="stat">
+                                        <span class="stat_label">CURRENT</span>
+                                        <span class="stat_modifier" id="current_hp">57</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="stat">
+                                        <span class="stat_label">MAX</span>
+                                        <span class="stat_modifier" id="max_hp">58</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="stat">
+                                        <span class="stat_label">TEMP</span>
+                                        <span class="stat_modifier" id="temp_hp">28</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
                     </td>
                     <td colspan="2">
-                        <span class="stat_label">INT</span> 
-                        <span class="stat_modifier" id="int_save"></span>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2">
-                        <span class="stat_label">DEX</span> 
-                        <span class="stat_modifier" id="dex_save"></span>
-                    </td>
-                    <td colspan="2">
-                        <span class="stat_label">WIS</span> 
-                        <span class="stat_modifier" id="wis_save"></span>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2">
-                        <span class="stat_label">CON</span> 
-                        <span class="stat_modifier" id="con_save"></span>
-                    </td>
-                    <td colspan="2">
-                        <span class="stat_label">CHA</span> 
-                        <span class="stat_modifier" id="cha_save"></span>
+                        <table class="subtable">
+                            <tr>
+                                <th colspan="2">SAVING THROWS</th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span class="stat_label">STR</span>
+                                    <span class="stat_modifier" id="str_save"></span>
+                                </td>
+                                <td>
+                                    <span class="stat_label">INT</span> 
+                                    <span class="stat_modifier" id="int_save"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span class="stat_label">DEX</span> 
+                                    <span class="stat_modifier" id="dex_save"></span>
+                                </td>
+                                <td>
+                                    <span class="stat_label">WIS</span> 
+                                    <span class="stat_modifier" id="wis_save"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span class="stat_label">CON</span> 
+                                    <span class="stat_modifier" id="con_save"></span>
+                                </td>
+                                <td>
+                                    <span class="stat_label">CHA</span> 
+                                    <span class="stat_modifier" id="cha_save"></span>
+                                </td>
+                            </tr>
+                        </table>
                     </td>
                 </tr>
             </table>
