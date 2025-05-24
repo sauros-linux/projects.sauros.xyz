@@ -204,13 +204,15 @@ function parse_character() {
         if ("spells" in character_class) {
             var spellcasting_ability = character_class["features"].find((f) => f["name"] == "Spellcasting")["modifiers"][0]["spellcasting"]["ability"];
 
-            for (let spell in character_class["spells"]) {
-                spells.push({
-                    "name": spell["name"],
-                    "to_hit": "@PB+@str",
-                    "damage": "1+@str"
-                });
-            }
+            character_class["spells"].forEach(spell => {
+                if ("damage" in spell) {
+                    spells.push({
+                        "name": spell["name"],
+                        "to_hit": `@PB+@${spellcasting_ability}`,
+                        "damage": spell["damage"]
+                    });
+                }
+            });
         }
     });
 
