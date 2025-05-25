@@ -15,6 +15,41 @@ async function getData(url) {
     }
 }
 
+class Roll {
+    dice = "d20";
+    num = "1";
+    modifiers = [];
+    extra_rolls = [];
+
+    getModifier() {
+        var mod = 0;
+        this.modifiers.forEach(modifier => {
+            mod += modifier;
+        });
+        return mod;
+    }
+
+    getModifierString() {
+        var mod = this.getModifier();
+        return `${(mod >= 0 ? "+" : "-")}${mod}`;
+    }
+
+    toString() {
+        var extra_roll_strings = "";
+        this.extra_rolls.forEach(extra_roll => {
+            extra_roll_strings += `+${extra_roll.toString()}`;
+        });
+        return `${this.num}${this.dice}${this.getModifierString()}${extra_roll_strings}`;
+    }
+}
+
+function add_sign(value) {
+    if (value >= 0)
+        return `+${value}`;
+    else
+        return `-${value}`;
+}
+
 function get_character_level() {
     var level = 0;
     for (var i = 0; i < character_json["class"].length; i++) {
@@ -149,8 +184,6 @@ function parse_character() {
             }
         });
 
-        
-
         document.getElementById(ability).innerText = base_score;
 
         var mod = get_stat_modifier(base_score);
@@ -166,20 +199,34 @@ function parse_character() {
             var item = character_json["equipment"][i];
             
             if (item["type"] == "weapon") {
-                var attack_mod = "@str";
+                var attack_mod = "str";
                 if (item["properties"].includes("Finesse")) {
                     var str_score = get_stat("str");
                     var dex_score = get_stat("dex");
 
                     if (dex_score > str_score)
-                        attack_mod = "@dex";
+                        attack_mod = "dex";
                 }
 
-                attacks.push({
-                    "name": item["name"],
-                    "to_hit": "+" + attack_mod,
-                    "damage": "1d6+" + attack_mod
-                });
+                attack_mod = get_stat_modifier(get_stat(attack_mod));
+
+                try {
+                    to_hit_roll = new Roll();
+                    to_hit_roll.modifiers.push(get_proficiency_bonus());
+                    to_hit_roll.modifiers.push(attack_mod);
+
+                    damage_roll = new Roll();
+                    damage_roll.modifiers.push(attack_mod);
+
+                    attacks.push({
+                        "name": item["name"],
+                        "to_hit": to_hit_roll.toString(),
+                        "damage": damage_roll.toString(),
+                    });
+                }
+                catch (error) {
+                    console.log(error);
+                }
             }
         } catch {
             
@@ -194,8 +241,8 @@ function parse_character() {
     attacks.forEach(attack => {
         document.getElementById("attacks").children[0].innerHTML += `<tr>
                 <td>${attack["name"]}</td>
-                <td><button label="${attack["name"]} (To Hit)" class="rollable">${render_text(attack["to_hit"])}</button></td>
-                <td><button label="${attack["name"]} (Damage)" class="rollable">${render_text(attack["damage"])}</button></td>
+                <td><button label="${attack["name"]} (To Hit)" class="rollable">${attack["to_hit"]}</button></td>
+                <td><button label="${attack["name"]} (Damage)" class="rollable">${attack["damage"]}</button></td>
             </tr>`;
     });
     document.getElementById("attacks").children[0].innerHTML += `<tr><th colspan="3">SPELLS</th></tr>`;
@@ -217,9 +264,11 @@ function parse_character() {
     });
 
     spells.forEach(spell => {
+        var to_hit = eval(render_text(spell["to_hit"]));
+
         document.getElementById("attacks").children[0].innerHTML += `<tr>
                 <td>${spell["name"]}</td>
-                <td><button label="${spell["name"]} (To Hit)" class="rollable">${render_text(spell["to_hit"])}</button></td>
+                <td><button label="${spell["name"]} (To Hit)" class="rollable">${add_sign(to_hit)}</button></td>
                 <td><button label="${spell["name"]} (Damage)" class="rollable">${render_text(spell["damage"])}</button></td>
             </tr>`;
     });
