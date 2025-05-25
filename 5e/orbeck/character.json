@@ -48,6 +48,24 @@
                         "dice": "d8",
                         "num": "1"
                     }
+                },
+                {
+                    "name": "Lightning Lure",
+                    "level": 0,
+                    "casting_time": "1 action",
+                    "range_area": "Self/15 ft.",
+                    "components": "V",
+                    "duration": "Instantaneous",
+                    "source": "Sword Coast Adventurer's Guide, pg. 143",
+                    "description": [
+                        "You create a lash of lightning energy that strikes at one creature of your choice that you can see within 15 feet of you. The target must succeed on a Strength saving throw or be pulled up to 10 feet in a straight line toward you and then take 1d8 lightning damage if it is within 5 feet of you.",
+                        "This spell's damage increases by 1d8 when you reach 5th level (2d8), 11th level (3d8), and 17th level (4d8)."
+                    ],
+                    "save": "str",
+                    "damage": {
+                        "dice": "d8",
+                        "num": "1"
+                    }
                 }
             ]
         }
@@ -190,6 +208,22 @@
         "cha": 8
     },
     "equipment": [
+        {
+            "type": "weapon",
+            "name": "Dagger",
+            "damage": {
+                "dice": "d4",
+                "num": "1"
+            },
+            "damage_type": "Slashing",
+            "properties": [
+                "Finesse",
+                "Light",
+                "Nick",
+                "Thrown",
+                "+1"
+            ]
+        },
         {
             "type": "weapon",
             "name": "Scimitar",

@@ -31,7 +31,10 @@ class Roll {
 
     getModifierString() {
         var mod = this.getModifier();
-        return `${(mod >= 0 ? "+" : "-")}${mod}`;
+        if (mod == 0)
+            return "";
+        else
+            return `${(mod >= 0 ? "+" : "-")}${mod}`;
     }
 
     toString() {
@@ -39,7 +42,10 @@ class Roll {
         this.extra_rolls.forEach(extra_roll => {
             extra_roll_strings += `+${extra_roll.toString()}`;
         });
-        return `${this.num}${this.dice}${this.getModifierString()}${extra_roll_strings}`;
+        if (this.dice == "d20")
+            return `${this.getModifierString()}${extra_roll_strings}`;
+        else
+            return `${this.num}${this.dice}${this.getModifierString()}${extra_roll_strings}`;
     }
 }
 
@@ -210,32 +216,42 @@ function parse_character() {
 
                 attack_mod = get_stat_modifier(get_stat(attack_mod));
 
-                try {
-                    to_hit_roll = new Roll();
-                    to_hit_roll.modifiers.push(get_proficiency_bonus());
-                    to_hit_roll.modifiers.push(attack_mod);
+                if (item["properties"].includes("+1"))
+                    attack_mod += 1;
+                if (item["properties"].includes("+2"))
+                    attack_mod += 2;
+                if (item["properties"].includes("+3"))
+                    attack_mod += 3;
 
-                    damage_roll = new Roll();
+                to_hit_roll = new Roll();
+                // if proficient
+                    to_hit_roll.modifiers.push(get_proficiency_bonus());
+                to_hit_roll.modifiers.push(attack_mod);
+
+                damage_roll = new Roll();
+                damage_roll.dice = item["damage"]["dice"];
+                damage_roll.num = item["damage"]["num"];
+                // if proficient
                     damage_roll.modifiers.push(attack_mod);
 
-                    attacks.push({
-                        "name": item["name"],
-                        "to_hit": to_hit_roll.toString(),
-                        "damage": damage_roll.toString(),
-                    });
-                }
-                catch (error) {
-                    console.log(error);
-                }
+                attacks.push({
+                    "name": item["name"],
+                    "to_hit": to_hit_roll.toString(),
+                    "damage": damage_roll.toString(),
+                });
             }
         } catch {
             
         }
     }
+    to_hit_roll = new Roll();
+    to_hit_roll.modifiers.push(get_proficiency_bonus());
+    to_hit_roll.modifiers.push(get_stat_modifier(get_stat("str")));
+
     attacks.push({
         "name": "Unarmed Strike",
-        "to_hit": "@PB+@str",
-        "damage": "1+@str"
+        "to_hit": to_hit_roll.toString(),
+        "damage": get_stat_modifier(get_stat("str")) + 1,
     });
 
     attacks.forEach(attack => {
@@ -253,11 +269,28 @@ function parse_character() {
 
             character_class["spells"].forEach(spell => {
                 if ("damage" in spell) {
-                    spells.push({
-                        "name": spell["name"],
-                        "to_hit": `@PB+@${spellcasting_ability}`,
-                        "damage": spell["damage"]
-                    });
+                    to_hit_roll = new Roll();
+                    to_hit_roll.modifiers.push(get_proficiency_bonus());
+                    to_hit_roll.modifiers.push(get_stat_modifier(get_stat(spellcasting_ability)));
+
+                    damage_roll = new Roll();
+                    damage_roll.dice = item["damage"]["dice"];
+                    damage_roll.num = item["damage"]["num"];
+
+                    if ("save" in spell) {
+                        spells.push({
+                            "name": spell["name"],
+                            "save": `DC ${8 + get_proficiency_bonus() + get_stat_modifier(get_stat(spellcasting_ability))} ${spell["save"].toUpper()}`,
+                            "damage": damage_roll.toString(),
+                        });
+                    }
+                    else {
+                        spells.push({
+                            "name": spell["name"],
+                            "to_hit": to_hit_roll.toString(),
+                            "damage": damage_roll.toString(),
+                        });
+                    }
                 }
             });
         }
