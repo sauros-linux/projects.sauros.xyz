@@ -64,6 +64,19 @@ function get_character_level() {
     return level;
 }
 
+function get_armor_class() {
+    var base_ac = 10;
+    var modifier = get_stat_modifier(get_stat("dex"));
+
+    if (document.getElementById("mage_armor").checked)
+        base_ac = 13;
+
+    if (document.getElementById("bladesong").checked)
+        modifier += get_stat_modifier(get_stat("int"));
+
+    return base_ac + modifier;
+}
+
 function get_stat(stat) {
     return parseInt(document.getElementById(stat).innerText);
 }
@@ -135,6 +148,10 @@ function get_roll_template(button, type = "normal") {
     }
 }
 
+function get_non_roll_template(button) {
+    return `&{template:default} {{name=${document.getElementById("name").innerText}}} {{${button.getAttribute("label")}=${button.innerText}}} {{Description=${button.getAttribute("description")}}}`;
+}
+
 function render_text(str) {
     var result = str;
     result = result.replace("@PB", `${get_proficiency_bonus()}`);
@@ -151,6 +168,13 @@ function send_roll(button, type = "normal") {
     window.postMessage({
         type: "custom20",
         message: get_roll_template(button, type),
+    }, "*")
+}
+
+function send_non_roll(button) {
+    window.postMessage({
+        type: "custom20",
+        message: get_non_roll_template(button),
     }, "*")
 }
 
@@ -280,8 +304,9 @@ function parse_character() {
                     if ("save" in spell) {
                         spells.push({
                             "name": spell["name"],
-                            "save": `DC ${8 + get_proficiency_bonus() + get_stat_modifier(get_stat(spellcasting_ability))} ${spell["save"].toUpper()}`,
+                            "save": `DC ${8 + get_proficiency_bonus() + get_stat_modifier(get_stat(spellcasting_ability))} ${spell["save"].toUpperCase()}`,
                             "damage": damage_roll.toString(),
+                            "description": spell["description"][0],
                         });
                     }
                     else {
@@ -297,14 +322,26 @@ function parse_character() {
     });
 
     spells.forEach(spell => {
-        var to_hit = eval(render_text(spell["to_hit"]));
+        console.log(spell);
+        if ("to_hit" in spell) {
+            var to_hit = eval(render_text(spell["to_hit"]));
 
-        document.getElementById("attacks").children[0].innerHTML += `<tr>
-                <td>${spell["name"]}</td>
-                <td><button label="${spell["name"]} (To Hit)" class="rollable">${add_sign(to_hit)}</button></td>
-                <td><button label="${spell["name"]} (Damage)" class="rollable">${render_text(spell["damage"])}</button></td>
-            </tr>`;
+            document.getElementById("attacks").children[0].innerHTML += `<tr>
+                    <td>${spell["name"]}</td>
+                    <td><button label="${spell["name"]} (To Hit)" class="rollable">${add_sign(to_hit)}</button></td>
+                    <td><button label="${spell["name"]} (Damage)" class="rollable">${render_text(spell["damage"])}</button></td>
+                </tr>`;
+        }
+        else {
+            document.getElementById("attacks").children[0].innerHTML += `<tr>
+                    <td>${spell["name"]}</td>
+                    <td><button label="${spell["name"]} (Save)" description="${spell["description"]}" class="non_rollable">${spell["save"]}</button></td>
+                    <td><button label="${spell["name"]} (Damage)" class="rollable">${render_text(spell["damage"])}</button></td>
+                </tr>`;
+        }
     });
+
+    document.getElementById("armor_class").innerText = get_armor_class();
 
     var rollable_buttons = document.getElementsByClassName("rollable");
 
@@ -330,6 +367,25 @@ function parse_character() {
             document.body.appendChild(menu);
         });
     }
+
+    var non_rollable_buttons = document.getElementsByClassName("non_rollable");
+
+    for (let i = 0; i < non_rollable_buttons.length; i++) {
+        non_rollable_buttons[i].setAttribute("id", `rollable_${i}`);
+        non_rollable_buttons[i].addEventListener("click", function(e) {
+            window.postMessage({
+                type: "custom20",
+                message: get_non_roll_template(non_rollable_buttons[i]),
+            }, "*")
+        });
+    }
+
+    document.getElementById("mage_armor").addEventListener("change", function(e) {
+        document.getElementById("armor_class").innerText = get_armor_class();
+    });
+    document.getElementById("bladesong").addEventListener("change", function(e) {
+        document.getElementById("armor_class").innerText = get_armor_class();
+    });
 }
 
 async function init() {

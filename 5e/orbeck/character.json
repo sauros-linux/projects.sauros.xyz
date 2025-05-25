@@ -7,7 +7,7 @@
         },
         {
             "name": "Wizard",
-            "level": 1,
+            "level": 2,
             "features": [
                 {
                     "name": "Spellcasting",
@@ -46,7 +46,8 @@
                     ],
                     "damage": {
                         "dice": "d8",
-                        "num": "1"
+                        "num": "1",
+                        "type": "Thunder"
                     }
                 },
                 {
@@ -64,7 +65,109 @@
                     "save": "str",
                     "damage": {
                         "dice": "d8",
-                        "num": "1"
+                        "num": "1",
+                        "type": "Thunder"
+                    }
+                },
+                {
+                    "name": "Chromatic Orb",
+                    "level": 1,
+                    "casting_time": "1 action",
+                    "range_area": "90 ft.",
+                    "components": "V, S, M (a diamon worth 50+ GP)",
+                    "duration": "Instantaneous",
+                    "source": "Player's Handbook, pg. 249",
+                    "description": [
+                        "You hurl an orb of energy at a target within range. Choose Acid, Cold, Fire, Lightning, Poison, or Thunder for the type of orb you create, and then make a ranged spell attack against the target. On a hit, the target takes 3d8 damage of the chosen type.",
+                        "If you roll the same number on two or more of the d8s, the orb leaps to a different target of your choice within 30 feet of the target. Make an attack roll against the new target, and make a new damage roll. The orb can't leap again unless you cast the spell with a level 2+ spell slot.",
+                        "The damage increases by 1d8 for each spell slot level above 1. The orb can leap a maximum number of times equal to the level of the slot expended, and a creature can be targeted only once by each casting of this spell."
+                    ],
+                    "damage": {
+                        "dice": "d8",
+                        "num": "3",
+                        "type": "Choose (Acid, Cold, Fire, Lightning, Poison, Thunder)"
+                    }
+                },
+                {
+                    "name": "Comprehend Languages",
+                    "level": 1,
+                    "casting_time": "1 action + 10 minutes",
+                    "range_area": "Self",
+                    "components": "V, S, M (a pinch of soot and salt)",
+                    "duration": "1 hour",
+                    "source": "Player's Handbook, pg. 252",
+                    "description": [
+                        "For the duration, you understand the literal meaning of any language that you hear or see signed. You also understand any written language that you see, but you must be touching the surface on which the words are written. It takes about 1 minute to read one page of text. This spell doesn't decode symbols or secret messages."
+                    ]
+                },
+                {
+                    "name": "Detect Magic",
+                    "level": 1,
+                    "casting_time": "1 action + 10 minutes",
+                    "range_area": "Self/30 ft.",
+                    "components": "V, S",
+                    "duration": "Concentration, up to 10 minutes",
+                    "source": "Player's Handbook, pg. 262",
+                    "description": [
+                        "For the duration, you sense the presence of magical effects within 30 feet of yourself. If you sense such effects, you can take the Magic action to see a faint aura around any visible creature or object in the area that bears the magic, and if an effect was created by a spell, you learn the spell's school of magic.",
+                        "The spell is blocked by 1 foot of stone, dirt, or wood; 1 inch of metal; or a thin sheet of lead."
+                    ]
+                },
+                {
+                    "name": "Mage Armor",
+                    "level": 1,
+                    "casting_time": "1 action",
+                    "range_area": "Touch",
+                    "components": "V, S, M (a piece of cured leather)",
+                    "duration": "8 hours",
+                    "source": "Player's Handbook, pg. 293",
+                    "description": [
+                        "You touch a willing creature who isn't wearing armor. Until the spell ends, the target's base AC becomes 13 plus its Dexterity modifier. The spell ends early if the target dons armor."
+                    ]
+                },
+                {
+                    "name": "Shield",
+                    "level": 1,
+                    "casting_time": "1 reaction, which you take when you are hit by an attack roll or targeted by the Magic Missile spell",
+                    "range_area": "Self",
+                    "components": "V, S",
+                    "duration": "1 round",
+                    "source": "Player's Handbook, pg. 316",
+                    "description": [
+                        "An imperceptible barrier of magical force protects you. Until the start of your next turn, you have a +5 bonus to AC, including against the triggering attack, and you take no damage from Magic Missile."
+                    ]
+                },
+                {
+                    "name": "Silvery Barbs",
+                    "level": 1,
+                    "casting_time": "1 reaction, which you take when a creature you can see within 60 feet of yourself succeeds on an attack roll, an ability check, or a saving throw",
+                    "range_area": "60 ft.",
+                    "components": "",
+                    "duration": "Instantaneous, 1 round",
+                    "source": "Sword Coast Adventurer's Guide, pg. 143",
+                    "description": [
+                        "You magically distract the triggering creature and turn its momentary uncertainty into encouragement for another creature. The triggering creature must reroll the d20 and use the lower roll.",
+                        "You can then choose a different creature you can see within range (you can choose yourself). The chosen creature has advantage on the next attack roll, ability check, or saving throw it makes within 1 minute. A creature can be empowered by only one use of this spell at a time."
+                    ]
+                },
+                {
+                    "name": "Thunderwave",
+                    "level": 1,
+                    "casting_time": "1 action",
+                    "range_area": "Self/15 ft. Cube",
+                    "components": "V, S",
+                    "duration": "Instantaneous",
+                    "source": "Player's Handbook, pg. 334",
+                    "description": [
+                        "You unleash a wave of thunderous energy. Each creature in a 15-foot Cube originating from you makes a Constitution saving throw. On a failed save, a creature takes 2d8 Thunder damage and is pushed 10 feet away from you. On a successful save, a creature takes half as much damage only.",
+                        "In addition, unsecured objects that are entirely within the Cube are pushed 10 feet away from you, and a thunderous boom is audible within 300 feet.",
+                        "The damage increases by 1d8 for each spell slot level above 1."
+                    ],
+                    "save": "con",
+                    "damage": {
+                        "dice": "d8",
+                        "num": "2",
+                        "type": "Thunder"
                     }
                 }
             ]
