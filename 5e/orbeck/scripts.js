@@ -56,24 +56,24 @@ function add_sign(value) {
         return `-${value}`;
 }
 
-function has_feature(feature) {
+function has_feature(feature_name) {
     for (var i = 0; i < character_json["class"].length; i++) {
-        character_json["class"][i]["features"].forEach(feature => {
-            if (feature["name"] == feature)
+        for (var j = 0; j < character_json["class"][i]["features"].length; j++) {
+            if (character_json["class"][i]["features"][j]["name"] == feature_name && character_json["class"][i]["level"] >= character_json["class"][i]["features"][j]["level"])
                 return true;
-        });
+        }
     }
 
     return false;
 }
 
-function has_spell(spell) {
+function has_spell(spell_name) {
     for (var i = 0; i < character_json["class"].length; i++) {
         if ("spells" in character_json["class"][i]) {
-            character_json["class"][i]["spells"].forEach(spell => {
-                if (spell["name"] == spell)
+            for (var j = 0; j < character_json["class"][i]["spells"].length; j++) {
+                if (character_json["class"][i]["spells"][j]["name"] == spell_name)
                     return true;
-            });
+            }
         }
     }
     
@@ -84,7 +84,7 @@ function get_armor_class() {
     var base_ac = 10;
     var modifier = get_stat_modifier(get_stat("dex"));
 
-    if (has_spell("Mage Armor") && document.getElementById("mage_armor").checked)
+    if (document.getElementById("mage_armor").checked)
         base_ac = 13;
 
     if (has_feature("Bladesong") && document.getElementById("bladesong").checked)
@@ -405,6 +405,29 @@ function parse_character() {
         }
     });
 
+    if (has_spell("Mage Armor")) {
+        document.getElementById("ac_table").innerHTML += `<tr>
+            <td>
+                <label for="mage_armor">Mage Armor?</label>
+                <input type="checkbox" id="mage_armor" name="mage_armor" onchange="document.getElementById('armor_class').innerText = get_armor_class()">
+            </td>
+        </tr>`;
+    }
+    
+    if (has_feature("Bladesong")) {
+        document.getElementById("ac_table").innerHTML += `<tr>
+            <td>
+                <label for="bladesong">Bladesong?</label>
+                <input type="checkbox" id="bladesong" name="bladesong" onchange="document.getElementById('armor_class').innerText = get_armor_class()">
+            </td>
+        </tr>`;
+    }
+    
+    document.getElementById("ac_table").innerHTML += `<tr>
+                                <td>
+                                    <span class="stat_modifier" id="armor_class"></span>
+                                </td>
+                            </tr>`;
     document.getElementById("armor_class").innerText = get_armor_class();
 
     var rollable_buttons = document.getElementsByClassName("rollable");
@@ -443,13 +466,6 @@ function parse_character() {
             }, "*")
         });
     }
-
-    document.getElementById("mage_armor").addEventListener("change", function(e) {
-        document.getElementById("armor_class").innerText = get_armor_class();
-    });
-    document.getElementById("bladesong").addEventListener("change", function(e) {
-        document.getElementById("armor_class").innerText = get_armor_class();
-    });
 }
 
 async function init() {
