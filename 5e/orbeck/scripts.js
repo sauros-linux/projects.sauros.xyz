@@ -56,6 +56,43 @@ function add_sign(value) {
         return `-${value}`;
 }
 
+function has_feature(feature) {
+    for (var i = 0; i < character_json["class"].length; i++) {
+        character_json["class"][i]["features"].forEach(feature => {
+            if (feature["name"] == feature)
+                return true;
+        });
+    }
+
+    return false;
+}
+
+function has_spell(spell) {
+    for (var i = 0; i < character_json["class"].length; i++) {
+        if ("spells" in character_json["class"][i]) {
+            character_json["class"][i]["spells"].forEach(spell => {
+                if (spell["name"] == spell)
+                    return true;
+            });
+        }
+    }
+    
+    return false;
+}
+
+function get_armor_class() {
+    var base_ac = 10;
+    var modifier = get_stat_modifier(get_stat("dex"));
+
+    if (has_spell("Mage Armor") && document.getElementById("mage_armor").checked)
+        base_ac = 13;
+
+    if (has_feature("Bladesong") && document.getElementById("bladesong").checked)
+        modifier += get_stat_modifier(get_stat("int"));
+
+    return base_ac + modifier;
+}
+
 function get_character_level() {
     var level = 0;
     for (var i = 0; i < character_json["class"].length; i++) {
@@ -64,17 +101,37 @@ function get_character_level() {
     return level;
 }
 
-function get_armor_class() {
-    var base_ac = 10;
-    var modifier = get_stat_modifier(get_stat("dex"));
+function get_max_spell_slots(spell_level) {
+    var level = 0;
+    for (var i = 0; i < character_json["class"].length; i++) {
+        var class_name = character_json["class"][i]["name"];
+        if (class_name == "Bard" ||
+            class_name == "Cleric" ||
+            class_name == "Druid" ||
+            class_name == "Sorcerer" ||
+            class_name == "Wizard"
+        ) {
+            level += character_json["class"][i]["level"];
+        } else if (class_name == "Paladin" || class_name == "Ranger") {
+            level += character_json["class"][i]["level"] / 2;
+        }
+    }
 
-    if (document.getElementById("mage_armor").checked)
-        base_ac = 13;
+    switch (spell_level) {
+        case 1:
+            if (level <= 1)
+                return 2;
+            else if (level == 2)
+                return 3;
+            else
+                return 4;
+    }
 
-    if (document.getElementById("bladesong").checked)
-        modifier += get_stat_modifier(get_stat("int"));
+    return level;
+}
 
-    return base_ac + modifier;
+function get_proficiency_bonus() {
+    return Math.round((get_character_level() + 1) / 4) + 1;
 }
 
 function get_stat(stat) {
@@ -100,10 +157,6 @@ function get_stat_label(stat) {
 
 function get_stat_modifier(num) {
     return Math.floor((num - 10) / 2);
-}
-
-function get_proficiency_bonus() {
-    return Math.round((get_character_level() + 1) / 4) + 1;
 }
 
 function get_roll(str, type = "normal") {
@@ -285,7 +338,8 @@ function parse_character() {
                 <td><button label="${attack["name"]} (Damage)" class="rollable">${attack["damage"]}</button></td>
             </tr>`;
     });
-    document.getElementById("attacks").children[0].innerHTML += `<tr><th colspan="3">SPELLS</th></tr>`;
+
+    document.getElementById("attacks").children[0].innerHTML += `<tr><th colspan="3">CANTRIPS</th></tr>`;
 
     character_json["class"].forEach(character_class => {
         if ("spells" in character_class) {
@@ -304,6 +358,7 @@ function parse_character() {
                     if ("save" in spell) {
                         spells.push({
                             "name": spell["name"],
+                            "level": spell["level"],
                             "save": `DC ${8 + get_proficiency_bonus() + get_stat_modifier(get_stat(spellcasting_ability))} ${spell["save"].toUpperCase()}`,
                             "damage": damage_roll.toString(),
                             "description": spell["description"][0],
@@ -312,6 +367,7 @@ function parse_character() {
                     else {
                         spells.push({
                             "name": spell["name"],
+                            "level": spell["level"],
                             "to_hit": to_hit_roll.toString(),
                             "damage": damage_roll.toString(),
                         });
@@ -321,8 +377,16 @@ function parse_character() {
         }
     });
 
+    var previous_spell_level = 0;
     spells.forEach(spell => {
-        console.log(spell);
+        if (spell["level"] != previous_spell_level) {
+            previous_spell_level = spell["level"];
+
+            document.getElementById("attacks").children[0].innerHTML += `<tr>
+                <th colspan="2">LEVEL ${spell["level"]} SPELLS</th>
+                <th><input type="number" min="0" max="${get_max_spell_slots(spell["level"])}" value="${get_max_spell_slots(spell["level"])}"/></th>
+            </tr>`;
+        }
         if ("to_hit" in spell) {
             var to_hit = eval(render_text(spell["to_hit"]));
 

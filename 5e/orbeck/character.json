@@ -3,7 +3,10 @@
     "class": [
         {
             "name": "Rogue",
-            "level": 1
+            "level": 1,
+            "features": [
+                
+            ]
         },
         {
             "name": "Wizard",
