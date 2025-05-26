@@ -49,6 +49,27 @@ class Roll {
     }
 }
 
+class Spell {
+    constructor(spell) {
+        this.name = spell["name"];
+        this.level = spell["level"];
+        this.casting_time = spell["casting_time"];
+        this.range_area = spell["range_area"];
+        this.components = spell["components"];
+        this.duration = spell["duration"];
+        this.source = spell["source"];
+        this.description = spell["description"];
+    }
+
+    toRow() {
+        return `<tr>
+                    <td>${this.name}</td>
+                    <td><button label="${this.name} (To Hit)" class="rollable">${add_sign(to_hit)}</button></td>
+                    <td><button label="${this.name} (Damage)" class="rollable">${render_text(spell["damage"])}</button></td>
+                </tr>`;
+    }
+}
+
 function add_sign(value) {
     if (value >= 0)
         return `+${value}`;
@@ -275,7 +296,7 @@ function parse_character() {
     }
 
     document.getElementById("prof").innerHTML           = get_rollable_button(`Proficiency Bonus`, (get_proficiency_bonus() >= 0 ? "+" : "") + get_proficiency_bonus().toString());    
-    document.getElementById("inspiration").innerHTML    = get_rollable_button(`Proficiency Bonus`, (get_proficiency_bonus() >= 0 ? "+" : "") + get_proficiency_bonus().toString());
+    document.getElementById("inspiration").innerHTML    = `<input type="checkbox">`;
 
     for (var i = 0; i < character_json["equipment"].length; i++) {
         try {
@@ -373,6 +394,17 @@ function parse_character() {
                         });
                     }
                 }
+                else {
+                    var description = "";
+                    for (var i = 0; i < spell["description"].length; i++) {
+                        description += spell["description"][i];
+                    }
+                    spells.push({
+                        "name": spell["name"],
+                        "level": spell["level"],
+                        "description": description,
+                    });
+                }
             });
         }
     });
@@ -396,11 +428,17 @@ function parse_character() {
                     <td><button label="${spell["name"]} (Damage)" class="rollable">${render_text(spell["damage"])}</button></td>
                 </tr>`;
         }
-        else {
+        else if ("save" in spell) {
             document.getElementById("attacks").children[0].innerHTML += `<tr>
                     <td>${spell["name"]}</td>
                     <td><button label="${spell["name"]} (Save)" description="${spell["description"]}" class="non_rollable">${spell["save"]}</button></td>
                     <td><button label="${spell["name"]} (Damage)" class="rollable">${render_text(spell["damage"])}</button></td>
+                </tr>`;
+        }
+        else {
+            document.getElementById("attacks").children[0].innerHTML += `<tr>
+                    <td>${spell["name"]}</td>
+                    <td><button label="${spell["name"]}" description="${spell["description"]}" class="non_rollable"></button></td>
                 </tr>`;
         }
     });
