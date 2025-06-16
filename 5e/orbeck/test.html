@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="styles.css"/>
+        <style>
+            #container {
+                z-index: 2;
+            }
+
+            #description {
+                height: 100%; /* 100% Full-height */
+                width: 0; /* 0 width - change this with JavaScript */
+                position: fixed; /* Stay in place */
+                z-index: 1; /* Stay on top */
+                top: 0;
+                right: 0;
+                overflow-x: hidden; /* Disable horizontal scroll */
+                background-color: #222222;
+            }
+
+            #close_button {
+                position: absolute;
+                width: calc(100% - 4px * 2);
+                height: 30px;
+                bottom: 4px;
+                right: 4px;
+
+                background-color: #882222;
+            }
+            #close_button:hover {
+                background-color: #DD3333;
+            }
+
+            button {
+                width: calc(100% - 2px * 2);
+                margin: 2px;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="container">
+            <table id="spell"></table>
+        </div>
+        <div id="description"></div>
+        
+        <!--<script src="scripts.js"></script>-->
+        <script src="classes.js"></script>
+        <script>
+            let character = Object.assign(new Character(), {
+                name: "Orbeck",
+                ability_scores: [ 8, 15, 14, 18, 10, 8],
+                level: 4,
+                spells: [],
+            });
+            
+            character.spells.push(new Spell({
+                name: "Lightning Lure",
+                description: [
+                    "You create a lash of lightning energy that strikes at one creature of your choice that you can see within 15 feet of you. The target must succeed on a Strength saving throw or be pulled up to 10 feet in a straight line toward you and then take 1d8 lightning damage if it is within 5 feet of you.",
+                    "This spell's damage increases by 1d8 when you reach 5th level (2d8), 11th level (3d8), and 17th level (4d8).",
+                ],
+                casting_stat: character.ability_scores[ABILITY.INT],
+                casting_time: { time: "Action" },
+                components: {
+                    has_verbal: true,
+                },
+                duration: { time: "Instantaneous" },
+                effect: {
+                    attack: true,
+                    damage: {
+                        roll: {
+                            num: 1,
+                            dice: DICE.D8,
+                        },
+                        type: DAMAGE_TYPE.LIGHTNING,
+                    },
+                    save: {
+                        effect_on_fail: "The target must succeed on a Strength saving throw or be pulled up to 10 feet in a straight line toward you and then take 1d8 lightning damage if it is within 5 feet of you.",
+                        stat: ABILITY.STR,
+                    },
+                },
+                proficiency_bonus: character.getProficiencyBonus(),
+                range: "15-foot radius",
+            }));
+            character.spells.push(new Spell({
+                name: "Chromatic Orb",
+                description: [
+                    "You hurl an orb of energy at a target within range. Choose Acid, Cold, Fire, Lightning, Poison, or Thunder for the type of orb you create, and then make a ranged spell attack against the target. On a hit, the target takes 3d8 damage of the chosen type.",
+                    "If you roll the same number on two or more of the d8s, the orb leaps to a different target of your choice within 30 feet of the target. Make an attack roll against the new target, and make a new damage roll. The orb can't leap again unless you cast the spell with a level 2+ spell slot.",
+                    "Using a Higher-Level Spell Slot. The damage increases by 1d8 for each spell slot level above 1. The orb can leap a maximum number of times equal to the level of the slot expended, and a creature can be targeted only once by each casting of this spell.",
+                ],
+                casting_stat: character.ability_scores[ABILITY.INT],
+                casting_time: { time: "Action" },
+                components: {
+                    has_verbal: true,
+                    has_somatic: true,
+                    has_material: true,
+                    material: "a diamond worth 50+ GP",
+                },
+                duration: { time: "Instantaneous" },
+                effect: {
+                    attack: true,
+                    damage: {
+                        roll: {
+                            num: 3,
+                            dice: DICE.D8,
+                        },
+                        type: DAMAGE_TYPE.ACID,
+                    },
+                },
+                proficiency_bonus: character.getProficiencyBonus(),
+                range: "90 feet",
+            }));
+            character.spells.push(new Spell({
+                name: "Mage Armor",
+                description: "You touch a willing creature who isn't wearing armor. Until the spell ends, the target's base AC becomes 13 plus its Dexterity modifier. The spell ends early if the target dons armor.",
+                casting_stat: character.ability_scores[ABILITY.INT],
+                casting_time: { time: "Action" },
+                components: {
+                    has_verbal: true,
+                    has_somatic: true,
+                    has_material: true,
+                    material: "a piece of cured leather",
+                },
+                duration: { time: "8 hours" },
+                effect: null,
+                proficiency_bonus: character.getProficiencyBonus(),
+                range: "Touch",
+            }));
+            character.spells.push(new Spell({
+                name: "Magic Missile",
+                description: [
+                    "You create three glowing darts of magical force. Each dart strikes a creature of your choice that you can see within range. A dart deals 1d4 + 1 Force damage to its target. The darts all strike simultaneously, and you can direct them to hit one creature or several.",
+                    "Using a Higher-Level Spell Slot. The spell creates one more dart for each spell slot level above 1.",
+                ],
+                casting_stat: character.ability_scores[ABILITY.INT],
+                casting_time: { time: "Action" },
+                components: {
+                    has_verbal: true,
+                    has_somatic: true,
+                },
+                duration: { time: "Instantaneous" },
+                effect: {
+                    damage: {
+                        roll: {
+                            num: 1,
+                            dice: DICE.D4,
+                            modifiers: [1],
+                        },
+                        type: DAMAGE_TYPE.FORCE,
+                    },
+                    
+                },
+                proficiency_bonus: character.getProficiencyBonus(),
+                range: "120 feet",
+            }));
+            character.spells.push(new Spell({
+                name: "Shadow Blade",
+                description: [
+                    "You weave together threads of shadow to create a sword of solidified gloom in your hand. This magic sword lasts until the spell ends. It counts as a simple melee weapon with which you are proficient. It deals 2d8 psychic damage on a hit and has the finesse, light, and thrown properties (range 20/60). In addition, when you use the sword to attack a target that is in dim light or darkness, you make the attack roll with advantage.",
+                    "If you drop the weapon or throw it, it dissipates at the end of the turn. Thereafter, while the spell persists, you can use a bonus action to cause the sword to reappear in your hand.",
+                    " At Higher Levels. When you cast this spell using a 3rd- or 4th-level spell slot, the damage increases to 3d8. When you cast it using a 5th- or 6th-level spell slot, the damage increases to 4d8. When you cast it using a spell slot of 7th level or higher, the damage increases to 5d8.",
+                ],
+                casting_stat: character.ability_scores[ABILITY.INT],
+                casting_time: { time: "Bonus action" },
+                components: {
+                    has_verbal: true,
+                    has_somatic: true,
+                },
+                duration: { time: "1 minute", concentration: true },
+                effect: {
+                    attack: true,
+                    damage: {
+                        roll: {
+                            num: 2,
+                            dice: DICE.D8,
+                            modifiers: [character.ability_scores[ABILITY.INT]],
+                        },
+                        type: DAMAGE_TYPE.PSYCHIC,
+                    },
+                    
+                },
+                proficiency_bonus: character.getProficiencyBonus(),
+                range: "Self",
+            }));
+
+            character.spells.forEach(spell => {
+                document.getElementById("spell").innerHTML += spell.toShortHTML();
+            });
+        </script>
+        <script src="scripts.js"></script>
+    </body>
+</html>

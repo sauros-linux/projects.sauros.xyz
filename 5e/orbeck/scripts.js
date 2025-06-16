@@ -15,61 +15,6 @@ async function getData(url) {
     }
 }
 
-class Roll {
-    dice = "d20";
-    num = "1";
-    modifiers = [];
-    extra_rolls = [];
-
-    getModifier() {
-        var mod = 0;
-        this.modifiers.forEach(modifier => {
-            mod += modifier;
-        });
-        return mod;
-    }
-
-    getModifierString() {
-        var mod = this.getModifier();
-        if (mod == 0)
-            return "";
-        else
-            return `${(mod >= 0 ? "+" : "-")}${mod}`;
-    }
-
-    toString() {
-        var extra_roll_strings = "";
-        this.extra_rolls.forEach(extra_roll => {
-            extra_roll_strings += `+${extra_roll.toString()}`;
-        });
-        if (this.dice == "d20")
-            return `${this.getModifierString()}${extra_roll_strings}`;
-        else
-            return `${this.num}${this.dice}${this.getModifierString()}${extra_roll_strings}`;
-    }
-}
-
-class Spell {
-    constructor(spell) {
-        this.name = spell["name"];
-        this.level = spell["level"];
-        this.casting_time = spell["casting_time"];
-        this.range_area = spell["range_area"];
-        this.components = spell["components"];
-        this.duration = spell["duration"];
-        this.source = spell["source"];
-        this.description = spell["description"];
-    }
-
-    toRow() {
-        return `<tr>
-                    <td>${this.name}</td>
-                    <td><button label="${this.name} (To Hit)" class="rollable">${add_sign(to_hit)}</button></td>
-                    <td><button label="${this.name} (Damage)" class="rollable">${render_text(spell["damage"])}</button></td>
-                </tr>`;
-    }
-}
-
 function add_sign(value) {
     if (value >= 0)
         return `+${value}`;
@@ -207,18 +152,18 @@ function get_roll(str, type = "normal") {
     }
 }
 
-function get_rollable_button(label, roll_string) {
-    return `<button class="rollable" label="${label}">${roll_string}</button>`;
+function get_rollable_button(label, type, roll_string) {
+    return `<button class="rollable" label="${label}" type="${type}">${roll_string}</button>`;
 }
 
 function get_roll_template(button, type = "normal") {
     switch (type) {
         case "advantage":
-            return `&{template:default} {{name=${document.getElementById("name").innerText}}} {{${button.getAttribute("label")}=[[${get_roll(button.innerText, "advantage")}]]}}`;
+            return `&{template:default} {{name=${button.getAttribute("label")} (${document.getElementById("name").innerText})}} {{${button.getAttribute("label")}=[[${get_roll(button.innerText, "advantage")}]]}}`;
         case "disadvantage":
-            return `&{template:default} {{name=${document.getElementById("name").innerText}}} {{${button.getAttribute("label")}=[[${get_roll(button.innerText, "disadvantage")}]]}}`;
+            return `&{template:default} {{name=${button.getAttribute("label")} (${document.getElementById("name").innerText})}} {{${button.getAttribute("label")}=[[${get_roll(button.innerText, "disadvantage")}]]}}`;
         default:
-            return `&{template:default} {{name=${document.getElementById("name").innerText}}} {{${button.getAttribute("label")}=[[${get_roll(button.innerText)}]]}}`;
+            return `&{template:default} {{name=${button.getAttribute("label")} (${document.getElementById("name").innerText})}} {{${button.getAttribute("label")}=[[${get_roll(button.innerText)}]]}}`;
     }
 }
 
@@ -291,11 +236,11 @@ function parse_character() {
         document.getElementById(ability).innerText = base_score;
 
         var mod = get_stat_modifier(base_score);
-        document.getElementById(ability + "_mod").innerHTML = get_rollable_button(`${get_stat_label(ability)}`, (mod >= 0 ? "+" : "") + mod.toString());
-        document.getElementById(ability + "_save").innerHTML = get_rollable_button(`${get_stat_label(ability)} Save`, (mod >= 0 ? "+" : "") + mod.toString());
+        document.getElementById(ability + "_mod").innerHTML = get_rollable_button(`${get_stat_label(ability)}`, "", (mod >= 0 ? "+" : "") + mod.toString());
+        document.getElementById(ability + "_save").innerHTML = get_rollable_button(`${get_stat_label(ability)}`, "Save", (mod >= 0 ? "+" : "") + mod.toString());
     }
 
-    document.getElementById("prof").innerHTML           = get_rollable_button(`Proficiency Bonus`, (get_proficiency_bonus() >= 0 ? "+" : "") + get_proficiency_bonus().toString());    
+    document.getElementById("prof").innerHTML           = get_rollable_button(`Proficiency Bonus`, "", (get_proficiency_bonus() >= 0 ? "+" : "") + get_proficiency_bonus().toString());    
     document.getElementById("inspiration").innerHTML    = `<input type="checkbox">`;
 
     for (var i = 0; i < character_json["equipment"].length; i++) {
@@ -354,9 +299,12 @@ function parse_character() {
 
     attacks.forEach(attack => {
         document.getElementById("attacks").children[0].innerHTML += `<tr>
+                <td></td>
                 <td>${attack["name"]}</td>
-                <td><button label="${attack["name"]} (To Hit)" class="rollable">${attack["to_hit"]}</button></td>
-                <td><button label="${attack["name"]} (Damage)" class="rollable">${attack["damage"]}</button></td>
+                <td></td>
+                <td></td>
+                <td><button label="${attack["name"]}" type="To Hit" class="rollable">${attack["to_hit"]}</button></td>
+                <td><button label="${attack["name"]}" type="Damage" class="rollable">${attack["damage"]}</button></td>
             </tr>`;
     });
 
@@ -415,7 +363,7 @@ function parse_character() {
             previous_spell_level = spell["level"];
 
             document.getElementById("attacks").children[0].innerHTML += `<tr>
-                <th colspan="2">LEVEL ${spell["level"]} SPELLS</th>
+                <th colspan="5">LEVEL ${spell["level"]} SPELLS</th>
                 <th><input type="number" min="0" max="${get_max_spell_slots(spell["level"])}" value="${get_max_spell_slots(spell["level"])}"/></th>
             </tr>`;
         }
@@ -423,24 +371,37 @@ function parse_character() {
             var to_hit = eval(render_text(spell["to_hit"]));
 
             document.getElementById("attacks").children[0].innerHTML += `<tr>
-                    <td>${spell["name"]}</td>
+                    <td colspan="4">${spell["name"]}</td>
                     <td><button label="${spell["name"]} (To Hit)" class="rollable">${add_sign(to_hit)}</button></td>
                     <td><button label="${spell["name"]} (Damage)" class="rollable">${render_text(spell["damage"])}</button></td>
                 </tr>`;
         }
         else if ("save" in spell) {
             document.getElementById("attacks").children[0].innerHTML += `<tr>
-                    <td>${spell["name"]}</td>
+                    <td colspan="4">${spell["name"]}</td>
                     <td><button label="${spell["name"]} (Save)" description="${spell["description"]}" class="non_rollable">${spell["save"]}</button></td>
                     <td><button label="${spell["name"]} (Damage)" class="rollable">${render_text(spell["damage"])}</button></td>
                 </tr>`;
         }
         else {
             document.getElementById("attacks").children[0].innerHTML += `<tr>
-                    <td>${spell["name"]}</td>
+                    <td colspan="5">${spell["name"]}</td>
                     <td><button label="${spell["name"]}" description="${spell["description"]}" class="non_rollable"></button></td>
                 </tr>`;
         }
+    });
+
+    var previous_spell_level = 0;
+    character.spells.forEach(spell => {
+        if (spell["level"] != previous_spell_level) {
+            previous_spell_level = spell["level"];
+
+            document.getElementById("attacks").children[0].innerHTML += `<tr>
+                <th colspan="5">LEVEL ${spell["level"]} SPELLS</th>
+                <th><input type="number" min="0" max="${get_max_spell_slots(spell["level"])}" value="${get_max_spell_slots(spell["level"])}"/></th>
+            </tr>`;
+        }
+        document.getElementById("attacks").children[0].innerHTML += spell.toShortHTML();
     });
 
     if (has_spell("Mage Armor")) {

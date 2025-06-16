@@ -1,0 +1,470 @@
+@font-face { font-family: 'Modesto Condensed Bold'; src: url('modesto-condensed-bold.ttf'); }
+@font-face { font-family: 'Bookmania'; src: url("Fontspring-DEMO-bookmania-regular.otf"); }
+@font-face { font-family: 'FF Scala Sans'; src: url("ScalaSans.otf"); }
+
+@font-face { font-family: 'Sneakers Pro Medium'; src: url("Sneakers Pro Medium.ttf"); }
+
+body {
+    font-family: "Sneakers Pro Medium";
+
+    color: #BBBBBB;
+    background-color: #222222;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin: 4px 0px;
+    font-variant: small-caps;
+}
+h1 {
+    margin: 16px 0px 8px 0px;
+    color: #D29A38;
+}
+h2 {
+    margin: 6px 0px 6px 0px;
+    color: #D29A38;
+    border-bottom: 1px solid #D29A38;
+    text-align: center;
+}
+h3 {
+    margin: 4px 0px 4px 0px;
+    color: #D29A38;
+    border-bottom: 1px solid #D29A38;
+    text-align: center;
+}
+h4, h5, h6 {
+    display: inline-block;
+    color: #BBBBBB;
+    font-style: italic;
+}
+h4::after, h5::after, h6::after {
+    content: ".";
+    font-style: italic;
+}
+h4.collapsible::after, h5.collapsible::after, h6.collapsible::after {
+    display: none;
+}
+p, li {
+    margin: 6px 0px;
+}
+a {
+    font-weight: bold;
+    color: #7DB6E8;
+    text-decoration: none;
+}
+
+.flex {
+    display: flex;
+}
+.flex > * {
+    flex: 1;
+}
+
+.container {
+    display: flex;
+    margin: 12px 4px;
+    width: calc(100% - 2 * 2px - 2 * 12px);
+}
+
+.inset {
+    margin: 6px 0px;
+    padding: 4px;
+    border-radius: 6px;
+    background-color: #323431;
+}
+.inset > h4::after {
+    display: none;
+}
+
+fieldset {
+    padding: 8px;
+    
+    border: 1px solid #444444;
+    border-radius: 6px;
+
+    background-color: #383838;
+}
+
+#class_list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+#class_list > div {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+.value-list > li > p {
+    display: inline;
+    margin: 0px;
+}
+
+table {
+    width: calc(100% - 18px);
+    margin: 8px;
+    table-layout: fixed;
+    border: 1px solid #444444;
+    border-collapse: collapse;
+    border-spacing: 8px;
+    overflow: hidden;
+}
+table.invisible {
+    width: calc(100% + 24px);
+    margin: -12px;
+    table-layout: fixed;
+    border: 0px solid #444444;
+    border-collapse: separate;
+    border-spacing: 12px;
+    overflow: scroll;
+}
+th {
+    padding: 4px 8px;
+    font-weight: bold;
+    color: #D29A38;
+    background-color: #222222;
+}
+tr, td {
+    padding: 4px;
+}
+tr:nth-child(even) {
+    background-color: #2D2D2D;
+}
+td {
+    text-align: center;
+}
+table.invisible > * > tr, .invisible > * > tr > td {
+    padding: 0px;
+}
+table.invisible > * > tr:nth-child(even) {
+    background-color: unset;
+}
+.subtable {
+    width: 100%;
+    height: 200px;
+    margin: 0;
+}
+
+input, select, button {
+    width: 100%;
+    height: 100%;
+    padding: 6px 4px 4px 4px;
+    box-sizing: border-box;
+    font-family: "Sneakers Pro Medium";
+
+    font-size: small;
+    border-radius: 6px 6px 0px 0px;
+    border-width: 0px 0px 1px 0px;
+    border-style: solid;
+    border-color: #444444;
+    color: #BBBBBB;
+    background-color: #222222;
+
+    transition: all 0.125s ease-in-out;
+}
+input:hover, select:hover, button:hover {
+    background-color: #565656;
+}
+input:focus, select:focus, button:focus {
+    background-color: #565656;
+    outline-color: #444444;
+    outline-style: solid;
+    outline-width: 1px 1px 0px 1px;
+}
+
+button {
+    cursor: pointer;
+    border-radius: 6px;
+    border-width: 1px;
+}
+.stat_modifier button {
+    width: unset;
+    padding: 8px;
+    font-size: unset;
+}
+
+.level {
+    position: relative;
+    display: inline-block;
+}
+.collapsible {
+    width: calc(100%);
+    height: unset;
+    margin: -2px;
+    padding: 2px;
+    border-radius: 6px 6px 0px 0px;
+    cursor: pointer;
+
+    transition: all 0.1s ease-in-out;
+}
+.collapsible:hover {
+    background-color: rgba(0,0,0,0.1);
+}
+.collapsible::after {
+    content: "";
+    font-size: 0.5em;
+    float: right;
+    transform: translateY(50%);
+}
+.collapsible.expand::after {
+    content: "Expand";
+}
+    /*margin: 4px 0px;
+    padding: 8px 6px;
+    box-sizing: border-box;
+    border-radius: 6px 6px 0px 0px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #444444;
+    background-color: #222222;
+    text-align: left;
+    cursor: pointer;
+}
+.collapsible:hover {
+    background-color: #565656;
+}*/
+/*.collapsible::before {
+    display: inline-block;
+    content: attr(data-descr);
+    padding-right: 6px;
+    min-width: 55px;
+}*/
+
+label {
+    font-family: "Sneakers Pro Medium";
+    font-size: small;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-left: 2px;
+}
+
+td:has(> .value-list), div:has(> .value-list) {
+    position: relative;
+}
+.value-list {
+    position: absolute;
+    left: -1px;
+    margin: 0px;
+    padding: 0px;
+    z-index: 5;
+
+    width: 100%;
+    transition: all 0.125s ease-in-out;
+}
+
+.value-list {
+    list-style: none;
+    overflow: hidden;
+    max-height: 0;
+
+    font-size: small;
+    border: 0px solid #444444;
+    border-radius: 0px 0px 6px 6px;
+    background-color: #565656;
+}
+.value-list.open {
+    max-height: 320px;
+    overflow: auto;
+
+    border-width: 0px 1px 1px 1px;
+}
+.value-list > li {
+    position: relative;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    opacity: 1;
+
+    margin: 0px;
+    padding: 2px 0px 2px 4px;
+}
+.value-list > li:hover {
+    background-color: #333333;
+}
+.value-list > li.closed {
+    max-height: 0;
+    overflow: hidden;
+    display: none;
+    margin: 0px;
+    padding: 0px;
+    opacity: 0;
+}
+.value-list > li.sub {
+    padding: 2px 0px 2px 16px;
+}
+
+.hidden {
+    display: none;
+    overflow: hidden;
+}
+
+.source {
+    padding-left: 4px;
+    color: #D29A38;
+}
+.source:before {
+    visibility: hidden;
+    opacity: 0;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 2px 4px;
+    transition: opacity 1s ease-in-out;
+
+    position: absolute;
+    z-index: 1;
+    bottom: 110%;
+    transform: translateX(calc(-33% - 2px));
+}
+.source:hover:before {
+    opacity: 1;
+    visibility: visible;
+}
+.source.PHB     { color: #337ab7; }
+.source.MM      { color: green; }
+.source.DMG     { color: purple; }
+.source.VGM     { color: gray; }
+.source.XGE     { color: #ba7c00; }
+.source.MTF     { color: #1f6e7b; }
+.source.AI      { color: #5baf04; }
+.source.TCE     { color: #a24d08; }
+.source.FTD     { color: #b82a15; }
+.source.MPMM    { color: #5c758d; }
+.source.AAG     { color: #056b97; }
+.source.BAM     { color: #056b97; }
+.source.BGG     { color: #469cb7; }
+.source.MPP     { color: #a23087; }
+.source.SatO    { color: #a23087; }
+.source.BMT     { color: #694165; }
+.source.DMTCRG  { color: #694165; }
+.source.SCAG    { color: #76af76; }
+.source.GRR     { color: #bfa76c; }
+.source.ERLW    { color: #983426; }
+.source.EGW     { color: #855a6e; }
+.source.MOT     { color: #556b2e; }
+.source.VRGR    { color: #bd000f; }
+.source.SCC     { color: #be9c56; }
+.source.TDCSR   { color: #642e4b; }
+.source.PSZ     { color: #6f8a2d; }
+.source.PSI     { color: #5d4696; }
+.source.PSK     { color: #a27135; }
+.source.PSA     { color: #eec276; }
+.source.OSA     { color: #933d0f; }
+.source.PSX     { color: #bb2722; }
+.source.PSD     { color: #5db7da; }
+.source.HWCS    { color: #d0914b; }
+
+.source.PHB:before      { content: "Player's Handbook"; }
+.source.MM:before       { content: "Monster Manual"; }
+.source.DMG:before      { content: "Dungeon Master's Guide"; }
+.source.VGM:before      { content: "Volo's Guide to Monsters"; }
+.source.XGE:before      { content: ""; }
+.source.MTF:before      { content: ""; }
+.source.AI:before       { content: ""; }
+.source.TCE:before      { content: ""; }
+.source.FTD:before      { content: ""; }
+.source.MPMM:before     { content: ""; }
+.source.AAG:before      { content: ""; }
+.source.BAM:before      { content: ""; }
+.source.BGG:before      { content: ""; }
+.source.MPP:before      { content: ""; }
+.source.SatO:before     { content: ""; }
+.source.BMT:before      { content: ""; }
+.source.DMTCRG:before   { content: ""; }
+.source.SCAG:before     { content: ""; }
+.source.GRR:before      { content: ""; }
+.source.ERLW:before     { content: ""; }
+.source.EGW:before      { content: ""; }
+.source.MOT:before      { content: ""; }
+.source.VRGR:before     { content: ""; }
+.source.SCC:before      { content: ""; }
+.source.TDCSR:before    { content: ""; }
+.source.PSZ:before      { content: ""; }
+.source.PSI:before      { content: ""; }
+.source.PSK:before      { content: ""; }
+.source.PSA:before      { content: ""; }
+.source.OSA:before      { content: ""; }
+.source.PSX:before      { content: ""; }
+.source.PSD:before      { content: ""; }
+.source.HWCS:before     { content: ""; }
+
+.stat {
+    width: 100%
+}
+.stat > span {
+    display: block;
+    position: relative;
+    width: 100%;
+    text-align: center;
+}
+.stat_label {
+    font-size: 0.9em;
+    font-weight: bold;
+    color: #999999;
+}
+.stat_modifier {
+    font-size: 1.25em;
+    padding: 4px 0px;
+    font-weight: bold;
+}
+.stat_total {
+    font-size: 0.9em;
+    color: #999999;
+}
+
+@media only screen and (max-width: 768px) {
+    h1, h2, h3, h4, h5, h6 {
+        font-size: 1.5em;
+    }
+    p {
+        font-size: 1.2em;
+    }
+    input, select, label {
+        font-size: 1.1em;
+    }
+    .value-list > li {
+        font-size: 1.3em;
+    }
+}
+
+.card {
+    position: relative;
+    width: 2.5in;
+    height: 3.5in;
+
+    background-image: url("https://raw.githubusercontent.com/TheGiddyLimit/homebrew-img/refs/heads/main/img/ObojimaTallGrass/Book/obojima-island-wave.webp");
+    background-size: 200%;
+    background-position-x: 50%;
+    background-repeat: no-repeat;
+
+    border: solid rgba(215,153,67,1) 1px;
+}
+
+.card > h3 {
+    margin: 0;
+    padding: 2px;
+    background-color: rgba(156,219,241,1);
+}
+
+.card > img {
+    position: absolute;
+    width: 100%;
+    top: 24px;
+    left: 0;
+}
+
+.card > div {
+    z-index: 4;
+    height: calc(100% - 96px - 24px - 1px);
+    margin-top: 96px;
+    display: flex;
+    background-image: url("./backdrop.png");
+    background-size: cover;
+}
+
+.card > div > p {
+    margin: 4px;
+    font-size: 10px;
+    align-self: flex-end;
+}
