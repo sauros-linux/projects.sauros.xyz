@@ -356,7 +356,7 @@ function parse_character() {
             });
         }
     });
-
+/*
     var previous_spell_level = 0;
     spells.forEach(spell => {
         if (spell["level"] != previous_spell_level) {
@@ -390,7 +390,7 @@ function parse_character() {
                 </tr>`;
         }
     });
-
+*/
     var previous_spell_level = 0;
     character.spells.forEach(spell => {
         if (spell["level"] != previous_spell_level) {
