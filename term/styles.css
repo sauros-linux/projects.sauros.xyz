@@ -1,0 +1,43 @@
+
+html, body {
+    margin: 0px;
+    padding: 0px;
+}
+
+body {
+    background-color: #000000;
+    color: #FFFFFF;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 18px;
+}
+
+.box {
+    border: #FFFFFF 1px solid;
+    display: inline-block;
+    margin: calc(21px - 1px) calc(18px - 1px);
+    padding: 0px;
+    white-space: nowrap
+}
+
+ul {
+    display: table;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+li {
+    display: table;
+    font-weight: bold;
+    margin: 21px 18px;
+    user-select: none;
+}
+
+li.selected {
+    background-color: #FFFFFF;
+    color: #000000;
+}
+
+p {
+    margin: 3px;
+}

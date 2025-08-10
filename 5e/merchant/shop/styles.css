@@ -1,0 +1,44 @@
+
+@font-face { font-family: 'Chiaro'; src: url('chiarostd_b.otf'); }
+@font-face { font-family: 'Kokin Edo'; src: url('FOT-KokinEdo Std EB.otf'); }
+@font-face { font-family: 'Rodin'; src: url('FOT-Rodin Pro DB.otf'); }
+
+body {
+    font-family: "Rodin";
+
+    color: #BBBBBB;
+    background-color: #222222;
+}
+
+#stock {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+}
+
+.item {
+    width: calc(50% - 8px * 2);
+    margin: 8px;
+    padding: 8px;
+
+    table-layout: fixed;
+
+    color: #DAA54F;
+    background-color: #F6F2E6;
+    border: 2px solid #DAA54F;
+    border-radius: 4px;
+}
+.img {
+    width: 100%;
+}
+.name {
+    margin: 8px;
+    font-size: larger;
+}
+.count {
+    font-size: smaller;
+}
+.cost {
+    padding: 8px;
+    font-size: smaller;
+}

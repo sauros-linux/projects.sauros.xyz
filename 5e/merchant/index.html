@@ -264,8 +264,6 @@
                 level: 5,
                 spells: [],
             });
-
-            let acid_splash = get_spell("XPHB", "Acid Splash");
             
             character.spells.push(new Spell({
                 name: "Blade Ward",
@@ -439,7 +437,24 @@
                 level: 1,
                 range: "Self",
             }));
-            
+            character.spells.push(new Spell({
+                name: "False Life",
+                description: [
+                    "You gain 2d4 + 4 Temporary Hit Points.",
+                    "Using a Higher-Level Spell Slot. You gain 5 additional Temporary Hit Points for each spell slot level above 1.",
+                ],
+                casting_stat: character.ability_scores[ABILITY.INT],
+                casting_time: { time: "Action" },
+                components: {
+                    has_verbal: true,
+                    has_somatic: true,
+                    ha
+                },
+                duration: { time: "1 hour" },
+                effect: null,
+                level: 1,
+                range: "Self",
+            }));
             character.spells.push(new Spell({
                 name: "Disguise Self",
                 description: [

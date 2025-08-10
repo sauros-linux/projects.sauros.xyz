@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="styles.css"/>
+    </head>
+    <body>
+        <div id="description"></div>
+        <div id="stock"></div>
+        <script>
+            let stock = [
+                { name: "Bottled Bombs", cost: 15, count: 2, img: "https://raw.githubusercontent.com/TheGiddyLimit/homebrew-img/refs/heads/main/img/ObojimaTallGrass/Potions/Combat/bottled-bomb.webp" },
+                { name: "Boom Beri", cost: 5, count: 3, img: "https://raw.githubusercontent.com/TheGiddyLimit/homebrew-img/refs/heads/main/img/ObojimaTallGrass/Ingredients/boom-beri.webp" },
+                { name: "Bundle of Driko Twigs", cost: 5, count: 1, img: "https://raw.githubusercontent.com/TheGiddyLimit/homebrew-img/refs/heads/main/img/ObojimaTallGrass/Ingredients/bundle-of-driko-twigs.webp" },
+            ]
+
+            stock.forEach(item => {
+                document.getElementById("stock").innerHTML += `<table class="item">
+                    <tr>
+                        <td rowspan="2"><img class="img" src="${item.img}" /></td>
+                        <td colspan="2"><span class="name">${item.name}</span></td>
+                        <td><span class="count">x${item.count}</span></td>
+                    </tr>
+                    <tr>
+                        <td colspan="3"><span class="cost">${item.cost} GP</span></td>
+                    </tr>
+                </table>`;
+            });
+        </script>
+    </body>
+</html>
