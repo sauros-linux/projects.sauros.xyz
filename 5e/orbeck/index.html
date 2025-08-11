@@ -214,24 +214,24 @@
                     <tr>
                         <th colspan="4">SKILLS</th>
                     </tr>
-                    <tr><td colspan="2">Acrobatics</td>     <td class="stat_label">DEX</td><td id="acrobatics_mod">+1</td></tr>
-                    <tr><td colspan="2">Animal Handling</td><td class="stat_label">WIS</td><td id="acnimal_handling_mod">+1</td></tr>
-                    <tr><td colspan="2">Arcana</td>         <td class="stat_label">INT</td><td id="arcana_mod">+1</td></tr>
-                    <tr><td colspan="2">Athletics</td>      <td class="stat_label">STR</td><td id="athletics_mod">+1</td></tr>
-                    <tr><td colspan="2">Deception</td>      <td class="stat_label">CHA</td><td id="deception_mod">+1</td></tr>
-                    <tr><td colspan="2">History</td>        <td class="stat_label">INT</td><td id="history_mod">+1</td></tr>
-                    <tr><td colspan="2">Insight</td>        <td class="stat_label">WIS</td><td id="insight_mod">+1</td></tr>
-                    <tr><td colspan="2">Intimidation</td>   <td class="stat_label">CHA</td><td id="intimidation_mod">+1</td></tr>
-                    <tr><td colspan="2">Investigation</td>  <td class="stat_label">INT</td><td id="investigation_mod">+1</td></tr>
-                    <tr><td colspan="2">Medicine</td>       <td class="stat_label">WIS</td><td id="medicine_mod">+1</td></tr>
-                    <tr><td colspan="2">Nature</td>         <td class="stat_label">INT</td><td id="nature_mod">+1</td></tr>
-                    <tr><td colspan="2">Perception</td>     <td class="stat_label">WIS</td><td id="perception_mod">+1</td></tr>
-                    <tr><td colspan="2">Performance</td>    <td class="stat_label">CHA</td><td id="performance_mod">+1</td></tr>
-                    <tr><td colspan="2">Persuasion</td>     <td class="stat_label">CHA</td><td id="persuasion_mod">+1</td></tr>
-                    <tr><td colspan="2">Religion</td>       <td class="stat_label">INT</td><td id="religion_mod">+1</td></tr>
-                    <tr><td colspan="2">Slight of Hand</td> <td class="stat_label">DEX</td><td id="slight_of_hand_mod">+1</td></tr>
-                    <tr><td colspan="2">Stealth</td>        <td class="stat_label">DEX</td><td id="stealth_mod">+1</td></tr>
-                    <tr><td colspan="2">Survival</td>       <td class="stat_label">WIS</td><td id="survival_mod">+1</td></tr>
+                    <tr><td colspan="2">Acrobatics</td>     <td class="stat_label">DEX</td><td id="acrobatics_mod"></td></tr>
+                    <tr><td colspan="2">Animal Handling</td><td class="stat_label">WIS</td><td id="animal_handling_mod"></td></tr>
+                    <tr><td colspan="2">Arcana</td>         <td class="stat_label">INT</td><td id="arcana_mod"></td></tr>
+                    <tr><td colspan="2">Athletics</td>      <td class="stat_label">STR</td><td id="athletics_mod"></td></tr>
+                    <tr><td colspan="2">Deception</td>      <td class="stat_label">CHA</td><td id="deception_mod"></td></tr>
+                    <tr><td colspan="2">History</td>        <td class="stat_label">INT</td><td id="history_mod"></td></tr>
+                    <tr><td colspan="2">Insight</td>        <td class="stat_label">WIS</td><td id="insight_mod"></td></tr>
+                    <tr><td colspan="2">Intimidation</td>   <td class="stat_label">CHA</td><td id="intimidation_mod"></td></tr>
+                    <tr><td colspan="2">Investigation</td>  <td class="stat_label">INT</td><td id="investigation_mod"></td></tr>
+                    <tr><td colspan="2">Medicine</td>       <td class="stat_label">WIS</td><td id="medicine_mod"></td></tr>
+                    <tr><td colspan="2">Nature</td>         <td class="stat_label">INT</td><td id="nature_mod"></td></tr>
+                    <tr><td colspan="2">Perception</td>     <td class="stat_label">WIS</td><td id="perception_mod"></td></tr>
+                    <tr><td colspan="2">Performance</td>    <td class="stat_label">CHA</td><td id="performance_mod"></td></tr>
+                    <tr><td colspan="2">Persuasion</td>     <td class="stat_label">CHA</td><td id="persuasion_mod"></td></tr>
+                    <tr><td colspan="2">Religion</td>       <td class="stat_label">INT</td><td id="religion_mod"></td></tr>
+                    <tr><td colspan="2">Sleight of Hand</td><td class="stat_label">DEX</td><td id="sleight_of_hand_mod"></td></tr>
+                    <tr><td colspan="2">Stealth</td>        <td class="stat_label">DEX</td><td id="stealth_mod"></td></tr>
+                    <tr><td colspan="2">Survival</td>       <td class="stat_label">WIS</td><td id="survival_mod"></td></tr>
                 </table>
                 <table>
                     <tr>
@@ -294,7 +294,26 @@
                         name: "Rogue",
                         level: 1,
                         features: [
-
+                            {
+                                name: "Skill Proficiencies",
+                                type: "proficiencies",
+                                proficiencies: [
+                                    "Sleight of Hand",
+                                    "Deception",
+                                    "Perception",
+                                    "Stealth",
+                                    "Dexterity Saving Throws",
+                                    "Intelligence Saving Throws"
+                                ]
+                            },
+                            {
+                                name: "Expertise",
+                                type: "expertise",
+                                expertise: [
+                                    "Perception",
+                                    "Stealth"
+                                ]
+                            },
                         ]
                     },
                     {
@@ -337,10 +356,17 @@
                                 spellcasting_ability: 3,
                             },
                             {
+                                name: "Scholar",
+                                type: "expertise",
+                                expertise: [
+                                    "Deception"
+                                ]
+                            },
+                            {
                                 name: "Bladesong",
                                 level: 3,
-                                modifiers: [
-                                    
+                                proficiencies: [
+                                    "Performance"
                                 ]
                             },
                             {

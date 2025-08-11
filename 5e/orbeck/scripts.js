@@ -22,41 +22,6 @@ function add_sign(value) {
         return `-${value}`;
 }
 
-function has_feature(feature_name) {
-    for (var i = 0; i < character["class"].length; i++) {
-        for (var j = 0; j < character["class"][i]["features"].length; j++) {
-            if (character["class"][i]["features"][j]["name"] == feature_name && character["class"][i]["level"] >= character["class"][i]["features"][j]["level"])
-                return true;
-        }
-    }
-
-    return false;
-}
-
-function has_spell(spell_name) {
-    for (const character_class of character["class"]) {
-        for (const feature of character_class["features"]) {
-            if (feature["type"] == "spellcasting" && "spells" in feature) {
-                for (const spell of feature["spells"]) {
-                    if (spell[1] == spell_name) {
-                        return true;
-                    }
-                }
-            }
-
-            if (feature["type"] == "feat" && "spells" in feature["feat"]) {
-                for (const spell of feature["feat"]["spells"]) {
-                    if (spell[1] == spell_name) {
-                        return true;
-                    }
-                }
-            }
-        }
-    }
-    
-    return false;
-}
-
 function get_armor_class() {
     var base_ac = 10;
     var modifier = get_stat_modifier(get_stat("dex"));
@@ -175,6 +140,45 @@ function get_proficiency_bonus() {
     return Math.round((get_character_level() + 1) / 4) + 1;
 }
 
+function get_skill_modifier(skill) {
+    let base_modifier = 0;
+    switch (skill) {
+        case "Athletics":
+            base_modifier = get_stat_modifier(get_stat("str"));
+            break;
+        case "Acrobatics":
+        case "Sleight of Hand":
+        case "Stealth":
+            base_modifier = get_stat_modifier(get_stat("dex"));
+            break;
+        case "Arcana":
+        case "History":
+        case "Investigation":
+        case "Nature":
+        case "Religion":
+            base_modifier = get_stat_modifier(get_stat("int"));
+            break;
+        case "Animal Handling":
+        case "Insight":
+        case "Medicine":
+        case "Perception":
+        case "Survival":
+            base_modifier = get_stat_modifier(get_stat("wis"));
+            break;
+        case "Deception":
+        case "Intimidation":
+        case "Performance":
+        case "Persuasion":
+            base_modifier = get_stat_modifier(get_stat("cha"));
+            break;
+    }
+
+    let modifier = base_modifier + (is_proficient(skill) ? get_proficiency_bonus() : 0);
+    modifier += (is_expert(skill) ? get_proficiency_bonus() : 0);
+
+    return modifier;
+}
+
 function get_stat(stat) {
     return parseInt(document.getElementById(stat).innerText);
 }
@@ -184,7 +188,7 @@ function get_stat_label(stat) {
         case "str":
             return "Strength";
         case "dex":
-            return "Dexerity";
+            return "Dexterity";
         case "con":
             return "Constitution";
         case "int":
@@ -244,6 +248,89 @@ function get_roll_template(button, type = "normal") {
 
 function get_non_roll_template(button) {
     return `&{template:default} {{name=${document.getElementById("name").innerText}}} {{${button.getAttribute("label")}=${button.innerText}}} {{Description=${button.getAttribute("description")}}}`;
+}
+
+function has_feature(feature_name) {
+    for (var i = 0; i < character["class"].length; i++) {
+        for (var j = 0; j < character["class"][i]["features"].length; j++) {
+            if (character["class"][i]["features"][j]["name"] == feature_name && character["class"][i]["level"] >= character["class"][i]["features"][j]["level"])
+                return true;
+        }
+    }
+
+    return false;
+}
+
+function has_spell(spell_name) {
+    for (const character_class of character["class"]) {
+        for (const feature of character_class["features"]) {
+            if (feature["type"] == "spellcasting" && "spells" in feature) {
+                for (const spell of feature["spells"]) {
+                    if (spell[1] == spell_name) {
+                        return true;
+                    }
+                }
+            }
+
+            if (feature["type"] == "feat" && "spells" in feature["feat"]) {
+                for (const spell of feature["feat"]["spells"]) {
+                    if (spell[1] == spell_name) {
+                        return true;
+                    }
+                }
+            }
+        }
+    }
+    
+    return false;
+}
+
+function is_expert(skill) {
+    for (const character_class of character["class"]) {
+        for (const feature of character_class["features"]) {
+            if ("expertise" in feature && feature["expertise"].includes(skill)) {
+                return true;
+            }
+        }
+    }
+
+    for (const feature of character["background"]["features"]) {
+        if ("expertise" in feature && feature["expertise"].includes(skill)) {
+            return true;
+        }
+    }
+
+    for (const feature of character["features"]) {
+        if ("expertise" in feature && feature["expertise"].includes(skill)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+function is_proficient(skill) {
+    for (const character_class of character["class"]) {
+        for (const feature of character_class["features"]) {
+            if ("proficiencies" in feature && feature["proficiencies"].includes(skill)) {
+                return true;
+            }
+        }
+    }
+
+    for (const feature of character["background"]["features"]) {
+        if ("proficiencies" in feature && feature["proficiencies"].includes(skill)) {
+            return true;
+        }
+    }
+
+    for (const feature of character["features"]) {
+        if ("proficiencies" in feature && feature["proficiencies"].includes(skill)) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 function render_text(str) {
@@ -319,8 +406,9 @@ async function parse_character() {
         document.getElementById(ability).innerText = base_score;
 
         var mod = get_stat_modifier(base_score);
+        var save = get_stat_modifier(base_score) + (is_proficient(get_stat_label(ability) + " Saving Throws") ? get_proficiency_bonus() : 0) 
         document.getElementById(ability + "_mod").innerHTML = get_rollable_button(`${get_stat_label(ability)}`, "", (mod >= 0 ? "+" : "") + mod.toString());
-        document.getElementById(ability + "_save").innerHTML = get_rollable_button(`${get_stat_label(ability)}`, "Save", (mod >= 0 ? "+" : "") + mod.toString());
+        document.getElementById(ability + "_save").innerHTML = get_rollable_button(`${get_stat_label(ability)}`, "Save", (save >= 0 ? "+" : "") + save.toString());
     }
 
     document.getElementById("prof").innerHTML           = get_rollable_button(`Proficiency Bonus`, "", (get_proficiency_bonus() >= 0 ? "+" : "") + get_proficiency_bonus().toString());    
@@ -442,8 +530,36 @@ async function parse_character() {
         document.getElementById("spells").children[0].innerHTML += spell.toShortHTML();
     });
 
+    let skills = [
+        "Acrobatics",
+        "Animal Handling",
+        "Arcana",
+        "Athletics",
+        "Deception",
+        "History",
+        "Insight",
+        "Intimidation",
+        "Investigation",
+        "Medicine",
+        "Nature",
+        "Perception",
+        "Performance",
+        "Persuasion",
+        "Religion",
+        "Sleight of Hand",
+        "Stealth",
+        "Survival",
+    ];
+    for (const SKILL of skills) {
+        document.getElementById(`${SKILL.toLowerCase().replaceAll(" ", "_")}_mod`).innerHTML = get_rollable_button(
+            SKILL,
+            "",
+            (get_skill_modifier(SKILL) < 0 ? "" : "+") + get_skill_modifier(SKILL)
+        );
+    }
+
     if (has_spell("Mage Armor")) {
-        document.getElementById("ac_table").innerHTML += `<tr>
+        document.getElementById("ac_table").innerHTML = `<tr>
             <td>
                 <label for="mage_armor">Mage Armor?</label>
                 <input type="checkbox" id="mage_armor" name="mage_armor" onchange="document.getElementById('armor_class').innerText = get_armor_class()">

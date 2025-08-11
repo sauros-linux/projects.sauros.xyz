@@ -402,10 +402,12 @@ class Spell {
         
         let spell_attack_damage_button = "";
         if (this.effect.isAttack()) {
+            let i = 0;
             for (const damage of this.effect.damage) {
-                spell_attack_damage_button  += `<button label="${this.name}" text="${this.toRoll(false, false, false, false, false, false, false, true)}" onclick=roll(event)>
+                spell_attack_damage_button  += `<button label="${this.name}" text="${this.toRoll(false, false, false, false, false, false, false, true, i)}" onclick=roll(event)>
             ${damage.toString()}
         </button>`;
+                i++;
             }
         }
         
@@ -420,7 +422,7 @@ class Spell {
         </tr>`;
     }
 
-    toRoll(show_source = false, show_description = false, show_range = false, show_level = false, show_components = false, show_to_hit = false, show_save = false, show_damage = false, advantage = false, disadvantage = false) {
+    toRoll(show_source = false, show_description = false, show_range = false, show_level = false, show_components = false, show_to_hit = false, show_save = false, show_damage = false, advantage = false, disadvantage = false, damage = 0) {
         let modifier = this.getCastingModifier() + this.proficiency_bonus;
 
         let roll_string = `&{template:default} {{name=${this.name} (${document.getElementById("name").innerText})}}`;
@@ -431,7 +433,7 @@ class Spell {
         if (show_components)                        { roll_string += `{{Components=${this.components.toString()}}}`; }
         if (show_to_hit && this.effect.attack)      { roll_string += `{{To Hit=[[${(advantage ? "2d20kh1" : (disadvantage ? "2d20kh1" : "1d20"))}${(modifier >= 0 ? "+" : "-") + modifier}]]}}`; }
         if (show_save   && this.effect.isSave())    { roll_string += `{{Save=${this.effect.save.toString()}}}`; }
-        if (show_damage && this.effect.isAttack())  { roll_string += `{{Damage=[[${this.effect.damage.toString()}]]}}`; }
+        if (show_damage && this.effect.isAttack())  { roll_string += `{{Damage=[[${this.effect.damage[damage].toString()}]]}}`; }
         return roll_string;
     }
 }

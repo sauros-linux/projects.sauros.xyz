@@ -98,6 +98,8 @@ async function get_spell(source, name) {
             result.range = `Self/${SPELL.range.distance.amount} ft.`;
         }
 
+        result.source = SPELL.source + " pg. " + SPELL.page;
+
         return result;
     } else {
         return null;
