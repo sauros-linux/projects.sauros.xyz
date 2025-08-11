@@ -453,3 +453,12 @@ td:has(> .value-list), div:has(> .value-list) {
 #close_button:hover {
     background-color: #DD3333;
 }
+
+.unprepared {
+    font-size: smaller;
+}
+.unprepared > * {
+    font-size: smaller;
+    color: #999999;
+    background-color: #111111;
+}

@@ -12,15 +12,37 @@ function abilityToString(ability, short = false) {
         case ABILITY.STR:
             return short ? "STR" : "Strength";
         case ABILITY.DEX:
-            return short ? "DEX" : "Strength";
+            return short ? "DEX" : "Dexterity";
         case ABILITY.CON:
-            return short ? "CON" : "Strength";
+            return short ? "CON" : "Constitution";
         case ABILITY.INT:
-            return short ? "INT" : "Strength";
+            return short ? "INT" : "Intelligence";
         case ABILITY.WIS:
-            return short ? "WIS" : "Strength";
+            return short ? "WIS" : "Wisdom";
         case ABILITY.CHA:
-            return short ? "CHA" : "Strength";
+            return short ? "CHA" : "Charisma";
+    }
+}
+function abilityFromString(ability) {
+    switch (ability.toLowerCase()) {
+        case "str":
+        case "strength":
+            return ABILITY.STR;
+        case "dex":
+        case "dexterity":
+            return ABILITY.DEX;
+        case "con":
+        case "constitution":
+            return ABILITY.CON;
+        case "int":
+        case "intelligence":
+            return ABILITY.INT;
+        case "wis":
+        case "wisdom":
+            return ABILITY.WIS;
+        case "cha":
+        case "charisma":
+            return ABILITY.CHA;
     }
 }
 const DAMAGE_TYPE = Object.freeze({
@@ -304,6 +326,7 @@ class Spell {
     duration = new Duration();
     effect = new SpellEffect();
     level = 0;
+    prepared = false;
     proficiency_bonus = 2;
     range = "";
     school = SCHOOL.ABJURATION;
@@ -370,15 +393,24 @@ class Spell {
             ${(modifier >= 0 ? "+" : "-") + modifier}
         </button>` : "";
         
+        if (this.effect.isSave()) {
+            this.effect.save.dc = 8 + modifier;
+        }
         let spell_attack_save           = this.effect.isSave()      ? `<button title="${this.effect.save.effect_on_fail.toString()}" text="${this.toRoll(false, false, true, true, true, false, true, false)}" onclick=roll(event)>
             ${this.effect.save.toString()}
         </button>` : "";
         
-        let spell_attack_damage_button  = this.effect.isAttack()    ? `<button label="${this.name}" text="${this.toRoll(false, false, false, false, false, false, false, true)}" onclick=roll(event)>
-            ${this.effect.damage.toString()}
-        </button>` : "";
+        let spell_attack_damage_button = "";
+        if (this.effect.isAttack()) {
+            for (const damage of this.effect.damage) {
+                spell_attack_damage_button  += `<button label="${this.name}" text="${this.toRoll(false, false, false, false, false, false, false, true)}" onclick=roll(event)>
+            ${damage.toString()}
+        </button>`;
+            }
+        }
+        
 
-        return `<tr>
+        return `<tr ${(this.prepared ? "" : "class=\"unprepared\"")}>
             <td><button label="${this.name}" text="${this.toRoll(true, true, true, true, true, true, true, true)}" onclick=roll(event)>Cast</button></td>
             <th onclick="open_description(\`${this.toHTML()}\`)">${this.name}</th>
             <td>${this.casting_time.toShortString()}</td>
@@ -410,6 +442,13 @@ class SpellComponents {
     has_material = false;
     material = "";
 
+    constructor(v = false, s = false, m = false, material = "") {
+        this.has_verbal = v;
+        this.has_somatic = s;
+        this.has_material = m;
+        this.material = material;
+    }
+
     toString() {
         let verbal_string = this.has_verbal ? ("V" + ((this.has_somatic || this.has_material) ? ", " : "")) : "";
         let somatic_string = this.has_somatic ? ("S" + (this.has_material ? ", " : "")) : "";
@@ -420,12 +459,12 @@ class SpellComponents {
 
 class SpellEffect {
     attack = false;
-    damage = null;
+    damage = [];
     description = new Description();
     save = null;
 
     isAttack() {
-        return this.damage != null || this.attack;
+        return this.damage.length != 0 || this.attack;
     }
 
     isSave() {

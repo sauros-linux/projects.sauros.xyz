@@ -14,17 +14,92 @@ async function get_data(url) {
 }
 
 async function get_spell(source, name) {
-    let data = await get_data(`https://5e.tools/data/spells/spells-${source.toLowerCase()}.json`);
+    let data = await get_data(`https://projects.sauros.xyz/5etools-src/data/spells/spells-${source.toLowerCase()}.json`);
     if (data == null) {
         return;
     }
 
     let spell_result = data["spell"].filter((spell) => spell.name == name);
 
-    console.log(spell_result);
-    if (spell_result.length > 1) {
+    if (spell_result.length == 1) {
         const SPELL = spell_result[0];
+
+        let result = new Spell({
+            name: SPELL.name,
+            description: SPELL.entries,
+            level: SPELL.level,
+        });
+
+        if (SPELL.time[0].unit == "action") {
+            result.casting_time = new ActivationTime(
+                `${(SPELL.time[0].number > 1 ? SPELL.time[0].number + " " : "")}Action`,
+            );
+        } else if (SPELL.time[0].unit == "bonus") {
+            result.casting_time = new ActivationTime(
+                `${(SPELL.time[0].number > 1 ? SPELL.time[0].number + " " : "")}Bonus action`,
+            );
+        }
+
+        result.components = new SpellComponents(
+            has_verbal = SPELL.components.v,
+            has_somatic = SPELL.components.s,
+            has_material = SPELL.components.m != null,
+            material = SPELL.components.m != null ? (SPELL.components.m.text ?? SPELL.components.m) : null,
+        );
+
+        if (SPELL.duration[0].type == "timed") {
+            if (SPELL.duration[0].duration.type == "minute") {
+                result.duration = new Duration(
+                    `${SPELL.duration[0].duration.amount} minute${(SPELL.duration[0].duration.amount > 1 ? "s" : "")}`,
+                    SPELL.duration[0].concentration,
+                );
+            } else if (SPELL.duration[0].duration.type == "round") {
+                result.duration = new Duration(
+                    `${SPELL.duration[0].duration.amount} round${(SPELL.duration[0].duration.amount > 1 ? "s" : "")}`,
+                    SPELL.duration[0].concentration,
+                );
+            }
+        } else if (SPELL.duration[0].type == "instant") {
+            result.duration = new Duration(
+                `Instantaneous`,
+                SPELL.duration[0].concentration,
+            );
+        }
+
+        result.effect = new SpellEffect();
+        if (SPELL.damageInflict != null) {
+            for (const damage_roll of result.description.toString().match(/\{@damage [0-9]{1,4}d[0-9]{1,2}[0-9 +\-]{0,9}\}/g)) {
+                let damage = new Damage();
+                damage.type = SPELL.damageInflict[0].charAt(0).toUpperCase() + SPELL.damageInflict[0].slice(1);
+
+                let roll = damage_roll.replace("{@damage ", "").replace("}", "");
+                damage.roll.num = roll.split('d')[0];
+                damage.roll.dice = `d${roll.split('d')[1]}`;
+
+                result.effect.damage.push(damage);
+            }
+
+            if (SPELL.spellAttack != null) {
+                result.effect.attack = true;
+            }
+            if (SPELL.savingThrow != null) {
+                result.effect.save = new Save();
+                result.effect.save.stat = abilityFromString(SPELL.savingThrow[0]);
+            }
+        }
+
+        if (SPELL.range.type == "point") {
+            if (SPELL.range.distance.type == "self") {
+                result.range = "Self";
+            } else if (SPELL.range.distance.type == "feet") {
+                result.range = `${SPELL.range.distance.amount} ft.`;
+            }
+        } else if (SPELL.range.type == "radius") {
+            result.range = `Self/${SPELL.range.distance.amount} ft.`;
+        }
+
+        return result;
     } else {
-        console.log("got multiple spells!");
+        return null;
     }
 }

@@ -23,9 +23,9 @@ function add_sign(value) {
 }
 
 function has_feature(feature_name) {
-    for (var i = 0; i < character_json["class"].length; i++) {
-        for (var j = 0; j < character_json["class"][i]["features"].length; j++) {
-            if (character_json["class"][i]["features"][j]["name"] == feature_name && character_json["class"][i]["level"] >= character_json["class"][i]["features"][j]["level"])
+    for (var i = 0; i < character["class"].length; i++) {
+        for (var j = 0; j < character["class"][i]["features"].length; j++) {
+            if (character["class"][i]["features"][j]["name"] == feature_name && character["class"][i]["level"] >= character["class"][i]["features"][j]["level"])
                 return true;
         }
     }
@@ -34,11 +34,22 @@ function has_feature(feature_name) {
 }
 
 function has_spell(spell_name) {
-    for (var i = 0; i < character_json["class"].length; i++) {
-        if ("spells" in character_json["class"][i]) {
-            for (var j = 0; j < character_json["class"][i]["spells"].length; j++) {
-                if (character_json["class"][i]["spells"][j]["name"] == spell_name)
-                    return true;
+    for (const character_class of character["class"]) {
+        for (const feature of character_class["features"]) {
+            if (feature["type"] == "spellcasting" && "spells" in feature) {
+                for (const spell of feature["spells"]) {
+                    if (spell[1] == spell_name) {
+                        return true;
+                    }
+                }
+            }
+
+            if (feature["type"] == "feat" && "spells" in feature["feat"]) {
+                for (const spell of feature["feat"]["spells"]) {
+                    if (spell[1] == spell_name) {
+                        return true;
+                    }
+                }
             }
         }
     }
@@ -61,8 +72,8 @@ function get_armor_class() {
 
 function get_character_level() {
     var level = 0;
-    for (var i = 0; i < character_json["class"].length; i++) {
-        level += character_json["class"][i]["level"];
+    for (var i = 0; i < character["class"].length; i++) {
+        level += character["class"][i]["level"];
     }
     return level;
 }
@@ -261,39 +272,47 @@ function send_non_roll(button) {
     }, "*")
 }
 
-function parse_character() {
+async function parse_character() {
     var attacks = [];
-    var spells = [];
 
     document.getElementById("name").innerText = character_json["name"];
 
     for (let ability in character_json["abilities"]) {
-        var base_score = character_json["abilities"][ability];
+        var base_score = character["ability_scores"][abilityFromString(ability)];
 
-        character_json["background"]["features"].forEach(feature => {
-            try {
-                feature["modifiers"].forEach(modifier => {
-                    if (modifier["type"] == "asi" && ability in modifier["asi"]) {
-                        base_score += modifier["asi"][ability];
-                    }
-                });
-            } catch {
-                
+        character["background"]["features"].forEach(feature => {
+            if ("asi" in feature && ability in feature["asi"]) {
+                base_score += feature["asi"][ability];
+            } else if ("feat" in feature && "asi" in feature["feat"] && ability in feature["feat"]["asi"]) {
+                base_score += feature["feat"]["asi"][ability];
             }
         });
 
+        for (const character_class of character["class"]) {
+            character_class["features"].forEach(feature => {
+                if ("asi" in feature && ability in feature["asi"]) {
+                    base_score += feature["asi"][ability];
+                } else if ("feat" in feature && "asi" in feature["feat"] && ability in feature["feat"]["asi"]) {
+                    base_score += feature["feat"]["asi"][ability];
+                }
+            });
+        }
+
         character_json["species"]["features"].forEach(feature => {
-            try {
-                feature["modifiers"].forEach(modifier => {
-                    if (modifier["type"] == "asi" && ability in modifier["asi"]) {
-                        base_score += modifier["asi"][ability];
-                    }
-                    else if (modifier["type"] == "speed") {
-                        document.getElementById("walk_speed").innerText = `${modifier["speed"]["name"]}: ${modifier["speed"]["speed"]} ft.`;
-                    }
-                });
-            } catch {
-                
+            if ("asi" in feature && ability in feature["asi"]) {
+                base_score += feature["asi"][ability];
+            } else if ("feat" in feature && "asi" in feature["feat"] && ability in feature["feat"]["asi"]) {
+                base_score += feature["feat"]["asi"][ability];
+            } else if ("speed" in feature) {
+                document.getElementById("walk_speed").innerText = `${modifier["speed"]["name"]}: ${modifier["speed"]["speed"]} ft.`;
+            }
+        });
+
+        character["features"].forEach(feature => {
+            if ("asi" in feature && ability in feature["asi"]) {
+                base_score += feature["asi"][ability];
+            } else if ("feat" in feature && "asi" in feature["feat"] && ability in feature["feat"]["asi"]) {
+                base_score += feature["feat"]["asi"][ability];
             }
         });
 
@@ -373,98 +392,50 @@ function parse_character() {
     });
 
     document.getElementById("spells").children[0].innerHTML += `<tr>
-                <th colspan="5">CANTRIPS</th>
-                <th></th>
+                <td colspan="5"><b>CANTRIPS</b></td>
+                <td></td>
             </tr>`;
 
-    character_json["class"].forEach(character_class => {
-        if ("spells" in character_class) {
-            var spellcasting_ability = character_class["features"].find((f) => f["name"] == "Spellcasting")["modifiers"][0]["spellcasting"]["ability"];
+    let spells = [];
+    for (const character_class of character["class"]) {        
+        for (const feature of character_class["features"]) {
+            if (feature["type"] == "spellcasting" && "spells" in feature) {
+                var spellcasting_ability = feature["spellcasting_ability"];
 
-            character_class["spells"].forEach(spell => {
-                if ("damage" in spell) {
-                    to_hit_roll = new Roll();
-                    to_hit_roll.modifiers.push(get_proficiency_bonus());
-                    to_hit_roll.modifiers.push(get_stat_modifier(get_stat(spellcasting_ability)));
-
-                    damage_roll = new Roll();
-                    damage_roll.dice = item["damage"]["dice"];
-                    damage_roll.num = item["damage"]["num"];
-
-                    if ("save" in spell) {
-                        spells.push({
-                            "name": spell["name"],
-                            "level": spell["level"],
-                            "save": `DC ${8 + get_proficiency_bonus() + get_stat_modifier(get_stat(spellcasting_ability))} ${spell["save"].toUpperCase()}`,
-                            "damage": damage_roll.toString(),
-                            "description": spell["description"][0],
-                        });
-                    }
-                    else {
-                        spells.push({
-                            "name": spell["name"],
-                            "level": spell["level"],
-                            "to_hit": to_hit_roll.toString(),
-                            "damage": damage_roll.toString(),
-                        });
-                    }
+                for (const spell of feature["spells"]) {
+                    let class_spell = await get_spell(spell[0], spell[1]);
+                    class_spell.casting_stat = get_stat(abilityToString(spellcasting_ability, true).toLowerCase());
+                    class_spell.proficiency_bonus = character.getProficiencyBonus();
+                    class_spell.prepared = spell[2] ?? false;
+            
+                    spells.push(class_spell);
                 }
-                else {
-                    var description = "";
-                    for (var i = 0; i < spell["description"].length; i++) {
-                        description += spell["description"][i];
-                    }
-                    spells.push({
-                        "name": spell["name"],
-                        "level": spell["level"],
-                        "description": description,
-                    });
+            }
+
+            if (feature["type"] == "feat" && "spells" in feature["feat"]) {
+                var spellcasting_ability = feature["feat"]["spellcasting_ability"];
+
+                for (const spell of feature["feat"]["spells"]) {
+                    let class_spell = await get_spell(spell[0], spell[1]);
+                    class_spell.casting_stat = get_stat(abilityToString(spellcasting_ability, true).toLowerCase());
+                    class_spell.proficiency_bonus = character.getProficiencyBonus();
+                    class_spell.prepared = spell[2] ?? false;
+            
+                    spells.push(class_spell);
                 }
-            });
+            }
         }
-    });
-/*
+    }
+
+    spells.sort((a, b) => a.level - b.level);
+
     var previous_spell_level = 0;
     spells.forEach(spell => {
         if (spell["level"] != previous_spell_level) {
             previous_spell_level = spell["level"];
 
-            document.getElementById("attacks").children[0].innerHTML += `<tr>
-                <th colspan="5">LEVEL ${spell["level"]} SPELLS</th>
-                <th><input type="number" min="0" max="${get_max_spell_slots(spell["level"])}" value="${get_max_spell_slots(spell["level"])}"/></th>
-            </tr>`;
-        }
-        if ("to_hit" in spell) {
-            var to_hit = eval(render_text(spell["to_hit"]));
-
-            document.getElementById("attacks").children[0].innerHTML += `<tr>
-                    <td colspan="4">${spell["name"]}</td>
-                    <td><button label="${spell["name"]} (To Hit)" class="rollable">${add_sign(to_hit)}</button></td>
-                    <td><button label="${spell["name"]} (Damage)" class="rollable">${render_text(spell["damage"])}</button></td>
-                </tr>`;
-        }
-        else if ("save" in spell) {
-            document.getElementById("attacks").children[0].innerHTML += `<tr>
-                    <td colspan="4">${spell["name"]}</td>
-                    <td><button label="${spell["name"]} (Save)" description="${spell["description"]}" class="non_rollable">${spell["save"]}</button></td>
-                    <td><button label="${spell["name"]} (Damage)" class="rollable">${render_text(spell["damage"])}</button></td>
-                </tr>`;
-        }
-        else {
-            document.getElementById("attacks").children[0].innerHTML += `<tr>
-                    <td colspan="5">${spell["name"]}</td>
-                    <td><button label="${spell["name"]}" description="${spell["description"]}" class="non_rollable"></button></td>
-                </tr>`;
-        }
-    });
-*/
-    var previous_spell_level = 0;
-    character.spells.forEach(spell => {
-        if (spell["level"] != previous_spell_level) {
-            previous_spell_level = spell["level"];
-
             document.getElementById("spells").children[0].innerHTML += `<tr>
-                <th colspan="5">LEVEL ${spell["level"]} SPELLS</th>
+                <td colspan="5"><b>LEVEL ${spell["level"]} SPELLS</b></td>
                 <th><input type="number" min="0" max="${get_max_spell_slots(spell["level"])}" value="${get_max_spell_slots(spell["level"])}"/></th>
             </tr>`;
         }
