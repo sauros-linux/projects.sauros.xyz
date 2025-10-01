@@ -14,7 +14,7 @@ async function get_data(url) {
 }
 
 async function get_spell(source, name) {
-    let data = await get_data(`https://projects.sauros.xyz/5etools-src/data/spells/spells-${source.toLowerCase()}.json`);
+    let data = await get_data(`https://projects.sauros.xyz/5e/data/spells/spells-${source.toLowerCase()}.json`);
     if (data == null) {
         return;
     }
