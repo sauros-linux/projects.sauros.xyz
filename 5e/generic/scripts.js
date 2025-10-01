@@ -27,7 +27,7 @@ function get_armor_class() {
     var base_ac = 10;
     var modifier = get_stat_modifier(get_stat("dex"));
 
-    if (document.getElementById("mage_armor").checked)
+    if (has_spell("Mage Armor") && document.getElementById("mage_armor").checked)
         base_ac = 13;
 
     if (has_feature("Bladesong") && document.getElementById("bladesong").checked)
@@ -42,6 +42,10 @@ function get_character_level() {
         level += character["class"][i]["level"];
     }
     return level;
+}
+
+function get_initiative_bonus() {
+    return get_stat_modifier(get_stat("dex"));
 }
 
 function get_max_spell_slots(spell_level) {
@@ -334,6 +338,15 @@ function is_proficient(skill) {
     return false;
 }
 
+function open_tab(tab) {
+    var i;
+    var x = document.getElementsByClassName("tab");
+    for (i = 0; i < x.length; i++) {
+        x[i].style.display = "none";
+    }
+    document.getElementById(tab).style.display = "block";
+}
+
 function render_text(str) {
     var result = str;
     result = result.replace("@PB", `${get_proficiency_bonus()}`);
@@ -361,11 +374,15 @@ function send_non_roll(button) {
 }
 
 async function parse_character() {
+
     var attacks = [];
+    let abilities = [
+        "str", "dex", "con", "int", "wis", "cha"
+    ];
 
     document.getElementById("name").innerText = character_json["name"];
 
-    for (let ability in character_json["abilities"]) {
+    for (const ability of abilities) {
         var base_score = character["ability_scores"][abilityFromString(ability)];
 
         character["background"]["features"].forEach(feature => {
@@ -386,7 +403,7 @@ async function parse_character() {
             });
         }
 
-        character_json["species"]["features"].forEach(feature => {
+        character["species"]["features"].forEach(feature => {
             if ("asi" in feature && ability in feature["asi"]) {
                 base_score += feature["asi"][ability];
             } else if ("feat" in feature && "asi" in feature["feat"] && ability in feature["feat"]["asi"]) {
@@ -412,7 +429,8 @@ async function parse_character() {
         document.getElementById(ability + "_save").innerHTML = get_rollable_button(`${get_stat_label(ability)}`, "Save", (save >= 0 ? "+" : "") + save.toString());
     }
 
-    document.getElementById("prof").innerHTML           = get_rollable_button(`Proficiency Bonus`, "", (get_proficiency_bonus() >= 0 ? "+" : "") + get_proficiency_bonus().toString());    
+    document.getElementById("prof").innerHTML           = get_rollable_button(`Proficiency Bonus`, "", (get_proficiency_bonus() >= 0 ? "+" : "") + get_proficiency_bonus().toString());
+    document.getElementById("init").innerHTML           = get_rollable_button(`Initiative`, "", (get_initiative_bonus() >= 0 ? "+" : "") + get_initiative_bonus().toString());
     document.getElementById("inspiration").innerHTML    = `<input type="checkbox">`;
 
     for (var i = 0; i < character_json["equipment"].length; i++) {
@@ -427,6 +445,8 @@ async function parse_character() {
 
                     if (dex_score > str_score)
                         attack_mod = "dex";
+                } else if (item["properties"].includes("Range")) {
+                    attack_mod = "dex";
                 }
 
                 attack_mod = get_stat_modifier(get_stat(attack_mod));
@@ -469,26 +489,27 @@ async function parse_character() {
         "damage": get_stat_modifier(get_stat("str")) + 1,
     });
 
-    attacks.forEach(attack => {
-        document.getElementById("attacks").children[0].innerHTML += `<tr>
-                <td></td>
-                <td>${attack["name"]}</td>
-                <td></td>
-                <td></td>
-                <td><button label="${attack["name"]}" type="To Hit" class="rollable">${attack["to_hit"]}</button></td>
-                <td><button label="${attack["name"]}" type="Damage" class="rollable">${attack["damage"]}</button></td>
-            </tr>`;
-    });
-
-    document.getElementById("spells").children[0].innerHTML += `<tr>
-                <td colspan="5"><b>CANTRIPS</b></td>
-                <td></td>
-            </tr>`;
-
     let spells = [];
+    for (const feature of character["background"]["features"]) {
+        if ("feat" in feature && "spells" in feature["feat"] && feature["feat"]["spells"].length > 0) {
+            var spellcasting_ability = feature["feat"]["spellcasting_ability"];
+
+            for (const spell of feature["feat"]["spells"]) {
+                let class_spell = await get_spell(spell[0], spell[1]);
+                class_spell.casting_stat = get_stat(abilityToString(spellcasting_ability, true).toLowerCase());
+                class_spell.proficiency_bonus = character.getProficiencyBonus();
+                class_spell.prepared = spell[2] ?? false;
+        
+                spells.push(class_spell);
+            }
+        }
+    }
     for (const character_class of character["class"]) {        
         for (const feature of character_class["features"]) {
-            if (feature["type"] == "spellcasting" && "spells" in feature) {
+            if (feature["level"] > character_class["level"])
+                continue;
+
+            if ("spells" in feature && feature["spells"].length > 0) {
                 var spellcasting_ability = feature["spellcasting_ability"];
 
                 for (const spell of feature["spells"]) {
@@ -501,7 +522,7 @@ async function parse_character() {
                 }
             }
 
-            if (feature["type"] == "feat" && "spells" in feature["feat"]) {
+            if ("feat" in feature && "spells" in feature["feat"] && feature["feat"]["spells"].length > 0) {
                 var spellcasting_ability = feature["feat"]["spellcasting_ability"];
 
                 for (const spell of feature["feat"]["spells"]) {
@@ -516,7 +537,49 @@ async function parse_character() {
         }
     }
 
+    spells.sort((a, b) => (a.name < b.name) ? -1 : (a.name > b.name) ? 1 : 0);
     spells.sort((a, b) => a.level - b.level);
+
+    attacks.forEach(attack => {
+        let to_hit_buttons = "";
+        let damage_buttons = "";
+        let notes = "";
+        
+        let spell = spells.find((spell) => spell.name == "True Strike");
+        if (attack["name"] != "Unarmed Strike" && spell != null) {
+
+            notes = "<br>True Strike";
+
+            let modifier = Math.floor((spell.casting_stat - 10) / 2) + character.getProficiencyBonus();
+
+            to_hit_buttons = `<button label="${attack["name"]}" type="To Hit" class="rollable">${attack["to_hit"]}</button>`;
+            damage_buttons = `<button label="${attack["name"]}" type="Damage" class="rollable">${attack["damage"]}</button>`;
+
+            to_hit_buttons += `<button label="True Strike (${attack["name"]})" type="To Hit" class="rollable">${(modifier >= 0 ? "+" : "-") + modifier}</button>`;
+            damage_roll = new Roll();
+            damage_roll.dice = item["damage"]["dice"];
+            damage_roll.num = item["damage"]["num"];
+            damage_roll.modifiers.push(Math.floor((spell.casting_stat - 10) / 2));
+
+            damage_buttons += `<button label="True Strike (${attack["name"]})" type="Damage" class="rollable">${damage_roll.toString()}</button>`;
+        } else {
+            to_hit_buttons = `<button label="${attack["name"]}" type="To Hit" class="rollable">${attack["to_hit"]}</button>`;
+            damage_buttons = `<button label="${attack["name"]}" type="Damage" class="rollable">${attack["damage"]}</button>`;
+        }
+
+        document.getElementById("attacks").children[0].innerHTML += `<tr>
+                <td></td>
+                <td>${attack["name"]}</td>
+                <td colspan="2">${notes}</td>
+                <td>${to_hit_buttons}</td>
+                <td>${damage_buttons}</td>
+            </tr>`;
+    });
+
+    document.getElementById("spells").children[0].innerHTML += `<tr>
+                <td colspan="5"><b>CANTRIPS</b></td>
+                <td></td>
+            </tr>`;
 
     var previous_spell_level = 0;
     spells.forEach(spell => {
@@ -630,8 +693,10 @@ function roll(e) {
 }
 
 async function init() {
-    character_json = await getData("https://projects.sauros.xyz/5e/orbeck/character.json");
+    character_json = await getData("character.json");
+
     character = Object.assign(new Character(), character_json);
+    
     parse_character();
 }
 

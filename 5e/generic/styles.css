@@ -50,17 +50,50 @@ a {
     text-decoration: none;
 }
 
-.flex {
-    display: flex;
-}
-.flex > * {
-    flex: 1;
-}
-
 .container {
     display: flex;
     margin: 12px 4px;
-    width: calc(100% - 2 * 2px - 2 * 12px);
+}
+.container .horizontal {
+    flex-direction: row;
+}
+
+.flex {
+    display: flex;
+}
+
+.flex_container {
+    flex: 1;
+}
+
+.name {
+    flex: 1;
+}
+.ability-scores {
+    flex: 1;
+}
+.defenses {
+    flex: 1;
+}
+.saving-throws {
+    flex: 1;
+}
+.senses {
+    flex: 1;
+}
+.proficiencies {
+    flex: 1;
+}
+.skills {
+    flex: 1;
+}
+.attacks {
+    flex: 2;
+    display: block;
+}
+
+.tab {
+    display: none;
 }
 
 .inset {

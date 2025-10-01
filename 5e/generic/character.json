@@ -63,8 +63,8 @@
                     "level": 1,
                     "type": "spellcasting",
                     "spells": [
-                        ["XPHB", "Command", true],
-                        ["XPHB", "Healing Word", true]
+                        ["XPHB", "Cure Wounds", true],
+                        ["OTTG", "Pacify Person", true]
                     ],
                     "spellcasting_ability": 5
                 },
@@ -81,6 +81,19 @@
                             "Shields"
                         ]
                     }
+                },
+                {
+                    "name": "Arcane Appraiser",
+                    "level": 2,
+                    "type": "spellcasting",
+                    "spells": [
+                        ["XPHB", "Identify", true]
+                    ],
+                    "spellcasting_ability": 5
+                },
+                {
+                    "name": "Maximize Value",
+                    "level": 2
                 }
             ]
         }
