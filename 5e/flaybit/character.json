@@ -23,7 +23,7 @@
                     "name": "Magic Initiate (Wizard)",
                     "spells": [
                         ["XPHB", "True Strike", true],
-                        ["XGE", "Control Flames", true],
+                        ["XGE",  "Control Flames", true],
                         ["XPHB", "Find Familiar", true]
                     ],
                     "spellcasting_ability": 5
@@ -73,13 +73,13 @@
                     "level": 1,
                     "type": "feat",
                     "feat": {
-                        "name": "Defender",
-                        "type": "proficiencies",
-                        "proficiencies": [
-                            "Martial Weapons",
-                            "Medium Armor",
-                            "Shields"
-                        ]
+                        "name": "Magician",
+                        "type": "spellcasting",
+                        "spells": [
+                            ["TCE",  "Green-Flame Blade", true],
+                            ["OTTG", "Retrieve", true]
+                        ],
+                        "spellcasting_ability": 5
                     }
                 },
                 {
@@ -98,7 +98,7 @@
             ]
         }
     ],
-    "weapons": [
+    "equipment": [
         {
             "type": "weapon",
             "name": "Frying Pan",

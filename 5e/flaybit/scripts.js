@@ -458,11 +458,14 @@ async function parse_character() {
 
                 for (const spell of feature["spells"]) {
                     let class_spell = await get_spell(spell[0], spell[1]);
-                    class_spell.casting_stat = get_stat(abilityToString(spellcasting_ability, true).toLowerCase());
-                    class_spell.proficiency_bonus = character.getProficiencyBonus();
-                    class_spell.prepared = spell[2] ?? false;
-            
-                    spells.push(class_spell);
+
+                    if (class_spell != null) {
+                        class_spell.casting_stat = get_stat(abilityToString(spellcasting_ability, true).toLowerCase());
+                        class_spell.proficiency_bonus = character.getProficiencyBonus();
+                        class_spell.prepared = spell[2] ?? false;
+
+                        spells.push(class_spell);
+                    }
                 }
             }
 
@@ -471,11 +474,14 @@ async function parse_character() {
 
                 for (const spell of feature["feat"]["spells"]) {
                     let class_spell = await get_spell(spell[0], spell[1]);
-                    class_spell.casting_stat = get_stat(abilityToString(spellcasting_ability, true).toLowerCase());
-                    class_spell.proficiency_bonus = character.getProficiencyBonus();
-                    class_spell.prepared = spell[2] ?? false;
-            
-                    spells.push(class_spell);
+                    
+                    if (class_spell != null) {
+                        class_spell.casting_stat = get_stat(abilityToString(spellcasting_ability, true).toLowerCase());
+                        class_spell.proficiency_bonus = character.getProficiencyBonus();
+                        class_spell.prepared = spell[2] ?? false;
+                
+                        spells.push(class_spell);
+                    }
                 }
             }
         }
@@ -484,9 +490,9 @@ async function parse_character() {
     spells.sort((a, b) => (a.name < b.name) ? -1 : (a.name > b.name) ? 1 : 0);
     spells.sort((a, b) => a.level - b.level);
 
-    for (var i = 0; i < character_json["weapons"].length; i++) {
+    for (var i = 0; i < character_json["equipment"].length; i++) {
         try {
-            var item = character_json["weapons"][i];
+            var item = character_json["equipment"][i];
 
             if (item["type"] == "weapon") {
                 var attack_mod = "str";
