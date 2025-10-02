@@ -53,6 +53,7 @@ a {
 .container {
     display: flex;
     margin: 12px 4px;
+    flex-wrap: wrap;
 }
 .container .horizontal {
     flex-direction: row;
@@ -66,30 +67,17 @@ a {
     flex: 1;
 }
 
-.name {
+.item {
+    margin: 4px;
     flex: 1;
+    min-width: 250px;
 }
-.ability-scores {
-    flex: 1;
-}
-.defenses {
-    flex: 1;
-}
-.saving-throws {
-    flex: 1;
-}
-.senses {
-    flex: 1;
-}
-.proficiencies {
-    flex: 1;
-}
-.skills {
-    flex: 1;
-}
-.attacks {
-    flex: 2;
-    display: block;
+
+.item {
+    color: #DAA54F;
+    background-color: #F6F2E6;
+    border: 2px solid #DAA54F;
+    border-radius: 4px;
 }
 
 .action_label {
@@ -173,6 +161,7 @@ tr, td {
 }
 tr:nth-child(even) {
     background-color: #2D2D2D;
+    background-color: rgba(45, 45, 45, 0.5);
 }
 .main > tbody > tr:nth-child(even) {
     background-color: unset;

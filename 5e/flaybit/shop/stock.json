@@ -1,0 +1,48 @@
+{
+    "menu": [
+        {
+            "name": "Yakitori",
+            "cost": 0.4,
+            "description": "chicken or beef cooked on a skewer over my signature arcane fire and seasoned with tare sauce",
+            "img": "https://www.zeldadungeon.net/wiki/images/thumb/f/fc/Gourmet_Spiced_Meat_Skewer_-_TotK_icon.png/160px-Gourmet_Spiced_Meat_Skewer_-_TotK_icon.png"
+        },
+        {
+            "name": "Sakana No Shioyaki",
+            "cost": 1,
+            "description": "classic fish seared over my signature arcane fire and seasoned with salt and smoke",
+            "img": "https://www.zeldadungeon.net/wiki/images/thumb/3/3a/Salt-Grilled_Fish_-_TotK_icon.png/160px-Salt-Grilled_Fish_-_TotK_icon.png"
+        },
+        {
+            "name": "Curry Rice",
+            "cost": 0.6,
+            "description": "basic curry rice, pairs well with many other dishes",
+            "img": "https://www.zeldadungeon.net/wiki/images/thumb/3/33/Curry_Rice_-_TotK_icon.png/160px-Curry_Rice_-_TotK_icon.png"
+        },
+        {
+            "name": "Ramen Bowl",
+            "cost": 0.6,
+            "description": "vegetable packed bowl of ramen in a thick soup",
+            "img": "https://www.zeldadungeon.net/wiki/images/thumb/b/bf/Cream_of_Vegetable_Soup_-_TotK_icon.png/160px-Cream_of_Vegetable_Soup_-_TotK_icon.png"
+        }
+    ],
+    "stock": [
+        {
+            "name": "Bamboo",
+            "cost": 5,
+            "count": 2,
+            "img": "https://raw.githubusercontent.com/TheGiddyLimit/homebrew-img/refs/heads/main/img/ObojimaTallGrass/Ingredients/bamboo.webp"
+        },
+        {
+            "name": "Chicken Egg",
+            "cost": 5,
+            "count": 2,
+            "img": "https://raw.githubusercontent.com/TheGiddyLimit/homebrew-img/refs/heads/main/img/ObojimaTallGrass/Ingredients/chicken-egg.webp"
+        },
+        {
+            "name": "Fish Head",
+            "cost": 5,
+            "count": 2,
+            "img": "https://raw.githubusercontent.com/TheGiddyLimit/homebrew-img/refs/heads/main/img/ObojimaTallGrass/Ingredients/fish-head.webp"
+        }
+    ]
+}

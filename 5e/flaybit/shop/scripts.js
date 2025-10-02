@@ -375,297 +375,33 @@ function send_non_roll(button) {
 
 async function parse_character() {
 
-    var attacks = [];
-    let abilities = [
-        "str", "dex", "con", "int", "wis", "cha"
-    ];
+    for (var i = 0; i < character_json["menu"].length; i++) {
+        let item = character_json["menu"][i];
 
-    document.getElementById("name").innerText = character_json["name"];
-
-    for (const ability of abilities) {
-        var base_score = character["ability_scores"][abilityFromString(ability)];
-
-        character["background"]["features"].forEach(feature => {
-            if ("asi" in feature && ability in feature["asi"]) {
-                base_score += feature["asi"][ability];
-            } else if ("feat" in feature && "asi" in feature["feat"] && ability in feature["feat"]["asi"]) {
-                base_score += feature["feat"]["asi"][ability];
-            }
-        });
-
-        for (const character_class of character["class"]) {
-            character_class["features"].forEach(feature => {
-                if ("asi" in feature && ability in feature["asi"]) {
-                    base_score += feature["asi"][ability];
-                } else if ("feat" in feature && "asi" in feature["feat"] && ability in feature["feat"]["asi"]) {
-                    base_score += feature["feat"]["asi"][ability];
-                }
-            });
-        }
-
-        character["species"]["features"].forEach(feature => {
-            if ("asi" in feature && ability in feature["asi"]) {
-                base_score += feature["asi"][ability];
-            } else if ("feat" in feature && "asi" in feature["feat"] && ability in feature["feat"]["asi"]) {
-                base_score += feature["feat"]["asi"][ability];
-            } else if ("speed" in feature) {
-                document.getElementById("walk_speed").innerText = `${modifier["speed"]["name"]}: ${modifier["speed"]["speed"]} ft.`;
-            }
-        });
-
-        character["features"].forEach(feature => {
-            if ("asi" in feature && ability in feature["asi"]) {
-                base_score += feature["asi"][ability];
-            } else if ("feat" in feature && "asi" in feature["feat"] && ability in feature["feat"]["asi"]) {
-                base_score += feature["feat"]["asi"][ability];
-            }
-        });
-
-        document.getElementById(ability).innerText = base_score;
-
-        var mod = get_stat_modifier(base_score);
-        var save = get_stat_modifier(base_score) + (is_proficient(get_stat_label(ability) + " Saving Throws") ? get_proficiency_bonus() : 0) 
-        document.getElementById(ability + "_mod").innerHTML = get_rollable_button(`${get_stat_label(ability)}`, "", (mod >= 0 ? "+" : "") + mod.toString());
-        document.getElementById(ability + "_save").innerHTML = get_rollable_button(`${get_stat_label(ability)}`, "Save", (save >= 0 ? "+" : "") + save.toString());
+        document.getElementById("menu").innerHTML += `<div class="flex item">
+                <table>
+                    <tr><th>${item["name"]}</th></tr>
+                    <tr>
+                        <td>${item["description"]} - ${item["cost"]} GP</td>
+                    </tr>
+                    <tr><td><img class="img" src="${item["img"]}" width="150px"/></td></tr>
+                </table>
+            </div>`;
     }
 
-    document.getElementById("prof").innerHTML           = get_rollable_button(`Proficiency Bonus`, "", (get_proficiency_bonus() >= 0 ? "+" : "") + get_proficiency_bonus().toString());
-    document.getElementById("init").innerHTML           = get_rollable_button(`Initiative`, "", (get_initiative_bonus() >= 0 ? "+" : "") + get_initiative_bonus().toString());
-    document.getElementById("inspiration").innerHTML    = `<input type="checkbox">`;
+    for (var i = 0; i < character_json["stock"].length; i++) {
+        let item = character_json["stock"][i];
 
-    let spells = [];
-    for (const feature of character["background"]["features"]) {
-        if ("feat" in feature && "spells" in feature["feat"] && feature["feat"]["spells"].length > 0) {
-            var spellcasting_ability = feature["feat"]["spellcasting_ability"];
-
-            for (const spell of feature["feat"]["spells"]) {
-                let class_spell = await get_spell(spell[0], spell[1]);
-                class_spell.casting_stat = get_stat(abilityToString(spellcasting_ability, true).toLowerCase());
-                class_spell.proficiency_bonus = character.getProficiencyBonus();
-                class_spell.prepared = spell[2] ?? false;
-        
-                spells.push(class_spell);
-            }
-        }
-    }
-    for (const character_class of character["class"]) {        
-        for (const feature of character_class["features"]) {
-            if (feature["level"] > character_class["level"])
-                continue;
-
-            if ("spells" in feature && feature["spells"].length > 0) {
-                var spellcasting_ability = feature["spellcasting_ability"];
-
-                for (const spell of feature["spells"]) {
-                    let class_spell = await get_spell(spell[0], spell[1]);
-                    class_spell.casting_stat = get_stat(abilityToString(spellcasting_ability, true).toLowerCase());
-                    class_spell.proficiency_bonus = character.getProficiencyBonus();
-                    class_spell.prepared = spell[2] ?? false;
-            
-                    spells.push(class_spell);
-                }
-            }
-
-            if ("feat" in feature && "spells" in feature["feat"] && feature["feat"]["spells"].length > 0) {
-                var spellcasting_ability = feature["feat"]["spellcasting_ability"];
-
-                for (const spell of feature["feat"]["spells"]) {
-                    let class_spell = await get_spell(spell[0], spell[1]);
-                    class_spell.casting_stat = get_stat(abilityToString(spellcasting_ability, true).toLowerCase());
-                    class_spell.proficiency_bonus = character.getProficiencyBonus();
-                    class_spell.prepared = spell[2] ?? false;
-            
-                    spells.push(class_spell);
-                }
-            }
-        }
-    }
-
-    spells.sort((a, b) => (a.name < b.name) ? -1 : (a.name > b.name) ? 1 : 0);
-    spells.sort((a, b) => a.level - b.level);
-
-    for (var i = 0; i < character_json["weapons"].length; i++) {
-        try {
-            var item = character_json["weapons"][i];
-
-            if (item["type"] == "weapon") {
-                var attack_mod = "str";
-                if (item["properties"].includes("Finesse")) {
-                    var str_score = get_stat("str");
-                    var dex_score = get_stat("dex");
-
-                    if (dex_score > str_score)
-                        attack_mod = "dex";
-                } else if (item["properties"].includes("Range")) {
-                    attack_mod = "dex";
-                }
-
-                attack_mod = get_stat_modifier(get_stat(attack_mod));
-
-                if (item["properties"].includes("+1"))
-                    attack_mod += 1;
-                if (item["properties"].includes("+2"))
-                    attack_mod += 2;
-                if (item["properties"].includes("+3"))
-                    attack_mod += 3;
-
-                to_hit_roll = new Roll();
-                // if proficient
-                    to_hit_roll.modifiers.push(get_proficiency_bonus());
-                to_hit_roll.modifiers.push(attack_mod);
-
-                damage_roll = new Roll();
-                damage_roll.dice = item["damage"]["dice"];
-                damage_roll.num = item["damage"]["num"];
-                // if proficient
-                    damage_roll.modifiers.push(attack_mod);
-
-                attacks.push({
-                    "name": item["name"],
-                    "to_hit": to_hit_roll.toString(),
-                    "damage": damage_roll.toString(),
-                });
-
-                let true_strike = spells.find((spell) => spell.name == "True Strike");
-                if (true_strike != null) {
-                    let spellcasting_mod = Math.floor((true_strike.casting_stat - 10) / 2)
-                    
-                    to_hit_roll_spell = new Roll();
-                    // if proficient
-                        to_hit_roll_spell.modifiers.push(get_proficiency_bonus());
-                    to_hit_roll_spell.modifiers.push(spellcasting_mod);
-
-                    damage_roll_spell = new Roll();
-                    damage_roll_spell.dice = item["damage"]["dice"];
-                    damage_roll_spell.num = item["damage"]["num"];
-                    // if proficient
-                        damage_roll_spell.modifiers.push(spellcasting_mod);
-
-                    attacks.push({
-                        "name": item["name"] + " (True Strike)",
-                        "to_hit": to_hit_roll_spell.toString(),
-                        "damage": damage_roll_spell.toString(),
-                    });
-                }
-            }
-        } catch {
-            
-        }
-    }
-    to_hit_roll = new Roll();
-    to_hit_roll.modifiers.push(get_proficiency_bonus());
-    to_hit_roll.modifiers.push(get_stat_modifier(get_stat("str")));
-
-    attacks.push({
-        "name": "Unarmed Strike",
-        "to_hit": to_hit_roll.toString(),
-        "damage": get_stat_modifier(get_stat("str")) + 1,
-    });
-
-    attacks.forEach(attack => {
-        let to_hit_buttons = "";
-        let damage_buttons = "";
-        let notes = "";
-        
-        to_hit_buttons = `<button label="${attack["name"]}" type="To Hit" class="rollable">${attack["to_hit"]}</button>`;
-        damage_buttons = `<button label="${attack["name"]}" type="Damage" class="rollable">${attack["damage"]}</button>`;
-
-        document.getElementById("attacks").children[0].innerHTML += `<tr>
-                <td></td>
-                <th colspan="2" class="action_label">${attack["name"]}</th>
-                <td>${notes}</td>
-                <td>${to_hit_buttons}</td>
-                <td>${damage_buttons}</td>
-            </tr>`;
-    });
-
-    document.getElementById("spells").children[0].innerHTML += `<tr>
-                <td colspan="5"><b>CANTRIPS</b></td>
-                <td></td>
-            </tr>`;
-
-    var previous_spell_level = 0;
-    spells.forEach(spell => {
-        if (spell["level"] != previous_spell_level) {
-            previous_spell_level = spell["level"];
-
-            document.getElementById("spells").children[0].innerHTML += `<tr>
-                <td colspan="5"><b>LEVEL ${spell["level"]} SPELLS</b></td>
-                <th><input type="number" min="0" max="${get_max_spell_slots(spell["level"])}" value="${get_max_spell_slots(spell["level"])}"/></th>
-            </tr>`;
-        }
-        document.getElementById("spells").children[0].innerHTML += spell.toShortHTML();
-    });
-
-    let skills = [
-        "Acrobatics",
-        "Animal Handling",
-        "Arcana",
-        "Athletics",
-        "Deception",
-        "History",
-        "Insight",
-        "Intimidation",
-        "Investigation",
-        "Medicine",
-        "Nature",
-        "Perception",
-        "Performance",
-        "Persuasion",
-        "Religion",
-        "Sleight of Hand",
-        "Stealth",
-        "Survival",
-    ];
-    for (const SKILL of skills) {
-        document.getElementById(`${SKILL.toLowerCase().replaceAll(" ", "_")}_mod`).innerHTML = get_rollable_button(
-            SKILL,
-            "",
-            (get_skill_modifier(SKILL) < 0 ? "" : "+") + get_skill_modifier(SKILL)
-        );
-    }
-
-    if (has_spell("Mage Armor")) {
-        document.getElementById("ac_table").innerHTML = `<tr>
-            <td>
-                <label for="mage_armor">Mage Armor?</label>
-                <input type="checkbox" id="mage_armor" name="mage_armor" onchange="document.getElementById('armor_class').innerText = get_armor_class()">
-            </td>
-        </tr>`;
-    }
-    
-    if (has_feature("Bladesong")) {
-        document.getElementById("ac_table").innerHTML += `<tr>
-            <td>
-                <label for="bladesong">Bladesong?</label>
-                <input type="checkbox" id="bladesong" name="bladesong" onchange="document.getElementById('armor_class').innerText = get_armor_class()">
-            </td>
-        </tr>`;
-    }
-    
-    document.getElementById("ac_table").innerHTML += `<tr>
-                                <td>
-                                    <span class="stat_modifier" id="armor_class"></span>
-                                </td>
-                            </tr>`;
-    document.getElementById("armor_class").innerText = get_armor_class();
-
-    for (let key in character_json["inventory"]) {
-        document.getElementById("inventory").children[0].innerHTML += `<tr>
-                <td colspan="6"><b>${key.toUpperCase()}</b></td>
-            </tr>`;
-        
-        for (var i = 0; i < character_json["inventory"][key].length; i++) {
-            let item = character_json["inventory"][key][i];
-
-            document.getElementById("inventory").children[0].innerHTML += `<tr>
-                <td></td>
-                <td colspan="2" class="action_label">${item[1]}</td>
-                <td>${item[2] * item[3]}</td>
-                <td>${item[3]}</td>
-                <td>${item[4] * item[3]}</td>
-            </tr>`;
-        }
+        document.getElementById("inventory").innerHTML += `<div class="flex item">
+                <table>
+                    <tr><th colspan="2">${item["name"]}</th></tr>
+                    <tr>
+                        <td>${item["cost"]} GP</td>
+                        <td><b>x${item["count"]}</b> in stock</td>
+                    </tr>
+                    <tr><td colspan="2"><img class="img" src="${item["img"]}" width="150px"/></td></tr>
+                </table>
+            </div>`;
     }
 
     var rollable_buttons = document.getElementsByClassName("rollable");
@@ -714,7 +450,7 @@ function roll(e) {
 }
 
 async function init() {
-    character_json = await getData("character.json");
+    character_json = await getData("stock.json");
 
     character = Object.assign(new Character(), character_json);
     
