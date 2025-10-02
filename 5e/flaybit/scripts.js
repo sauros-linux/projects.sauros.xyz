@@ -24,8 +24,18 @@ function add_sign(value) {
 }
 
 function get_armor_class() {
+
     var base_ac = 10;
     var modifier = get_stat_modifier(get_stat("dex"));
+
+    for (var i = 0; i < character["equipment"].length; i++) {
+        if (character["equipment"][i]["type"] == "light_armor") {
+            base_ac = character["equipment"][i]["base_ac"];
+        } else if (character["equipment"][i]["type"] == "medium_armor") {
+            base_ac = character["equipment"][i]["base_ac"];
+            modifier = Math.min(modifier, 2);
+        }
+    }
 
     if (has_spell("Mage Armor") && document.getElementById("mage_armor").checked)
         base_ac = 13;
@@ -236,18 +246,18 @@ function get_roll(str, type = "normal") {
     }
 }
 
-function get_rollable_button(label, type, roll_string) {
-    return `<button class="rollable" label="${label}" type="${type}">${roll_string}</button>`;
+function get_rollable_button(title, label, type, roll_string) {
+    return `<button class="rollable" title=${title} label="${label}" type="${type}">${roll_string}</button>`;
 }
 
 function get_roll_template(button, type = "normal") {
     switch (type) {
         case "advantage":
-            return `&{template:default} {{name=${button.getAttribute("label")} (${document.getElementById("name").innerText})}} {{${button.getAttribute("label")}=[[${get_roll(button.innerText, "advantage")}]]}}`;
+            return `&{template:default} {{name=${button.getAttribute("title")} (${document.getElementById("name").innerText})}} {{${button.getAttribute("label")}=[[${get_roll(button.innerText, "advantage")}]]}}`;
         case "disadvantage":
-            return `&{template:default} {{name=${button.getAttribute("label")} (${document.getElementById("name").innerText})}} {{${button.getAttribute("label")}=[[${get_roll(button.innerText, "disadvantage")}]]}}`;
+            return `&{template:default} {{name=${button.getAttribute("title")} (${document.getElementById("name").innerText})}} {{${button.getAttribute("label")}=[[${get_roll(button.innerText, "disadvantage")}]]}}`;
         default:
-            return `&{template:default} {{name=${button.getAttribute("label")} (${document.getElementById("name").innerText})}} {{${button.getAttribute("label")}=[[${get_roll(button.innerText)}]]}}`;
+            return `&{template:default} {{name=${button.getAttribute("title")} (${document.getElementById("name").innerText})}} {{${button.getAttribute("label")}=[[${get_roll(button.innerText)}]]}}`;
     }
 }
 
@@ -425,13 +435,20 @@ async function parse_character() {
 
         var mod = get_stat_modifier(base_score);
         var save = get_stat_modifier(base_score) + (is_proficient(get_stat_label(ability) + " Saving Throws") ? get_proficiency_bonus() : 0) 
-        document.getElementById(ability + "_mod").innerHTML = get_rollable_button(`${get_stat_label(ability)}`, "", (mod >= 0 ? "+" : "") + mod.toString());
-        document.getElementById(ability + "_save").innerHTML = get_rollable_button(`${get_stat_label(ability)}`, "Save", (save >= 0 ? "+" : "") + save.toString());
+        document.getElementById(ability + "_mod").innerHTML = get_rollable_button(`${get_stat_label(ability)}`, `${get_stat_label(ability)}`, "", (mod >= 0 ? "+" : "") + mod.toString());
+        document.getElementById(ability + "_save").innerHTML = get_rollable_button(`${get_stat_label(ability)}`, `${get_stat_label(ability)} Save`, "Save", (save >= 0 ? "+" : "") + save.toString());
     }
 
-    document.getElementById("prof").innerHTML           = get_rollable_button(`Proficiency Bonus`, "", (get_proficiency_bonus() >= 0 ? "+" : "") + get_proficiency_bonus().toString());
-    document.getElementById("init").innerHTML           = get_rollable_button(`Initiative`, "", (get_initiative_bonus() >= 0 ? "+" : "") + get_initiative_bonus().toString());
+    document.getElementById("prof").innerHTML           = get_rollable_button(`Proficiency Bonus`, `Proficiency Bonus`, "", (get_proficiency_bonus() >= 0 ? "+" : "") + get_proficiency_bonus().toString());
+    document.getElementById("init").innerHTML           = get_rollable_button(`Initiative`, `Initiative`, "", (get_initiative_bonus() >= 0 ? "+" : "") + get_initiative_bonus().toString());
     document.getElementById("inspiration").innerHTML    = `<input type="checkbox">`;
+    document.getElementById("current_hp").innerHTML     = `<input type="number">`;
+    document.getElementById("max_hp").innerHTML         = `<input type="number">`;
+    document.getElementById("temp_hp").innerHTML        = `<input type="number">`;
+
+    for (var i = 0; i < character_json["hit_dice"].length; i++) {
+        document.getElementById("max_hp").children[0].value += character_json["hit_dice"][i] + get_stat_modifier(get_stat("con"));
+    }
 
     let spells = [];
     for (const feature of character["background"]["features"]) {
@@ -494,7 +511,7 @@ async function parse_character() {
         try {
             var item = character_json["equipment"][i];
 
-            if (item["type"] == "weapon") {
+            if (item["type"] == "melee_weapon" || item["type"] == "ranged_weapon") {
                 var attack_mod = "str";
                 if (item["properties"].includes("Finesse")) {
                     var str_score = get_stat("str");
@@ -520,38 +537,95 @@ async function parse_character() {
                     to_hit_roll.modifiers.push(get_proficiency_bonus());
                 to_hit_roll.modifiers.push(attack_mod);
 
-                damage_roll = new Roll();
-                damage_roll.dice = item["damage"]["dice"];
-                damage_roll.num = item["damage"]["num"];
-                // if proficient
-                    damage_roll.modifiers.push(attack_mod);
+                let damage_rolls = [];
+                for (var j = 0; j < item["damage"].length; j++) {
+                    damage_roll = new Roll();
+                    damage_roll.dice = item["damage"][j]["dice"];
+                    damage_roll.num = item["damage"][j]["num"];
+                    // if proficient
+                        damage_roll.modifiers.push(attack_mod);
+
+                    damage_rolls.push(damage_roll.toString());
+                }
 
                 attacks.push({
                     "name": item["name"],
                     "to_hit": to_hit_roll.toString(),
-                    "damage": damage_roll.toString(),
+                    "damage": damage_rolls,
                 });
 
                 let true_strike = spells.find((spell) => spell.name == "True Strike");
                 if (true_strike != null) {
-                    let spellcasting_mod = Math.floor((true_strike.casting_stat - 10) / 2)
+                    let spellcasting_mod = Math.floor((true_strike.casting_stat - 10) / 2);
                     
                     to_hit_roll_spell = new Roll();
                     // if proficient
                         to_hit_roll_spell.modifiers.push(get_proficiency_bonus());
                     to_hit_roll_spell.modifiers.push(spellcasting_mod);
 
-                    damage_roll_spell = new Roll();
-                    damage_roll_spell.dice = item["damage"]["dice"];
-                    damage_roll_spell.num = item["damage"]["num"];
-                    // if proficient
-                        damage_roll_spell.modifiers.push(spellcasting_mod);
+                    let damage_rolls_spell = [];
+                    for (var j = 0; j < item["damage"].length; j++) {
+                        damage_roll_spell = new Roll();
+                        damage_roll_spell.dice = item["damage"][j]["dice"];
+                        damage_roll_spell.num = item["damage"][j]["num"];
+                        // if proficient
+                            damage_roll_spell.modifiers.push(spellcasting_mod);
+
+                        damage_rolls_spell.push(damage_roll_spell.toString());
+                    }
 
                     attacks.push({
-                        "name": item["name"] + " (True Strike)",
+                        "name": "True Strike",
+                        "weapon": item["name"],
                         "to_hit": to_hit_roll_spell.toString(),
-                        "damage": damage_roll_spell.toString(),
+                        "damage": damage_rolls_spell,
                     });
+                }
+
+                if (item["type"] != "ranged_weapon") {
+                    let green_flame_blade = spells.find((spell) => spell.name == "Green-Flame Blade");
+                    let booming_blade = spells.find((spell) => spell.name == "Booming Blade");
+
+                    if (green_flame_blade != null || booming_blade != null) {
+                        
+                        let damage_rolls_spell = [];
+                        for (var j = 0; j < item["damage"].length; j++) {
+                            damage_roll_spell = new Roll();
+                            damage_roll_spell.dice = item["damage"][j]["dice"];
+                            damage_roll_spell.num = item["damage"][j]["num"];
+                            // if proficient
+                                damage_roll_spell.modifiers.push(attack_mod);
+                            
+                            if (get_character_level() >= 5) {
+                                let extra_damage_roll = new Roll();
+                                extra_damage_roll.dice = DICE.D8;
+                                if (get_character_level() >= 17) {
+                                    extra_damage_roll.num = 3;
+                                } else if (get_character_level() >= 11) {
+                                    extra_damage_roll.num = 2;
+                                } else if (get_character_level() >= 5) {
+                                    extra_damage_roll.num = 1;
+                                }
+                                damage_roll_spell.extra_rolls.push(extra_damage_roll);
+                            }
+
+                            damage_rolls_spell.push(damage_roll_spell.toString());
+                        }
+
+                        if (green_flame_blade != null) {
+                            let spellcasting_mod_damage = new Roll();
+                            spellcasting_mod_damage.modifiers.push(Math.floor((green_flame_blade.casting_stat - 10) / 2));
+
+                            damage_rolls_spell.push(spellcasting_mod_damage);
+                        }
+
+                        attacks.push({
+                            "name": green_flame_blade != null ? "Green-Flame Blade" : "Booming Blade",
+                            "weapon": item["name"],
+                            "to_hit": to_hit_roll.toString(),
+                            "damage": damage_rolls_spell,
+                        });
+                    }
                 }
             }
         } catch {
@@ -565,7 +639,7 @@ async function parse_character() {
     attacks.push({
         "name": "Unarmed Strike",
         "to_hit": to_hit_roll.toString(),
-        "damage": get_stat_modifier(get_stat("str")) + 1,
+        "damage": [ get_stat_modifier(get_stat("str")) + 1 ],
     });
 
     attacks.forEach(attack => {
@@ -573,12 +647,14 @@ async function parse_character() {
         let damage_buttons = "";
         let notes = "";
         
-        to_hit_buttons = `<button label="${attack["name"]}" type="To Hit" class="rollable">${attack["to_hit"]}</button>`;
-        damage_buttons = `<button label="${attack["name"]}" type="Damage" class="rollable">${attack["damage"]}</button>`;
+        to_hit_buttons = `<button title="${attack["name"]}" label="To Hit" type="To Hit" class="rollable">${attack["to_hit"]}</button>`;
+        for (var i = 0; i < attack["damage"].length; i++) {
+            damage_buttons += `<button title="${attack["name"]}" label="Damage" type="Damage" class="rollable">${attack["damage"][i]}</button>`;
+        }
 
         document.getElementById("attacks").children[0].innerHTML += `<tr>
                 <td></td>
-                <th colspan="2" class="action_label">${attack["name"]}</th>
+                <th colspan="2" class="action_label">${attack["name"]}${(attack["weapon"] != undefined ? ` (${attack["weapon"]})` : "")}</th>
                 <td>${notes}</td>
                 <td>${to_hit_buttons}</td>
                 <td>${damage_buttons}</td>
@@ -625,6 +701,7 @@ async function parse_character() {
     ];
     for (const SKILL of skills) {
         document.getElementById(`${SKILL.toLowerCase().replaceAll(" ", "_")}_mod`).innerHTML = get_rollable_button(
+            SKILL,
             SKILL,
             "",
             (get_skill_modifier(SKILL) < 0 ? "" : "+") + get_skill_modifier(SKILL)
