@@ -193,12 +193,12 @@ class Description {
         if (Array.isArray(this.text)) {
             let result = "<p>";
             for (let i = 0; i < this.text.length; i++) {
-                result += this.text[i] + "</p>";
+                result += render_description(this.text[i], "</p><p>") + "</p>";
             }
             return result;
         }
         else
-            return this.text;
+            return render_description(this.text);
     }
 
     toString() {
@@ -381,6 +381,10 @@ class Spell {
     </tr>
     <tr>
         <td colspan='4' style='text-align: left;'>${this.description.toHTML()}</td>
+    </tr>
+    <tr>
+        <td>Source: </td>
+        <td class='source ${this.source.split(" ")[0]}' title='${get_book(this.source.split(" ")[0])}'>${this.source}</td>
     </tr>
     <tr><td colspan='4'><button label='${this.name}' class='rollable'>Cast</button></td></tr>
 </table>`;

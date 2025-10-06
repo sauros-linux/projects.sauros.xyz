@@ -1,4 +1,22 @@
 
+function get_book(str) {
+    switch (str) {
+        case "XPHB":
+            return 'Player’s Handbook (2024)';
+        case "PHB":
+            return 'Player’s Handbook (2014)';
+        case "TCE":
+            return 'Tasha’s Cauldron of Everything';
+        case "XGE":
+            return 'Xanathar’s Guide to Everything';
+        case "OTTG":
+        case "O:TTG":
+            return 'Obojima: Tales from the Tall Grass';
+    }
+
+    return "";
+}
+
 async function get_data(url) {
     try {
         const response = await fetch(url);
@@ -14,7 +32,7 @@ async function get_data(url) {
 }
 
 async function get_spell(source, name) {
-    let data = await get_data(`https://projects.sauros.xyz/5etools-src/data/spells/spells-${source.toLowerCase()}.json`);
+    let data = await get_data(`https://projects.sauros.xyz/5e/data/spells/spells-${source.toLowerCase()}.json`);
     if (data == null) {
         return;
     }
@@ -67,12 +85,18 @@ async function get_spell(source, name) {
         }
 
         result.effect = new SpellEffect();
-        if (SPELL.damageInflict != null) {
-            for (const damage_roll of result.description.toString().match(/\{@damage [0-9]{1,4}d[0-9]{1,2}[0-9 +\-]{0,9}\}/g)) {
-                let damage = new Damage();
-                damage.type = SPELL.damageInflict[0].charAt(0).toUpperCase() + SPELL.damageInflict[0].slice(1);
+        let matches = result.description.toString().match(/\{@(damage|dice) [0-9]{1,4}d[0-9]{1,2}[0-9 +\-]{0,9}\}/g);
 
-                let roll = damage_roll.replace("{@damage ", "").replace("}", "");
+        if (matches != null) {
+            for (const damage_roll of result.description.toString().match(/\{@(damage|dice) [0-9]{1,4}d[0-9]{1,2}[0-9 +\-]{0,9}\}/g)) {
+                let damage = new Damage();
+                if (SPELL.damageInflict != null) {
+                    damage.type = SPELL.damageInflict[0].charAt(0).toUpperCase() + SPELL.damageInflict[0].slice(1);
+                } else {
+                    damage.type = "";
+                }
+
+                let roll = damage_roll.replace("{@damage ", "").replace("{@dice ", "").replace("}", "");
                 damage.roll.num = roll.split('d')[0];
                 damage.roll.dice = `d${roll.split('d')[1]}`;
 
@@ -81,10 +105,6 @@ async function get_spell(source, name) {
 
             if (SPELL.spellAttack != null) {
                 result.effect.attack = true;
-            }
-            if (SPELL.savingThrow != null) {
-                result.effect.save = new Save();
-                result.effect.save.stat = abilityFromString(SPELL.savingThrow[0]);
             }
         }
 
@@ -98,10 +118,39 @@ async function get_spell(source, name) {
             result.range = `Self/${SPELL.range.distance.amount} ft.`;
         }
 
+        if (SPELL.savingThrow != null) {
+            result.effect.save = new Save();
+            result.effect.save.stat = abilityFromString(SPELL.savingThrow[0]);
+        }
+
         result.source = SPELL.source + " pg. " + SPELL.page;
 
         return result;
     } else {
         return null;
     }
+}
+
+function render_description(str, delimeter = "\n") {
+    let result = "";
+
+    if (typeof str == "string") {
+        result = str;
+    } else if (str.constructor.name == "Array") {
+        for (let i = 0; i < str.length; i++) {
+            result += str[i];
+            if ((i + 1) < str.length)
+                result += delimeter;
+        }
+    } else if ("type" in str && str["type"] == "list") {
+        result += "<ul>";
+        for (let i = 0; i < str["items"].length; i++) {
+            result += "<li>" + str["items"][i] + "</li>";
+            if ((i + 1) < str["items"].length)
+                result += delimeter;
+        }
+        result += "</ul>";
+    }
+
+    return result;
 }

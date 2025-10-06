@@ -16,6 +16,52 @@ async function getData(url) {
     }
 }
 
+function open_load_window() {
+    document.getElementById("input").style.display = "block";
+
+    document.getElementById("input").style.width = "90%";
+    document.getElementById("input").style.minWidth = "500px";
+}
+
+function close_load_window() {
+    document.getElementById("input").style.display = "none";
+}
+
+function load_character() {
+    let character_json_file = document.getElementById("character_json_file").files[0];
+    let character_json_text = document.getElementById("character_json_text").value;
+
+    const reader = new FileReader();
+    reader.onload = function() {
+        character_json = JSON.parse(reader.result);
+
+        character = Object.assign(new Character(), character_json);
+
+        console.log(character);
+        
+        parse_character();
+    };
+
+    if (character_json_file != null) {
+        reader.readAsText(character_json_file);
+    } else if (character_json_text != null) {
+        character_json = JSON.parse(character_json_text);
+
+        character = Object.assign(new Character(), character_json);
+
+        console.log(character);
+        
+        parse_character();
+    }
+}
+
+function save_character() {
+    let string = JSON.stringify(character_json);
+
+    navigator.clipboard.writeText(string);
+    alert("Copied to clipboard!");
+}
+
 function add_sign(value) {
     if (value >= 0)
         return `+${value}`;
@@ -383,129 +429,9 @@ function send_non_roll(button) {
     }, "*")
 }
 
-async function parse_character() {
+async function parse_attacks(spells) {
 
     var attacks = [];
-    let abilities = [
-        "str", "dex", "con", "int", "wis", "cha"
-    ];
-
-    document.getElementById("name").innerText = character_json["name"];
-
-    for (const ability of abilities) {
-        var base_score = character["ability_scores"][abilityFromString(ability)];
-
-        character["background"]["features"].forEach(feature => {
-            if ("asi" in feature && ability in feature["asi"]) {
-                base_score += feature["asi"][ability];
-            } else if ("feat" in feature && "asi" in feature["feat"] && ability in feature["feat"]["asi"]) {
-                base_score += feature["feat"]["asi"][ability];
-            }
-        });
-
-        for (const character_class of character["class"]) {
-            character_class["features"].forEach(feature => {
-                if ("asi" in feature && ability in feature["asi"]) {
-                    base_score += feature["asi"][ability];
-                } else if ("feat" in feature && "asi" in feature["feat"] && ability in feature["feat"]["asi"]) {
-                    base_score += feature["feat"]["asi"][ability];
-                }
-            });
-        }
-
-        character["species"]["features"].forEach(feature => {
-            if ("asi" in feature && ability in feature["asi"]) {
-                base_score += feature["asi"][ability];
-            } else if ("feat" in feature && "asi" in feature["feat"] && ability in feature["feat"]["asi"]) {
-                base_score += feature["feat"]["asi"][ability];
-            } else if ("speed" in feature) {
-                document.getElementById("walk_speed").innerText = `${modifier["speed"]["name"]}: ${modifier["speed"]["speed"]} ft.`;
-            }
-        });
-
-        character["features"].forEach(feature => {
-            if ("asi" in feature && ability in feature["asi"]) {
-                base_score += feature["asi"][ability];
-            } else if ("feat" in feature && "asi" in feature["feat"] && ability in feature["feat"]["asi"]) {
-                base_score += feature["feat"]["asi"][ability];
-            }
-        });
-
-        document.getElementById(ability).innerText = base_score;
-
-        var mod = get_stat_modifier(base_score);
-        var save = get_stat_modifier(base_score) + (is_proficient(get_stat_label(ability) + " Saving Throws") ? get_proficiency_bonus() : 0) 
-        document.getElementById(ability + "_mod").innerHTML = get_rollable_button(`${get_stat_label(ability)}`, `${get_stat_label(ability)}`, "", (mod >= 0 ? "+" : "") + mod.toString());
-        document.getElementById(ability + "_save").innerHTML = get_rollable_button(`${get_stat_label(ability)}`, `${get_stat_label(ability)} Save`, "Save", (save >= 0 ? "+" : "") + save.toString());
-    }
-
-    document.getElementById("prof").innerHTML           = get_rollable_button(`Proficiency Bonus`, `Proficiency Bonus`, "", (get_proficiency_bonus() >= 0 ? "+" : "") + get_proficiency_bonus().toString());
-    document.getElementById("init").innerHTML           = get_rollable_button(`Initiative`, `Initiative`, "", (get_initiative_bonus() >= 0 ? "+" : "") + get_initiative_bonus().toString());
-    document.getElementById("inspiration").innerHTML    = `<input type="checkbox">`;
-    document.getElementById("current_hp").innerHTML     = `<input type="number">`;
-    document.getElementById("max_hp").innerHTML         = `<input type="number">`;
-    document.getElementById("temp_hp").innerHTML        = `<input type="number">`;
-
-    for (var i = 0; i < character_json["hit_dice"].length; i++) {
-        document.getElementById("max_hp").children[0].value += character_json["hit_dice"][i] + get_stat_modifier(get_stat("con"));
-    }
-
-    let spells = [];
-    for (const feature of character["background"]["features"]) {
-        if ("feat" in feature && "spells" in feature["feat"] && feature["feat"]["spells"].length > 0) {
-            var spellcasting_ability = feature["feat"]["spellcasting_ability"];
-
-            for (const spell of feature["feat"]["spells"]) {
-                let class_spell = await get_spell(spell[0], spell[1]);
-                class_spell.casting_stat = get_stat(abilityToString(spellcasting_ability, true).toLowerCase());
-                class_spell.proficiency_bonus = character.getProficiencyBonus();
-                class_spell.prepared = spell[2] ?? false;
-        
-                spells.push(class_spell);
-            }
-        }
-    }
-    for (const character_class of character["class"]) {        
-        for (const feature of character_class["features"]) {
-            if (feature["level"] > character_class["level"])
-                continue;
-
-            if ("spells" in feature && feature["spells"].length > 0) {
-                var spellcasting_ability = feature["spellcasting_ability"];
-
-                for (const spell of feature["spells"]) {
-                    let class_spell = await get_spell(spell[0], spell[1]);
-
-                    if (class_spell != null) {
-                        class_spell.casting_stat = get_stat(abilityToString(spellcasting_ability, true).toLowerCase());
-                        class_spell.proficiency_bonus = character.getProficiencyBonus();
-                        class_spell.prepared = spell[2] ?? false;
-
-                        spells.push(class_spell);
-                    }
-                }
-            }
-
-            if ("feat" in feature && "spells" in feature["feat"] && feature["feat"]["spells"].length > 0) {
-                var spellcasting_ability = feature["feat"]["spellcasting_ability"];
-
-                for (const spell of feature["feat"]["spells"]) {
-                    let class_spell = await get_spell(spell[0], spell[1]);
-                    
-                    if (class_spell != null) {
-                        class_spell.casting_stat = get_stat(abilityToString(spellcasting_ability, true).toLowerCase());
-                        class_spell.proficiency_bonus = character.getProficiencyBonus();
-                        class_spell.prepared = spell[2] ?? false;
-                
-                        spells.push(class_spell);
-                    }
-                }
-            }
-        }
-    }
-
-    spells.sort((a, b) => (a.name < b.name) ? -1 : (a.name > b.name) ? 1 : 0);
-    spells.sort((a, b) => a.level - b.level);
 
     for (var i = 0; i < character_json["equipment"].length; i++) {
         try {
@@ -642,6 +568,215 @@ async function parse_character() {
         "damage": [ get_stat_modifier(get_stat("str")) + 1 ],
     });
 
+    return attacks;
+}
+
+async function parse_inventory() {
+    for (let key in character_json["inventory"]) {
+        document.getElementById("inventory").children[0].innerHTML += `<tr>
+                <td colspan="6"><b>${key.toUpperCase()}</b></td>
+            </tr>`;
+
+        let weight = 0.0;
+        let gp = 0.0;
+        
+        for (var i = 0; i < character_json["inventory"][key].length; i++) {
+            let item = character_json["inventory"][key][i];
+
+            document.getElementById("inventory").children[0].innerHTML += `<tr>
+                <td>x${item[3]}</td>
+                <td colspan="3" class="action_label">${item[1]}</td>
+                <td>${item[2]}</td>
+                <td>${item[4]}</td>
+            </tr>`;
+
+            weight += item[2] * item[3];
+            gp += item[4] * item[3];
+        }
+
+        document.getElementById("inventory").children[0].innerHTML += `<tr>
+                <td colspan="4">Total</td>
+                <td>${weight} lbs.</td>
+                <td>${gp} GP</td>
+            </tr>`;
+    }
+}
+
+async function parse_spells() {
+    let spells = [];
+
+    for (const feature of character["background"]["features"]) {
+        if ("feat" in feature && "spells" in feature["feat"] && feature["feat"]["spells"].length > 0) {
+            var spellcasting_ability = feature["feat"]["spellcasting_ability"];
+
+            for (const spell of feature["feat"]["spells"]) {
+                let class_spell = await get_spell(spell[0], spell[1]);
+                class_spell.casting_stat = get_stat(abilityToString(spellcasting_ability, true).toLowerCase());
+                class_spell.proficiency_bonus = character.getProficiencyBonus();
+                class_spell.prepared = spell[2] ?? false;
+        
+                spells.push(class_spell);
+            }
+        }
+    }
+    for (const character_class of character["class"]) {        
+        for (const feature of character_class["features"]) {
+            if (feature["level"] > character_class["level"])
+                continue;
+
+            if ("spells" in feature && feature["spells"].length > 0) {
+                var spellcasting_ability = feature["spellcasting_ability"];
+
+                for (const spell of feature["spells"]) {
+                    let class_spell = await get_spell(spell[0], spell[1]);
+
+                    if (class_spell != null) {
+                        class_spell.casting_stat = get_stat(abilityToString(spellcasting_ability, true).toLowerCase());
+                        class_spell.proficiency_bonus = character.getProficiencyBonus();
+                        class_spell.prepared = spell[2] ?? false;
+
+                        spells.push(class_spell);
+                    }
+                }
+            }
+
+            if ("feat" in feature && "spells" in feature["feat"] && feature["feat"]["spells"].length > 0) {
+                var spellcasting_ability = feature["feat"]["spellcasting_ability"];
+
+                for (const spell of feature["feat"]["spells"]) {
+                    let class_spell = await get_spell(spell[0], spell[1]);
+                    
+                    if (class_spell != null) {
+                        class_spell.casting_stat = get_stat(abilityToString(spellcasting_ability, true).toLowerCase());
+                        class_spell.proficiency_bonus = character.getProficiencyBonus();
+                        class_spell.prepared = spell[2] ?? false;
+                
+                        spells.push(class_spell);
+                    }
+                }
+            }
+        }
+    }
+
+    spells.sort((a, b) => (a.name < b.name) ? -1 : (a.name > b.name) ? 1 : 0);
+    spells.sort((a, b) => a.level - b.level);
+
+    return spells;
+}
+
+async function parse_character() {
+
+    console.log(character_json);
+
+    let abilities = [
+        "str", "dex", "con", "int", "wis", "cha"
+    ];
+
+    document.getElementById("name").innerText = character_json["name"];
+
+    document.getElementById("background").innerText = character_json["background"]["name"];
+
+    // parse classes
+    for (let i = 0; i < character_json["class"].length; i++) {
+        let current_class = character_json["class"][i];
+        let features = "";
+
+        for (let j = 0; j < current_class["features"].length; j++) {
+            let current_feature = current_class["features"][j];
+
+            features += `<tr><td>${current_feature["name"]}</td></tr>`;
+        }
+
+        document.getElementById("class-features").innerHTML += `<div class="flex">
+                            <table class="collapsible">
+                                <tr><th>${current_class["name"]} Features</th></tr>
+                                ${features}
+                            </table>
+                        </div>`;
+    }
+
+    document.getElementById("species").innerText = character_json["species"]["name"];
+    document.getElementById("walk_speed").innerText = character_json["species"]["walking_speed"];
+
+    for (const ability of abilities) {
+        var base_score = character["ability_scores"][abilityFromString(ability)];
+
+        character["background"]["features"].forEach(feature => {
+            if ("asi" in feature && ability in feature["asi"]) {
+                base_score += feature["asi"][ability];
+            } else if ("feat" in feature && "asi" in feature["feat"] && ability in feature["feat"]["asi"]) {
+                base_score += feature["feat"]["asi"][ability];
+            }
+        });
+
+        for (const character_class of character["class"]) {
+            character_class["features"].forEach(feature => {
+                if ("asi" in feature && ability in feature["asi"]) {
+                    base_score += feature["asi"][ability];
+                } else if ("feat" in feature && "asi" in feature["feat"] && ability in feature["feat"]["asi"]) {
+                    base_score += feature["feat"]["asi"][ability];
+                }
+            });
+        }
+
+        character["species"]["features"].forEach(feature => {
+            if ("asi" in feature && ability in feature["asi"]) {
+                base_score += feature["asi"][ability];
+            } else if ("feat" in feature && "asi" in feature["feat"] && ability in feature["feat"]["asi"]) {
+                base_score += feature["feat"]["asi"][ability];
+            } else if ("speed" in feature) {
+                document.getElementById("walk_speed").innerText = `${modifier["speed"]["name"]}: ${modifier["speed"]["speed"]} ft.`;
+            }
+        });
+
+        character["features"].forEach(feature => {
+            if ("asi" in feature && ability in feature["asi"]) {
+                base_score += feature["asi"][ability];
+            } else if ("feat" in feature && "asi" in feature["feat"] && ability in feature["feat"]["asi"]) {
+                base_score += feature["feat"]["asi"][ability];
+            }
+        });
+
+        document.getElementById(ability).innerText = base_score;
+
+        var mod = get_stat_modifier(base_score);
+        var save = get_stat_modifier(base_score) + (is_proficient(get_stat_label(ability) + " Saving Throws") ? get_proficiency_bonus() : 0) 
+        document.getElementById(ability + "_mod").innerHTML = get_rollable_button(`${get_stat_label(ability)}`, `${get_stat_label(ability)}`, "", (mod >= 0 ? "+" : "") + mod.toString());
+        document.getElementById(ability + "_save").innerHTML = get_rollable_button(`${get_stat_label(ability)}`, `${get_stat_label(ability)} Save`, "Save", (save >= 0 ? "+" : "") + save.toString());
+    }
+
+    document.getElementById("prof").innerHTML           = get_rollable_button(`Proficiency Bonus`, `Proficiency Bonus`, "", (get_proficiency_bonus() >= 0 ? "+" : "") + get_proficiency_bonus().toString());
+    document.getElementById("init").innerHTML           = get_rollable_button(`Initiative`, `Initiative`, "", (get_initiative_bonus() >= 0 ? "+" : "") + get_initiative_bonus().toString());
+    document.getElementById("inspiration").innerHTML    = `<input type="checkbox">`;
+    document.getElementById("current_hp").innerHTML     = `<input type="number">`;
+    document.getElementById("max_hp").innerHTML         = `<input type="number">`;
+    document.getElementById("temp_hp").innerHTML        = `<input type="number">`;
+
+    let max_hp = 0;
+    for (var i = 0; i < character_json["hit_dice"].length; i++) {
+        max_hp += character_json["hit_dice"][i] + get_stat_modifier(get_stat("con"));
+    }
+    document.getElementById("max_hp").children[0].value = max_hp;
+
+    let spells = await parse_spells();
+    var attacks = await parse_attacks(spells);
+
+    document.getElementById("attacks").parentElement.innerHTML = `<table id="attacks">
+                            <tr>
+                                <th colspan="6">ATTACKS</th>
+                            </tr>
+                        </table>`;
+
+    document.getElementById("spells").parentElement.innerHTML = `<table id="spells">
+                            <tr>
+                                <th colspan="6">SPELLS</th>
+                            </tr>
+                            <tr>
+                                <td colspan="5"><b>CANTRIPS</b></td>
+                                <td></td>
+                            </tr>
+                        </table>`;
+
     attacks.forEach(attack => {
         let to_hit_buttons = "";
         let damage_buttons = "";
@@ -660,12 +795,7 @@ async function parse_character() {
                 <td>${damage_buttons}</td>
             </tr>`;
     });
-
-    document.getElementById("spells").children[0].innerHTML += `<tr>
-                <td colspan="5"><b>CANTRIPS</b></td>
-                <td></td>
-            </tr>`;
-
+    
     var previous_spell_level = 0;
     spells.forEach(spell => {
         if (spell["level"] != previous_spell_level) {
@@ -707,6 +837,9 @@ async function parse_character() {
             (get_skill_modifier(SKILL) < 0 ? "" : "+") + get_skill_modifier(SKILL)
         );
     }
+    document.getElementById("passive_perception").innerText     = 10 + get_skill_modifier("Perception");
+    document.getElementById("passive_investigation").innerText  = 10 + get_skill_modifier("Investigation");
+    document.getElementById("passive_insight").innerText        = 10 + get_skill_modifier("Insight");
 
     if (has_spell("Mage Armor")) {
         document.getElementById("ac_table").innerHTML = `<tr>
@@ -733,23 +866,7 @@ async function parse_character() {
                             </tr>`;
     document.getElementById("armor_class").innerText = get_armor_class();
 
-    for (let key in character_json["inventory"]) {
-        document.getElementById("inventory").children[0].innerHTML += `<tr>
-                <td colspan="6"><b>${key.toUpperCase()}</b></td>
-            </tr>`;
-        
-        for (var i = 0; i < character_json["inventory"][key].length; i++) {
-            let item = character_json["inventory"][key][i];
-
-            document.getElementById("inventory").children[0].innerHTML += `<tr>
-                <td></td>
-                <td colspan="2" class="action_label">${item[1]}</td>
-                <td>${item[2] * item[3]}</td>
-                <td>${item[3]}</td>
-                <td>${item[4] * item[3]}</td>
-            </tr>`;
-        }
-    }
+    await parse_inventory();
 
     var rollable_buttons = document.getElementsByClassName("rollable");
 
@@ -796,12 +913,33 @@ function roll(e) {
     }, "*")
 }
 
+function collapsible_on_click(event) {
+    event.currentTarget.classList.toggle("expanded");
+}
+
+function update_collapsible(name) {
+    if (typeof name == "string") {
+        document.getElementById(name).addEventListener("click", collapsible_on_click);
+    } else {
+        name.addEventListener("click", collapsible_on_click);
+    }
+}
+
+function update_collapsibles() {
+    var coll = document.getElementsByClassName("collapsible");
+    var i;
+
+    for (i = 0; i < coll.length; i++) {
+        update_collapsible(coll[i]);
+    }
+}
+
 async function init() {
     character_json = await getData("character.json");
-
     character = Object.assign(new Character(), character_json);
     
     parse_character();
+    update_collapsibles();
 }
 
 window.onload = init;

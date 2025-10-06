@@ -1,4 +1,22 @@
 
+function get_book(str) {
+    switch (str) {
+        case "XPHB":
+            return 'Player’s Handbook (2024)';
+        case "PHB":
+            return 'Player’s Handbook (2014)';
+        case "TCE":
+            return 'Tasha’s Cauldron of Everything';
+        case "XGE":
+            return 'Xanathar’s Guide to Everything';
+        case "OTTG":
+        case "O:TTG":
+            return 'Obojima: Tales from the Tall Grass';
+    }
+
+    return "";
+}
+
 async function get_data(url) {
     try {
         const response = await fetch(url);
@@ -111,4 +129,28 @@ async function get_spell(source, name) {
     } else {
         return null;
     }
+}
+
+function render_description(str, delimeter = "\n") {
+    let result = "";
+
+    if (typeof str == "string") {
+        result = str;
+    } else if (str.constructor.name == "Array") {
+        for (let i = 0; i < str.length; i++) {
+            result += str[i];
+            if ((i + 1) < str.length)
+                result += delimeter;
+        }
+    } else if ("type" in str && str["type"] == "list") {
+        result += "<ul>";
+        for (let i = 0; i < str["items"].length; i++) {
+            result += "<li>" + str["items"][i] + "</li>";
+            if ((i + 1) < str["items"].length)
+                result += delimeter;
+        }
+        result += "</ul>";
+    }
+
+    return result;
 }

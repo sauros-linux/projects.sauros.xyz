@@ -169,6 +169,7 @@
     "species": {
         "name": "Nakudama",
         "description": "",
+        "walking_speed": 25,
         "features": [
             
         ]

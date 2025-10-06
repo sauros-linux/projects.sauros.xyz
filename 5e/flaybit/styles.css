@@ -3,7 +3,8 @@
 @font-face { font-family: 'FF Scala Sans'; src: url("ScalaSans.otf"); }
 
 body {
-    font-family: "FF Scala Sans";
+    /*font-family: "FF Scala Sans";*/
+    font-family: Arial, Helvetica, sans-serif;
 
     color: #BBBBBB;
     background-color: #222222;
@@ -52,7 +53,9 @@ a {
 
 .container {
     display: flex;
-    margin: 12px 4px;
+}
+.container .vertical {
+    flex-direction: column;
 }
 .container .horizontal {
     flex-direction: row;
@@ -60,36 +63,23 @@ a {
 
 .flex {
     display: flex;
-}
-
-.flex_container {
     flex: 1;
 }
-
-.name {
-    flex: 1;
-}
-.ability-scores {
-    flex: 1;
+.statistics {
+    flex: 3;
 }
 .defenses {
-    flex: 1;
+    flex: 2;
 }
-.saving-throws {
-    flex: 1;
+.defenses-conditions {
+    flex: 2;
 }
-.senses {
-    flex: 1;
-}
-.proficiencies {
-    flex: 1;
-}
-.skills {
-    flex: 1;
+.hit-points {
+    flex: 2;
 }
 .attacks {
-    flex: 2;
     display: block;
+    flex: 2;
 }
 
 .action_label {
@@ -101,7 +91,6 @@ a {
     transition: all 0.075s ease-in;
 }
 .action_label:hover {
-    font-weight: bold;
     color: #D2C338;
 }
 
@@ -164,7 +153,7 @@ table.invisible {
 }
 th {
     padding: 4px 8px;
-    font-family: "FF Scala Sans";
+    /*font-family: "FF Scala Sans";*/
     font-weight: bold;
     color: #D29A38;
 }
@@ -237,47 +226,35 @@ button {
     display: inline-block;
 }
 .collapsible {
-    width: calc(100%);
-    height: unset;
-    margin: -2px;
-    padding: 2px;
-    border-radius: 6px 6px 0px 0px;
+    position: relative;
     cursor: pointer;
 
-    transition: all 0.1s ease-in-out;
+    transition: border-color 0.1s ease-in-out, background-color 0.1s ease-in-out;
 }
-.collapsible:hover {
-    background-color: rgba(0,0,0,0.1);
+.collapsible td {
+    display: none;
+}
+.collapsible > td:first-child {
+    display: initial; 
 }
 .collapsible::after {
-    content: "";
-    font-size: 0.5em;
-    float: right;
-    transform: translateY(50%);
-}
-.collapsible.expand::after {
-    content: "Expand";
-}
-    /*margin: 4px 0px;
-    padding: 8px 6px;
-    box-sizing: border-box;
-    border-radius: 6px 6px 0px 0px;
-    border-width: 1px;
-    border-style: solid;
-    border-color: #444444;
-    background-color: #222222;
-    text-align: left;
-    cursor: pointer;
+    position: absolute;
+    top: 0px;   right: 6px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #D29A38;
+    content: "🞃";
 }
 .collapsible:hover {
-    background-color: #565656;
-}*/
-/*.collapsible::before {
-    display: inline-block;
-    content: attr(data-descr);
-    padding-right: 6px;
-    min-width: 55px;
-}*/
+    border-color: #D29A38;
+    background-color: rgba(0,0,0,0.2);
+}
+.collapsible.expanded td {
+    display: initial;
+}
+.collapsible.expanded::after {
+    content: "🞁";
+}
 
 label {
     font-family: "FF Scala Sans";
@@ -404,40 +381,6 @@ td:has(> .value-list), div:has(> .value-list) {
 .source.PSD     { color: #5db7da; }
 .source.HWCS    { color: #d0914b; }
 
-.source.PHB:before      { content: "Player's Handbook"; }
-.source.MM:before       { content: "Monster Manual"; }
-.source.DMG:before      { content: "Dungeon Master's Guide"; }
-.source.VGM:before      { content: "Volo's Guide to Monsters"; }
-.source.XGE:before      { content: ""; }
-.source.MTF:before      { content: ""; }
-.source.AI:before       { content: ""; }
-.source.TCE:before      { content: ""; }
-.source.FTD:before      { content: ""; }
-.source.MPMM:before     { content: ""; }
-.source.AAG:before      { content: ""; }
-.source.BAM:before      { content: ""; }
-.source.BGG:before      { content: ""; }
-.source.MPP:before      { content: ""; }
-.source.SatO:before     { content: ""; }
-.source.BMT:before      { content: ""; }
-.source.DMTCRG:before   { content: ""; }
-.source.SCAG:before     { content: ""; }
-.source.GRR:before      { content: ""; }
-.source.ERLW:before     { content: ""; }
-.source.EGW:before      { content: ""; }
-.source.MOT:before      { content: ""; }
-.source.VRGR:before     { content: ""; }
-.source.SCC:before      { content: ""; }
-.source.TDCSR:before    { content: ""; }
-.source.PSZ:before      { content: ""; }
-.source.PSI:before      { content: ""; }
-.source.PSK:before      { content: ""; }
-.source.PSA:before      { content: ""; }
-.source.OSA:before      { content: ""; }
-.source.PSX:before      { content: ""; }
-.source.PSD:before      { content: ""; }
-.source.HWCS:before     { content: ""; }
-
 .stat {
     width: 100%
 }
@@ -489,6 +432,18 @@ td:has(> .value-list), div:has(> .value-list) {
     top: 0;
     right: 0;
     overflow-x: hidden; /* Disable horizontal scroll */
+    background-color: #222222;
+}
+
+#input {
+    display: none;
+    height: 90%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 5%;
+    left: 5%;
+    overflow-x: hidden;
     background-color: #222222;
 }
 

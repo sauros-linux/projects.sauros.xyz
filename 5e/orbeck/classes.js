@@ -193,12 +193,12 @@ class Description {
         if (Array.isArray(this.text)) {
             let result = "<p>";
             for (let i = 0; i < this.text.length; i++) {
-                result += this.text[i] + "</p>";
+                result += render_description(this.text[i], "</p><p>") + "</p>";
             }
             return result;
         }
         else
-            return this.text;
+            return render_description(this.text);
     }
 
     toString() {
@@ -382,6 +382,10 @@ class Spell {
     <tr>
         <td colspan='4' style='text-align: left;'>${this.description.toHTML()}</td>
     </tr>
+    <tr>
+        <td>Source: </td>
+        <td class='source ${this.source.split(" ")[0]}' title='${get_book(this.source.split(" ")[0])}'>${this.source}</td>
+    </tr>
     <tr><td colspan='4'><button label='${this.name}' class='rollable'>Cast</button></td></tr>
 </table>`;
     }
@@ -410,11 +414,10 @@ class Spell {
                 i++;
             }
         }
-        
 
         return `<tr ${(this.prepared ? "" : "class=\"unprepared\"")}>
             <td><button label="${this.name}" text="${this.toRoll(true, true, true, true, true, true, true, true)}" onclick=roll(event)>Cast</button></td>
-            <th onclick="open_description(\`${this.toHTML()}\`)">${this.name}</th>
+            <th onclick="open_description(\`${this.toHTML()}\`)" class="action_label">${this.name}</th>
             <td>${this.casting_time.toShortString()}</td>
             <td>${this.range}</td>
             <td>${spell_attack_to_hit_button}${spell_attack_save}</td>
