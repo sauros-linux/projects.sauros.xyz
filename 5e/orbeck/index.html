@@ -3,6 +3,7 @@
 <html>
     <head>
         <meta charset="utf-8">
+        <link rel="stylesheet" href="main.css"/>
         <link rel="stylesheet" href="styles.css"/>
     </head>
     <body>
@@ -12,105 +13,86 @@
                 <button class="flex" onclick="save_character()">Save</button>
             </div>
             <div class="container">
-                <h2 class="flex name"><span id="name"></span></h2>
+                <h2 class="flex name"><span id="name" class="heading"></span></h2>
             </div>
             <div class="container horizontal">
                 <div class="flex container vertical">
                     <div class="flex ability-scores">
                         <table>
                             <tr>
-                                <th>STR</th>
-                                <th>DEX</th>
-                                <th>CON</th>
-                                <th>INT</th>
-                                <th>WIS</th>
-                                <th>CHA</th>
+                                <th class="heading">STR</th>
+                                <th class="heading">DEX</th>
+                                <th class="heading">CON</th>
+                                <th class="heading">INT</th>
+                                <th class="heading">WIS</th>
+                                <th class="heading">CHA</th>
                             </tr>
                             <tr>
-                                <td>
-                                    <table class="subtable">
-                                        <tr><td><span class="stat_modifier" id="str_mod"></span></td></tr>
-                                        <tr><td><span class="stat_total"    id="str"></span></td></tr>
-                                    </table>
-                                </td>
-                                <td>
-                                    <table class="subtable">
-                                        <tr><td><span class="stat_modifier" id="dex_mod"></span></td></tr>
-                                        <tr><td><span class="stat_total"    id="dex"></span></td></tr>
-                                    </table>
-                                </td>
-                                <td>
-                                    <table class="subtable">
-                                        <tr><td><span class="stat_modifier" id="con_mod"></span></td></tr>
-                                        <tr><td><span class="stat_total"    id="con"></span></td></tr>
-                                    </table>
-                                </td>
-                                <td>
-                                    <table class="subtable">
-                                        <tr><td><span class="stat_modifier" id="int_mod"></span></td></tr>
-                                        <tr><td><span class="stat_total"    id="int"></span></td></tr>
-                                    </table>
-                                </td>
-                                <td>
-                                    <table class="subtable">
-                                        <tr><td><span class="stat_modifier" id="wis_mod"></span></td></tr>
-                                        <tr><td><span class="stat_total"    id="wis"></span></td></tr>
-                                    </table>
-                                </td>
-                                <td>
-                                    <table class="subtable">
-                                        <tr><td><span class="stat_modifier" id="cha_mod"></span></td></tr>
-                                        <tr><td><span class="stat_total"    id="cha"></span></td></tr>
-                                    </table>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                    <div class="flex saving-throws">
-                        <table>
-                            <tr>
-                                <th>SAVING THROWS</th>
+                                <td><span class="stat_modifier" id="str_mod"></span></td>
+                                <td><span class="stat_modifier" id="dex_mod"></span></td>
+                                <td><span class="stat_modifier" id="con_mod"></span></td>
+                                <td><span class="stat_modifier" id="int_mod"></span></td>
+                                <td><span class="stat_modifier" id="wis_mod"></span></td>
+                                <td><span class="stat_modifier" id="cha_mod"></span></td>
                             </tr>
                             <tr>
-                                <td>
-                                    <table class="subtable">
-                                        <tr>
-                                            <td>
-                                                <span class="stat_label">STR</span>
-                                                <span class="stat_modifier" id="str_save"></span>
-                                            </td>
-                                            <td>
-                                                <span class="stat_label">INT</span> 
-                                                <span class="stat_modifier" id="int_save"></span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <span class="stat_label">DEX</span> 
-                                                <span class="stat_modifier" id="dex_save"></span>
-                                            </td>
-                                            <td>
-                                                <span class="stat_label">WIS</span> 
-                                                <span class="stat_modifier" id="wis_save"></span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <span class="stat_label">CON</span> 
-                                                <span class="stat_modifier" id="con_save"></span>
-                                            </td>
-                                            <td>
-                                                <span class="stat_label">CHA</span> 
-                                                <span class="stat_modifier" id="cha_save"></span>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
+                                <td><span class="stat_total"    id="str"></span></td>
+                                <td><span class="stat_total"    id="dex"></span></td>
+                                <td><span class="stat_total"    id="con"></span></td>
+                                <td><span class="stat_total"    id="int"></span></td>
+                                <td><span class="stat_total"    id="wis"></span></td>
+                                <td><span class="stat_total"    id="cha"></span></td>
+                            </tr>
+                            <tr><td colspan="6">SAVING THROWS</td></tr>
+                            <tr>
+                                <td><span class="stat_modifier" id="str_save"></span></td>
+                                <td><span class="stat_modifier" id="dex_save"></span></td>
+                                <td><span class="stat_modifier" id="con_save"></span></td>
+                                <td><span class="stat_modifier" id="int_save"></span></td>
+                                <td><span class="stat_modifier" id="wis_save"></span></td>
+                                <td><span class="stat_modifier" id="cha_save"></span></td>
                             </tr>
                         </table>
                     </div>
                 </div>
                 <div class="flex container vertical defenses">
+                    <div class="flex container horizontal">
+                        <div class="flex">
+                            <table id="ac_table">
+                                <tr>
+                                    <th  class="heading">ARMOR CLASS</th>
+                                </tr>
+                                <tr><td id="armor_class"></td></tr>
+                            </table>
+                        </div>
+                        <div class="flex hit-points">
+                            <table>
+                                <tr>
+                                    <th class="heading" colspan="5">HIT POINTS</th>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <div class="stat">
+                                            <span class="stat_modifier" id="current_hp"></span>
+                                            <span class="stat_label">CURRENT</span>
+                                        </div>
+                                    </td>
+                                    <td colspan="2">
+                                        <div class="stat">
+                                            <span class="stat_modifier" id="max_hp"></span>
+                                            <span class="stat_label">MAX</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="stat">
+                                            <span class="stat_modifier" id="temp_hp"></span>
+                                            <span class="stat_label">TEMP</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
                     <div class="flex container horizontal">
                         <div class="flex statistics">
                             <table>
@@ -135,58 +117,10 @@
                                     </td>
                                     <td>
                                         <div class="stat">
-                                            <span class="stat_label">INITIATIVE</span>
                                             <span class="stat_modifier" id="init"></span>
+                                            <span class="stat_label">INITIATIVE</span>
                                         </div>
                                     </td>
-                                </tr>
-                            </table>
-                        </div>
-                        <div class="flex">
-                            <table id="ac_table">
-                                <tr>
-                                    <th>ARMOR CLASS</th>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-                    <div class="flex container horizontal">
-                        <div class="flex defenses-conditions">
-                            <table>
-                                <tr>
-                                    <th>DEFENSES</th>
-                                    <th>CONDITIONS</th>
-                                </tr>
-                                <tr>
-                                    <td id="defenses">None</td>
-                                    <td id="conditions">None</td>
-                                </tr>
-                            </table>
-                        </div>
-                        <div class="flex hit-points">
-                            <table>
-                                <tr>
-                                    <td>
-                                        <div class="stat">
-                                            <span class="stat_label">CURRENT</span>
-                                            <span class="stat_modifier" id="current_hp"></span>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="stat">
-                                            <span class="stat_label">MAX</span>
-                                            <span class="stat_modifier" id="max_hp"></span>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="stat">
-                                            <span class="stat_label">TEMP</span>
-                                            <span class="stat_modifier" id="temp_hp"></span>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th colspan="3">HIT POINTS</th>
                                 </tr>
                             </table>
                         </div>
@@ -196,6 +130,9 @@
             <div class="container horizontal">
                 <div class="flex senses">
                     <table>
+                        <tr>
+                            <th class="heading" colspan="3">SENSES</th>
+                        </tr>
                         <tr>
                             <td colspan="2">PASSIVE PERCEPTION</td>
                             <td id="passive_perception"></td>
@@ -208,19 +145,28 @@
                             <td colspan="2">PASSIVE INSIGHT</td>
                             <td id="passive_insight"></td>
                         </tr>
-                        <tr>
-                            <th colspan="3">SENSES</th>
-                        </tr>
                     </table>
                 </div>
                 <div class="flex proficiencies">
                     <table>
+                        <tr>
+                            <th class="heading">PROFICIENCIES & TRAINING</th>
+                        </tr>
                         <tr><td>ARMOR</td></tr>
                         <tr><td>WEAPONS</td></tr>
                         <tr><td>TOOLS</td></tr>
                         <tr><td>LANGUAGES</td></tr>
+                    </table>
+                </div>
+                <div class="flex defenses-conditions">
+                    <table>
                         <tr>
-                            <th>PROFICIENCIES & TRAINING</th>
+                            <th class="heading">DEFENSES</th>
+                            <th class="heading">CONDITIONS</th>
+                        </tr>
+                        <tr>
+                            <td id="defenses">None</td>
+                            <td id="conditions">None</td>
                         </tr>
                     </table>
                 </div>
@@ -229,7 +175,7 @@
                 <div class="flex skills">
                     <table>
                         <tr>
-                            <th colspan="4">SKILLS</th>
+                            <th class="heading" colspan="4">SKILLS</th>
                         </tr>
                         <tr><td colspan="2">Acrobatics</td>     <td class="stat_label">DEX</td><td id="acrobatics_mod"></td></tr>
                         <tr><td colspan="2">Animal Handling</td><td class="stat_label">WIS</td><td id="animal_handling_mod"></td></tr>
@@ -252,31 +198,23 @@
                     </table>
                 </div>
                 <div class="flex attacks">
-                    <table>
+                    <table style="border: none;">
                         <tr>
-                            <th><button onclick="open_tab('attacks_tab')">ATTACKS</button></th>
-                            <th><button onclick="open_tab('spells_tab')">SPELLS</button></th>
-                            <th><button onclick="open_tab('inventory_tab')">INVENTORY</button></th>
+                            <th style="border: none;"><button class="heading" onclick="open_tab('attacks_tab')">ATTACKS</button></th>
+                            <th style="border: none;"><button class="heading" onclick="open_tab('spells_tab')">SPELLS</button></th>
+                            <th style="border: none;"><button class="heading" onclick="open_tab('inventory_tab')">INVENTORY</button></th>
                         </tr>
                     </table>
                     <div class="tab" id="attacks_tab" style="display: block;">
-                        <table id="attacks">
-                            <tr>
-                                <th colspan="6">ATTACKS</th>
-                            </tr>
-                        </table>
+                        <table id="attacks"></table>
                     </div>
                     <div class="tab" id="spells_tab">
-                        <table id="spells">
-                            <tr>
-                                <th colspan="6">SPELLS</th>
-                            </tr>
-                        </table>
+                        <table id="spells"></table>
                     </div>
                     <div class="tab" id="inventory_tab">
                         <table id="inventory">
                             <tr>
-                                <th colspan="6">INVENTORY</th>
+                                <th class="heading" colspan="6">INVENTORY</th>
                             </tr>
                             <tr>
                                 <td>QTY</td>
