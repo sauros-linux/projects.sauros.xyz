@@ -77,6 +77,42 @@
 			"entries": [
 				"You cause an object within range that isn't being worn or carried to fly to your open hand. The object must weigh no more than 10 pounds or the spell fails."
 			]
+		},
+		{
+			"name": "Task",
+			"source": "OTTG",
+			"page": 191,
+			"level": 0,
+			"school": "T",
+			"time": [
+				{
+					"number": 1,
+					"unit": "action"
+				}
+			],
+			"range": {
+				"type": "point",
+				"distance": {
+					"type": "feet",
+					"amount": 15
+				}
+			},
+			"components": {
+				"s": true
+			},
+			"duration": [
+				{
+					"type": "timed",
+					"duration": {
+						"type": "hour",
+						"amount": 1
+					}
+				}
+			],
+			"entries": [
+				"With a flick of your wrist, you magically complete a small and simple task, such as flipping a book page, buttering bread, or heating a cup of tea, without any physical interaction. The task can't include anything that is intended to inflict a harmful effect on a creature and must be something you'd normally be able to accomplish without the use of magic. The spell fails if the target of the task has total cover from you.",
+				"If you cast this spell multiple times, you can have up to three tasks active at a time, and you can dismiss one of them as a bonus action."
+			]
 		}
 	]
 }
