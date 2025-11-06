@@ -916,6 +916,7 @@ async function refresh_buttons() {
     var rollable_buttons = document.getElementsByClassName("rollable");
 
     for (let i = 0; i < rollable_buttons.length; i++) {
+        rollable_buttons[i].replaceWith(rollable_buttons[i].cloneNode(true));
         rollable_buttons[i].setAttribute("id", `rollable_${i}`);
         rollable_buttons[i].addEventListener("click", function(e) {
             window.postMessage({
