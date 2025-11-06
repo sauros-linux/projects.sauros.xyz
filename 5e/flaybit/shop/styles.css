@@ -30,7 +30,7 @@ h3 {
 }
 h4, h5, h6 {
     display: inline-block;
-    color: #BBBBBB;
+    /*color: #BBBBBB;*/
     font-family: "FF Scala Sans";
     font-style: italic;
 }
@@ -75,7 +75,7 @@ a {
 
 .item {
     color: #DAA54F;
-    background-color: #F6F2E6;
+    /*background-color: #F6F2E6;*/
     border: 2px solid #DAA54F;
     border-radius: 4px;
 }
@@ -492,4 +492,9 @@ td:has(> .value-list), div:has(> .value-list) {
 }
 #close_button:hover {
     background-color: #DD3333;
+}
+
+.flame_img {
+    width: 100%;
+    mix-blend-mode: lighten;
 }
