@@ -1,0 +1,1273 @@
+{
+    "spell": [
+		{
+			"name": "Create Mandrake",
+			"source": "TPM",
+			"page": 20,
+			"level": 1,
+			"school": "T",
+			"time": [
+				{
+					"number": 1,
+					"unit": "hour"
+				}
+			],
+			"range": {
+				"type": "point",
+				"distance": {
+					"type": "touch"
+				}
+			},
+			"components": {
+				"v": true,
+				"s": true,
+				"m": "a mandrake root and a squirrel's heart"
+			},
+			"duration": [
+				{
+					"type": "instant"
+				}
+			],
+			"meta": {
+				"ritual": true
+			},
+			"entries": [
+				"While chanting a continuous orison to the powers of nature, you carve the mandrake root into a humanoid shape with an opening in the chest in which the squirrel's heart is placed.",
+				"Upon completion, the mandrake root mutates and grows into a {@creature mandrake minion|TPM}, using the stats below.",
+				"Once created, the creature is your loyal companion and obeys your commands. On each of your turns, you can use a bonus action to mentally command any mandrake minion you made with this spell if it is within 60 feet of you (if you control multiple creatures, you can command any or all of them at the same time, issuing the same command to each one). You decide what action the creature will take and where it will move during its next turn, or you can issue a general command, such as to guard a particular chamber or corridor.",
+				"If you issue no commands, the creature only defends itself against hostile creatures if any are present or follows you if no hostile creatures are present. Once given an order, the creature continues to follow it until its task is complete.",
+				"The {@creature mandrake minion|TPM} can wield simple weapons and use objects, but it cannot wear armor. It has the mental capabilities of a Humanoid creature with its Intelligence score, allowing it to solve simple problems and preform tasks without detailed instructions from you.",
+				"The {@creature mandrake minion|TPM} remains until it or you are killed. You may only have a number of {@creature mandrake minion|TPM|mandrake minions} equal to your spellcasting ability modifier under your control at one time.",
+				"Creating a new {@creature mandrake minion|TPM} once at your maximum causes the oldest {@creature mandrake minion|TPM} under your control to die as the new one is created.",
+				{
+					"type": "statblock",
+					"tag": "creature",
+					"source": "TPM",
+					"name": "Mandrake Minion",
+					"page": 20,
+					"style": "inset"
+				}
+			],
+			"classes": {
+				"fromClassList": [
+					{
+						"name": "Druid",
+						"source": "PHB"
+					}
+				]
+			},
+			"miscTags": [
+				"SMN",
+				"UBA"
+			]
+		},
+		{
+			"name": "Cruciferous Comets",
+			"source": "TPM",
+			"page": 20,
+			"level": 1,
+			"school": "V",
+			"time": [
+				{
+					"number": 1,
+					"unit": "action"
+				}
+			],
+			"range": {
+				"type": "point",
+				"distance": {
+					"type": "feet",
+					"amount": 120
+				}
+			},
+			"components": {
+				"s": true,
+				"m": "a cabbage or other cruciferous vegetable, studded with small meteorites"
+			},
+			"duration": [
+				{
+					"type": "instant"
+				}
+			],
+			"entries": [
+				"You choose a point within range and toss the vegetable into the air. The vegetable then splits into multiple copies of itself, which come crashing down with extreme force. All creatures within a 20 feet radius of the point must make a Dexterity saving throw, taking {@damage 2d6} bludgeoning damage on a fail or half as much damage on a success."
+			],
+			"entriesHigherLevel": [
+				{
+					"type": "entries",
+					"name": "At Higher Levels:",
+					"entries": [
+						"When you cast this spell using a spell slot of 2nd level or higher, the damage increases by {@dice 1d6} and the radius increases by 5 feet for each slot level above 1st."
+					]
+				}
+			],
+			"classes": {
+				"fromClassList": [
+					{
+						"name": "Druid",
+						"source": "PHB"
+					},
+					{
+						"name": "Merchant",
+						"source": "TPM"
+					}
+				]
+			},
+			"damageInflict": [
+				"bludgeoning"
+			],
+			"savingThrow": [
+				"dexterity"
+			],
+			"miscTags": [
+				"SCL"
+			]
+		},
+		{
+			"name": "Doohickey",
+			"source": "TPM",
+			"page": 21,
+			"level": 0,
+			"school": "T",
+			"time": [
+				{
+					"number": 1,
+					"unit": "bonus"
+				}
+			],
+			"range": {
+				"type": "point",
+				"distance": {
+					"type": "touch"
+				}
+			},
+			"components": {
+				"v": true,
+				"s": true,
+				"m": "a tool or utensil from a set of artisan's tools"
+			},
+			"duration": [
+				{
+					"type": "timed",
+					"duration": {
+						"type": "minute",
+						"amount": 1
+					}
+				}
+			],
+			"entries": [
+				"The tool or utensil used as the material component in casting this becomes imbued with the innate magical power of value.",
+				"For the duration, you can use your spellcasting ability instead of Strength for the attack and damage rolls of melee attacks using the item, and you can make an attack with it using the {@action Use an Object} action rather than the {@action Attack} action.",
+				"The item's damage die is a {@dice d6} of a damage type appropriate for its form from either bludgeoning, piercing, or slashing."
+			],
+			"classes": {
+				"fromClassList": [
+					{
+						"name": "Artificer",
+						"source": "TCE"
+					},
+					{
+						"name": "Merchant",
+						"source": "TPM"
+					}
+				]
+			}
+		},
+		{
+			"name": "Exchange",
+			"source": "TPM",
+			"page": 21,
+			"level": 0,
+			"school": "T",
+			"time": [
+				{
+					"number": 1,
+					"unit": "action"
+				}
+			],
+			"range": {
+				"type": "point",
+				"distance": {
+					"type": "touch"
+				}
+			},
+			"components": {
+				"s": true,
+				"m": "a handful of coins"
+			},
+			"duration": [
+				{
+					"type": "instant"
+				}
+			],
+			"entries": [
+				"After closing your hand around the coins, you immediately convert them to another form of currency you have seen before of equal value. If doing so to create coins of a lesser value (for example 1 gold piece to 10 silver pieces), the spell will create them, up to a maximum of 10 coins."
+			],
+			"classes": {
+				"fromClassList": [
+					{
+						"name": "Merchant",
+						"source": "TPM"
+					}
+				]
+			},
+			"miscTags": [
+				"PRM"
+			]
+		},
+		{
+			"name": "Find Vessel",
+			"source": "TPM",
+			"page": 21,
+			"level": 3,
+			"school": "C",
+			"time": [
+				{
+					"number": 10,
+					"unit": "minute"
+				}
+			],
+			"range": {
+				"type": "point",
+				"distance": {
+					"type": "feet",
+					"amount": 120
+				}
+			},
+			"components": {
+				"v": true,
+				"s": true
+			},
+			"duration": [
+				{
+					"type": "instant"
+				}
+			],
+			"entries": [
+				"{@note This spell graciously provided by Benjamin Huffman.}",
+				"You summon a spirit that assumes the form of a waterborne vessel. Appearing in an unoccupied space within range, the spirit takes the form you choose: {@item keelboat|DMG} or {@item rowboat|DMG}. The vessel has the statistics provided in the Dungeon Master's Guide for the chosen form. Additionally, the vessel is immune to nonmagical bludgeoning, piercing, and slashing damage.",
+				"You have advantage on ability checks you make to steer the vessel. While you are aboard the vessel, it responds to your verbal commands, allowing you to ignore the minimum crew number required to operate the vehicle. The vessel's speed, cargo weight limit, and hit points are all doubled. While you have the vessel summoned, you can cast this spell again to restore it to its maximum hit points.",
+				"The vessel disappears when it drops to 0 hit points or when you dismiss it as an action. When the vessel disappears, it leaves behind any creatures or objects it was carrying.",
+				"You cannot have more than one vessel summoned by this spell at a time."
+			],
+			"entriesHigherLevel": [
+				{
+					"type": "entries",
+					"name": "At Higher Levels",
+					"entries": [
+						"When you cast this spell with a spell slot of 5th level or higher, you can choose from two additional waterborne vessel shapes for the summoned spirit: {@item longship|DMG} or {@item sailing ship|DMG}. When you cast this spell using a spell slot of 7th level or higher, you can choose from another two additional waterborne vessel shapes for the summoned spirit: {@item galley|DMG} or {@item warship|DMG}."
+					]
+				}
+			],
+			"classes": {
+				"fromClassList": [
+					{
+						"name": "Bard",
+						"source": "PHB"
+					},
+					{
+						"name": "Wizard",
+						"source": "PHB"
+					}
+				]
+			},
+			"miscTags": [
+				"ADV",
+				"HL",
+				"OBJ",
+				"SMN"
+			]
+		},
+		{
+			"name": "Fondue Fountain",
+			"source": "TPM",
+			"page": 21,
+			"level": 1,
+			"school": "C",
+			"time": [
+				{
+					"number": 1,
+					"unit": "action"
+				}
+			],
+			"range": {
+				"type": "line",
+				"distance": {
+					"type": "feet",
+					"amount": 20
+				}
+			},
+			"components": {
+				"s": true,
+				"m": {
+					"text": "a wheel of cheese worth at least 15 gp, which the spell consumes",
+					"cost": 1500,
+					"consume": true
+				}
+			},
+			"duration": [
+				{
+					"type": "instant"
+				}
+			],
+			"entries": [
+				"You cause the cheese to spontaneously boil and spray in a line that is 20 ft. long and 5 ft. wide. Creatures in the area must make a Dexterity saving throw. Creatures that fail take {@damage 2d4} Fire damage and have their speed reduced by 10 ft. until the end of their next turn. Creatures that succeed take half as much damage and do not have their speed reduced.",
+				"Additionally, the line's area and the area within 5 ft. of the line (excluding your space) are covered in sticky cheese, becoming {@quickref difficult terrain|PHB|3} that costs 3 ft. of movement for every foot moved for 1 minute., after which the cheese hardens."
+			],
+			"entriesHigherLevel": [
+				{
+					"type": "entries",
+					"name": "At Higher Levels:",
+					"entries": [
+						"When you cast this spell using a spell slot of 2nd level or higher, the damage increases by {@dice 2d4} and the length of the line increases by 5 ft. for each slot level above 1st."
+					]
+				}
+			],
+			"classes": {
+				"fromClassList": [
+					{
+						"name": "Artificer",
+						"source": "TCE"
+					},
+					{
+						"name": "Bard",
+						"source": "PHB"
+					},
+					{
+						"name": "Sorcerer",
+						"source": "PHB"
+					},
+					{
+						"name": "Wizard",
+						"source": "PHB"
+					}
+				]
+			},
+			"damageInflict": [
+				"fire"
+			],
+			"savingThrow": [
+				"dexterity"
+			]
+		},
+		{
+			"name": "Fool's Gold",
+			"source": "TPM",
+			"page": 22,
+			"level": 0,
+			"school": "C",
+			"time": [
+				{
+					"number": 1,
+					"unit": "action"
+				}
+			],
+			"range": {
+				"type": "point",
+				"distance": {
+					"type": "touch"
+				}
+			},
+			"components": {
+				"m": "1 gold coin"
+			},
+			"duration": [
+				{
+					"type": "timed",
+					"duration": {
+						"type": "hour",
+						"amount": 24
+					},
+					"concentration": true
+				}
+			],
+			"entries": [
+				"{@note This spell graciously provided by Benjamin Huffman.}",
+				"When you cast this spell, you enchant the coin you used as the material component for this spell. At any point before the duration of this spell elapses, you can summon the coin back to your hand. Doing so ends the spell."
+			],
+			"classes": {
+				"fromClassList": [
+					{
+						"name": "Bard",
+						"source": "PHB"
+					},
+					{
+						"name": "Wizard",
+						"source": "PHB"
+					},
+					{
+						"name": "Merchant",
+						"source": "TPM"
+					}
+				]
+			}
+		},
+		{
+			"name": "Fruits of Labor",
+			"source": "TPM",
+			"page": 22,
+			"level": 4,
+			"school": "C",
+			"time": [
+				{
+					"number": 1,
+					"unit": "action"
+				}
+			],
+			"range": {
+				"type": "point",
+				"distance": {
+					"type": "self"
+				}
+			},
+			"components": {
+				"v": true,
+				"s": true,
+				"m": "an apple seed suspended in a small vial of blood, sweat, and tears"
+			},
+			"duration": [
+				{
+					"type": "instant"
+				}
+			],
+			"entries": [
+				"You create 3 magical fruits with the appearance and flavor of any mundane fruit of your choice. A creature that eats one of these fruit cannot gain levels of {@condition exhaustion} from nonmagical sources and gains a bonus to Strength and Constitution checks equal to your spellcasting ability modifier (minimum of 1) for 8 hours. These fruits crumble to dust after 24 hours if not eaten."
+			],
+			"entriesHigherLevel": [
+				{
+					"type": "entries",
+					"name": "At Higher Levels:",
+					"entries": [
+						"When you cast this spell using a spell slot of 5th level or higher, you create one additional fruit for each slot level above 4th."
+					]
+				}
+			],
+			"classes": {
+				"fromClassList": [
+					{
+						"name": "Druid",
+						"source": "PHB"
+					},
+					{
+						"name": "Ranger",
+						"source": "PHB"
+					}
+				]
+			},
+			"conditionInflict": [
+				"exhaustion"
+			]
+		},
+		{
+			"name": "Gilded Touch",
+			"source": "TPM",
+			"page": 22,
+			"level": 0,
+			"school": "T",
+			"time": [
+				{
+					"number": 1,
+					"unit": "action"
+				}
+			],
+			"range": {
+				"type": "point",
+				"distance": {
+					"type": "touch"
+				}
+			},
+			"components": {
+				"s": true,
+				"m": "ten metal coins that are at least 1 inch in circumference"
+			},
+			"duration": [
+				{
+					"type": "timed",
+					"duration": {
+						"type": "minute",
+						"amount": 1
+					}
+				}
+			],
+			"entries": [
+				"You cover an object no larger than a 5-foot-cube with a thin leaf of the metal of the coins used in the casting of this spell. The coins can cover enough area to coat the blade of a greatsword, a shield, 10 pieces of ammunition, or any object that fits in your hand. The metal confers an additional property.",
+				"Some typical metals and their effects follow. You might discover another metal during your adventures other than one described here. If you do so, the GM determines how the metal behaves.",
+				{
+					"type": "entries",
+					"name": "Copper",
+					"entries": [
+						"Whenever the creature holding or wearing the object takes lightning damage, it takes an additional {@damage 1d10} lightning damage."
+					]
+				},
+				{
+					"type": "entries",
+					"name": "Cold Iron",
+					"entries": [
+						"When used to attack a fey creature, the roll required to score a critical hit is reduced by 1."
+					]
+				},
+				{
+					"type": "entries",
+					"name": "Silver",
+					"entries": [
+						"It becomes a {@item silvered weapon|PHB} {@homebrew |(Player's Handbook p. 148)}."
+					]
+				},
+				{
+					"type": "entries",
+					"name": "Gold",
+					"entries": [
+						"It deals an additional {@damage 1d4} damage while affected by another spell."
+					]
+				},
+				{
+					"type": "entries",
+					"name": "Platinum",
+					"entries": [
+						"It doubles in weight and gains the {@itemProperty H||heavy} property."
+					]
+				},
+				{
+					"type": "entries",
+					"name": "Adamantine",
+					"entries": [
+						"It becomes {@item adamantine armor|DMG}, {@item Adamantine Ammunition|XGE|ammunition}, or a {@item Adamantine Weapon|XGE|weapon} {@homebrew |(see Xanathar's Guide to Everything p. 78)}.",
+						"When the spell ends, the coins magically reappear in your hand, unless they are destroyed."
+					]
+				}
+			],
+			"entriesHigherLevel": [
+				{
+					"type": "entries",
+					"name": "Expending a Spell Slot",
+					"entries": [
+						"You can increase the duration of this spell by casting it using a spell slot. When you cast this spell using a spell slot of 1st level or higher, the duration increases by 1 hour for each slot level."
+					]
+				}
+			],
+			"classes": {
+				"fromClassList": [
+					{
+						"name": "Artificer",
+						"source": "TCE"
+					},
+					{
+						"name": "Merchant",
+						"source": "TPM"
+					}
+				]
+			},
+			"damageInflict": [
+				"lightning"
+			]
+		},
+		{
+			"name": "Gold Dust",
+			"source": "TPM",
+			"page": 22,
+			"level": 2,
+			"school": "V",
+			"time": [
+				{
+					"number": 1,
+					"unit": "action"
+				}
+			],
+			"range": {
+				"type": "point",
+				"distance": {
+					"type": "feet",
+					"amount": 60
+				}
+			},
+			"components": {
+				"s": true,
+				"m": "20 gold pieces"
+			},
+			"duration": [
+				{
+					"type": "timed",
+					"duration": {
+						"type": "minute",
+						"amount": 1
+					}
+				}
+			],
+			"entries": [
+				"You create a cloud of flying coins in a 10-foot radius sphere, centered on a point you choose within range. A creature that enters the spell's area for the first time on a turn or starts its turn there must succeed on a Dexterity saving throw or take {@damage 2d10} bludgeoning damage. A creature takes half damage on a success.",
+				"As a bonus action on your turn, you can move the cloud up to 20 feet."
+			],
+			"entriesHigherLevel": [
+				{
+					"type": "entries",
+					"name": "At Higher Levels",
+					"entries": [
+						"When you cast this spell using a spell slot of 3rd level or higher, the damage increases by {@damage 1d10} per level of the spell slot expended."
+					]
+				}
+			],
+			"classes": {
+				"fromClassList": [
+					{
+						"name": "Bard",
+						"source": "PHB"
+					},
+					{
+						"name": "Wizard",
+						"source": "PHB"
+					},
+					{
+						"name": "Merchant",
+						"source": "TPM"
+					}
+				]
+			},
+			"damageInflict": [
+				"bludgeoning"
+			],
+			"savingThrow": [
+				"dexterity"
+			],
+			"miscTags": [
+				"UBA"
+			]
+		},
+		{
+			"name": "Hedge Risk",
+			"source": "TPM",
+			"page": 23,
+			"level": 1,
+			"school": "A",
+			"time": [
+				{
+					"number": 1,
+					"unit": "reaction",
+					"condition": "which you take when a creature takes damage"
+				}
+			],
+			"range": {
+				"type": "point",
+				"distance": {
+					"type": "feet",
+					"amount": 60
+				}
+			},
+			"components": {
+				"s": true,
+				"m": "gold pieces"
+			},
+			"duration": [
+				{
+					"type": "instant"
+				}
+			],
+			"entries": [
+				"You save health for wealth. When a creature that you can see within range takes damage, you may reduce the damage by expending gp at a rate of 1 point of damage for every gp spent, up to 10 gp. Any gp expended are magically destroyed."
+			],
+			"entriesHigherLevel": [
+				{
+					"type": "entries",
+					"name": "At Higher Levels",
+					"entries": [
+						"When you cast this spell using a spell slot of 2nd level or higher, the amount of gp you can spend increases by 10 gp per level of the spell slot expended."
+					]
+				}
+			],
+			"classes": {
+				"fromClassList": [
+					{
+						"name": "Merchant",
+						"source": "TPM"
+					}
+				]
+			},
+			"miscTags": [
+				"HL",
+				"SGT"
+			]
+		},
+		{
+			"name": "Ivaldi's Impervious Anvil",
+			"source": "TPM",
+			"page": 23,
+			"level": 4,
+			"school": "V",
+			"time": [
+				{
+					"number": 1,
+					"unit": "action"
+				}
+			],
+			"range": {
+				"type": "point",
+				"distance": {
+					"type": "feet",
+					"amount": 120
+				}
+			},
+			"components": {
+				"v": true,
+				"m": "A tiny silver anvil worth at least 50 gold pieces"
+			},
+			"duration": [
+				{
+					"type": "timed",
+					"duration": {
+						"type": "hour",
+						"amount": 1
+					},
+					"concentration": true
+				}
+			],
+			"entries": [
+				"Choose an unoccupied area on the ground within range that is 10 feet wide, 15 feet long, and 5 feet tall. A massive magical anvil that is translucent but tangible is summoned in the area. The anvil is magical object that is unbreakable and immovable, allowing for objects to be worked on it with titanic force, such as that needed to work adamantine.",
+				"The anvil can only be dismissed by a {@spell dispel magic} spell of 6th-level or higher, {@spell antimagic field|PHB|antimagic}, the {@spell wish} spell, or if you stop {@status concentration||concentrating} on the spell. Incorporeal creatures that end their turn in the anvil's space take double the damage they would normally take for doing so."
+			],
+			"classes": {
+				"fromClassList": [
+					{
+						"name": "Artificer",
+						"source": "TCE"
+					},
+					{
+						"name": "Merchant",
+						"source": "TPM"
+					}
+				]
+			}
+		},
+		{
+			"name": "Ivaldi's Rustproof Coating",
+			"source": "TPM",
+			"page": 23,
+			"level": 2,
+			"school": "A",
+			"time": [
+				{
+					"number": 1,
+					"unit": "action"
+				}
+			],
+			"range": {
+				"type": "point",
+				"distance": {
+					"type": "touch"
+				}
+			},
+			"components": {
+				"v": true,
+				"s": true,
+				"m": {
+					"text": "A drop of oil on a small rag or a 1 inch cube of lard, which the spell consumes",
+					"consume": true
+				}
+			},
+			"duration": [
+				{
+					"type": "timed",
+					"duration": {
+						"type": "hour",
+						"amount": 8
+					}
+				}
+			],
+			"entries": [
+				"{@note This spell graciously provided by Nate Butler.}",
+				"You wave a hand over a willing target, emitting a green mist that clings to all of the metallic armor, weapons, and other objects and equipment they are carrying or wearing, coating them in a faint green sheen. For the duration all of the effected objects are immune to attacks and effects that corrode metal, such as a {@creature rust monster|MM|rust monster's} Antennae attack. This spell does not enhance the physical durability of the objects."
+			],
+			"entriesHigherLevel": [
+				{
+					"type": "entries",
+					"name": "At Higher Levels:",
+					"entries": [
+						"When you cast this spell using a spell slot of 3rd level or higher, you may target one additional creature for each slot level above 2nd."
+					]
+				}
+			],
+			"classes": {
+				"fromClassList": [
+					{
+						"name": "Artificer",
+						"source": "TCE"
+					},
+					{
+						"name": "Merchant",
+						"source": "TPM"
+					}
+				]
+			}
+		},
+		{
+			"name": "Mage Ward",
+			"source": "TPM",
+			"page": 23,
+			"level": 0,
+			"school": "A",
+			"time": [
+				{
+					"number": 1,
+					"unit": "action"
+				}
+			],
+			"range": {
+				"type": "point",
+				"distance": {
+					"type": "self"
+				}
+			},
+			"components": {
+				"v": true,
+				"s": true
+			},
+			"duration": [
+				{
+					"type": "timed",
+					"duration": {
+						"type": "round",
+						"amount": 1
+					}
+				}
+			],
+			"entries": [
+				"{@note This spell graciously provided by Ross Leiser.}",
+				"You create a protective ward around yourself that strikes out at those who attack you. The first time a creature hits you with an attack before the start of your next turn, it takes {@damage 1d10} force damage and the spell ends.",
+				"The spell's damage increases by {@dice 1d10} when you reach 5th level ({@dice 2d10}), 11th level ({@dice 3d10}), and 17th level ({@dice 4d10})."
+			],
+			"scalingLevelDice": {
+				"label": "force damage",
+				"scaling": {
+					"1": "1d10",
+					"5": "2d10",
+					"11": "3d10",
+					"17": "4d10"
+				}
+			},
+			"classes": {
+				"fromClassList": [
+					{
+						"name": "Sorcerer",
+						"source": "PHB"
+					},
+					{
+						"name": "Wizard",
+						"source": "PHB"
+					},
+					{
+						"name": "Merchant",
+						"source": "TPM"
+					}
+				]
+			},
+			"damageInflict": [
+				"force"
+			],
+			"miscTags": [
+				"SCL"
+			]
+		},
+		{
+			"name": "Mineral Wealth",
+			"source": "TPM",
+			"page": 23,
+			"level": 2,
+			"school": "T",
+			"time": [
+				{
+					"number": 1,
+					"unit": "action"
+				}
+			],
+			"range": {
+				"type": "point",
+				"distance": {
+					"type": "touch"
+				}
+			},
+			"components": {
+				"v": true,
+				"s": true,
+				"m": "a set of jeweler's tools"
+			},
+			"duration": [
+				{
+					"type": "instant"
+				}
+			],
+			"entries": [
+				"You touch a pile of currency and convert it into a nonmagical gemstone or gemstones of equal value. You must have previously seen and touched an example of a type of gemstone in order to create gemstones of that type.",
+				"Alternatively, you may touch a pile of gemstones of the same kind and fuse them into one large gemstone of the same variety, with a GP value equal to that of the combined value of the gemstones used to make it."
+			],
+			"classes": {
+				"fromClassList": [
+					{
+						"name": "Merchant",
+						"source": "TPM"
+					}
+				]
+			}
+		},
+		{
+			"name": "Money Shot",
+			"source": "TPM",
+			"page": 23,
+			"level": 1,
+			"school": "V",
+			"time": [
+				{
+					"number": 1,
+					"unit": "action"
+				}
+			],
+			"range": {
+				"type": "point",
+				"distance": {
+					"type": "touch"
+				}
+			},
+			"components": {
+				"v": true,
+				"s": true,
+				"m": "gold pieces used for the attack"
+			},
+			"duration": [
+				{
+					"type": "timed",
+					"duration": {
+						"type": "minute",
+						"amount": 1
+					}
+				}
+			],
+			"entries": [
+				"You touch a gold piece and imbue it with magic for the duration or until you cast this spell again. When you cast the spell, you can make a ranged spell attack against a creature within 60 feet with the coin. On a hit, the target takes bludgeoning damage equal to {@damage 1d6} + your spellcasting ability modifier.",
+				"As a bonus action on your turn, you can repeat the attack against any creature within range of the coin. Alternatively, you can snap your fingers to cause the coin to return to your hand."
+			],
+			"entriesHigherLevel": [
+				{
+					"type": "entries",
+					"name": "At Higher Levels",
+					"entries": [
+						"When you cast this spell using a spell slot of 2nd level or higher, you can affect one additional coin for each slot level above 1st."
+					]
+				}
+			],
+			"classes": {
+				"fromClassList": [
+					{
+						"name": "Merchant",
+						"source": "TPM"
+					}
+				]
+			},
+			"spellAttack": [
+				"R"
+			],
+			"miscTags": [
+				"UBA"
+			]
+		},
+		{
+			"name": "Money Talks",
+			"source": "TPM",
+			"page": 24,
+			"level": 2,
+			"school": "I",
+			"time": [
+				{
+					"number": 1,
+					"unit": "minute"
+				}
+			],
+			"range": {
+				"type": "point",
+				"distance": {
+					"type": "touch"
+				}
+			},
+			"components": {
+				"v": true,
+				"s": true,
+				"m": "two coins with the likeness of any creature on them"
+			},
+			"duration": [
+				{
+					"type": "timed",
+					"duration": {
+						"type": "hour",
+						"amount": 8
+					}
+				}
+			],
+			"entries": [
+				"When you cast the spell, you name one other creature with which you share a language and hand them one of the coins. The image on the coin you give them takes on your appearance, while the image on the coin you keep takes on theirs.",
+				"On your respective turns for the duration, either of you can use the coin to communicate with the other, provided you are on the same plane of existence. A creature does not need to be holding their coin for the other to speak to them through it."
+			],
+			"classes": {
+				"fromClassList": [
+					{
+						"name": "Merchant",
+						"source": "TPM"
+					}
+				]
+			}
+		},
+		{
+			"name": "Pilfer",
+			"source": "TPM",
+			"page": 24,
+			"level": 1,
+			"school": "T",
+			"time": [
+				{
+					"number": 1,
+					"unit": "action"
+				}
+			],
+			"range": {
+				"type": "point",
+				"distance": {
+					"type": "self"
+				}
+			},
+			"components": {
+				"s": true,
+				"m": "a melee weapon"
+			},
+			"duration": [
+				{
+					"type": "timed",
+					"duration": {
+						"type": "minute",
+						"amount": 1
+					}
+				}
+			],
+			"entries": [
+				"Make a melee spell attack against a creature using the weapon used as the component for this spell. On a hit, the creature takes the damage of the weapon and, if the creature was hostile to you, the weapon drops gold pieces equal to the damage the target took in the nearest unoccupied space. The weapon cannot create any more gold pieces than the target creature has hit points. Once the weapon has created 20 gp, the spell ends."
+			],
+			"entriesHigherLevel": [
+				{
+					"type": "entries",
+					"name": "At Higher Levels",
+					"entries": [
+						"When you cast this spell using a spell slot of 2nd level or higher, the weapon can create an additional 20 gold pieces before the spell ends for each slot level above 1st."
+					]
+				}
+			],
+			"classes": {
+				"fromClassList": [
+					{
+						"name": "Merchant",
+						"source": "TPM"
+					}
+				]
+			},
+			"spellAttack": [
+				"M"
+			]
+		},
+		{
+			"name": "Popping Corn",
+			"source": "TPM",
+			"page": 24,
+			"level": 1,
+			"school": "V",
+			"time": [
+				{
+					"number": 1,
+					"unit": "action"
+				}
+			],
+			"range": {
+				"type": "point",
+				"distance": {
+					"type": "touch"
+				}
+			},
+			"components": {
+				"s": true,
+				"m": "a thin copper wire wrapped around an ear of corn"
+			},
+			"duration": [
+				{
+					"type": "instant"
+				}
+			],
+			"entries": [
+				"You imbue the ear of corn with magical energy and throw it to a point you can see within 60 ft., where it explodes upon impact. All creatures within 10 ft. of that point must make a Dexterity saving throw, taking {@damage 2d4} thunder damage on a fail or half as much damage on a success. Creatures that fail their save are also knocked {@condition prone}."
+			],
+			"entriesHigherLevel": [
+				{
+					"type": "entries",
+					"name": "At Higher Levels:",
+					"entries": [
+						"When you cast this spell using a spell slot of 2nd level or higher, the damage increases by {@dice 2d4} for each slot level above 1st."
+					]
+				}
+			],
+			"classes": {
+				"fromClassList": [
+					{
+						"name": "Druid",
+						"source": "PHB"
+					}
+				]
+			},
+			"damageInflict": [
+				"thunder"
+			],
+			"conditionInflict": [
+				"prone"
+			],
+			"savingThrow": [
+				"dexterity"
+			],
+			"miscTags": [
+				"SGT"
+			]
+		},
+		{
+			"name": "Streak of Luck",
+			"source": "TPM",
+			"page": 24,
+			"level": 4,
+			"school": "D",
+			"time": [
+				{
+					"number": 1,
+					"unit": "action"
+				}
+			],
+			"range": {
+				"type": "point",
+				"distance": {
+					"type": "feet",
+					"amount": 60
+				}
+			},
+			"components": {
+				"v": true,
+				"s": true,
+				"m": "a rabbit's foot"
+			},
+			"duration": [
+				{
+					"type": "timed",
+					"duration": {
+						"type": "minute",
+						"amount": 1
+					}
+				}
+			],
+			"entries": [
+				"You cause a twist of inexplicable luck, granting three creatures of your choice within range, including potentially yourself, 1 luck point as per the {@feat Lucky} feat {@homebrew |(Player's Handbook p. 167)}."
+			],
+			"entriesHigherLevel": [
+				{
+					"type": "entries",
+					"name": "At Higher Levels",
+					"entries": [
+						"When you cast this spell using a spell slot of 5th-level or higher, you can target one additional creature with this spell for each slot level above 4th. When you use a spell slot of 5th level or higher, you grant each creature 1 additional luck point. When you use a spell slot of 7th level or higher, you grant each creature 2 additional luck points."
+					]
+				}
+			],
+			"classes": {
+				"fromClassList": [
+					{
+						"name": "Bard",
+						"source": "PHB"
+					}
+				]
+			},
+			"miscTags": [
+				"SCL"
+			]
+		},
+		{
+			"name": "Tagmay's Thermal Container",
+			"source": "TPM",
+			"page": 24,
+			"level": 2,
+			"school": "T",
+			"time": [
+				{
+					"number": 1,
+					"unit": "minute"
+				}
+			],
+			"range": {
+				"type": "point",
+				"distance": {
+					"type": "touch"
+				}
+			},
+			"components": {
+				"v": true,
+				"s": true,
+				"m": "a Large or smaller closable metal container, a jar of animal blubber, and a vial of mercury"
+			},
+			"duration": [
+				{
+					"type": "timed",
+					"duration": {
+						"type": "day",
+						"amount": 10
+					}
+				}
+			],
+			"meta": {
+				"ritual": true
+			},
+			"entries": [
+				"This spell allows the interior of the container used in the casting of this spell to change temperature indicated by the amount of mercury in the vial. The container maintains its shape, weight, and containment capacity, and its exterior remains comfortable to touch and handle.",
+				"On your turn while the spell is active, you can use the {@action Use an Object} action on your turns to fill or remove mercury from the vial, which changes the temperature of the interior of the container as shown below:",
+				{
+					"type": "entries",
+					"name": "Empty",
+					"entries": [
+						"The interior of the container becomes an environment of {@hazard extreme cold|DMG}, and any foodstuffs or other organic materials placed within the container are protected from natural decay or spoilage, freezing after 1 minute."
+					]
+				},
+				{
+					"type": "entries",
+					"name": "Half",
+					"entries": [
+						"The interior of the container remains a comfortable temperature, no matter the temperature outside the container."
+					]
+				},
+				{
+					"type": "entries",
+					"name": "Full",
+					"entries": [
+						"The interior of the container becomes an environment of {@hazard extreme heat|DMG}, and any foodstuffs or other organic materials within the container begin cooking, reaching your preferred edibility after 1 minute."
+					]
+				}
+			],
+			"entriesHigherLevel": [
+				{
+					"type": "entries",
+					"name": "At Higher Levels:",
+					"entries": [
+						"When you cast this spell using a spell slot of 3rd level or higher, the container gains a walking speed in feet equal to 10 times the slot's level, and you can command it as a bonus action to take the {@action Dash} action immediately after your turn."
+					]
+				}
+			],
+			"classes": {
+				"fromClassList": [
+					{
+						"name": "Artificer",
+						"source": "TCE"
+					},
+					{
+						"name": "Merchant",
+						"source": "TPM"
+					}
+				]
+			},
+			"miscTags": [
+				"SCL",
+				"UBA"
+			]
+		}
+	]
+}
