@@ -15750,6 +15750,14 @@
 					"source": "OTTG"
 				}
 			]
+		},
+		"Task": {
+			"classVariant": [
+				{
+					"name": "Wizard",
+					"source": "OTTG"
+				}
+			]
 		}
 	}
 }
