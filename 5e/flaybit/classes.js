@@ -100,32 +100,32 @@ class ActivationTime {
     toShortString() {
         let short_string = "";
 
-        switch (this.time) {
-            case "Action":
+        switch (this.time.toUpperCase()) {
+            case "ACTION":
                 short_string = "1A";
                 break;
-            case "Bonus action":
+            case "BONUS ACTION":
                 short_string = "1BA";
                 break;
-            case "Reaction":
+            case "REACTION":
                 short_string = "1R";
                 break;
-            case "1 minute":
+            case "1 MINUTE":
                 short_string = "1 min.";
                 break;
-            case "10 minutes":
+            case "10 MINUTES":
                 short_string = "10 min.";
                 break;
-            case "1 hour":
+            case "1 HOUR":
                 short_string = "1 hr.";
                 break;
-            case "8 hours":
+            case "8 HOURS":
                 short_string = "8 hr.";
                 break;
-            case "12 hours":
+            case "12 HOURS":
                 short_string = "12 hr.";
                 break;
-            case "24 hours":
+            case "24 HOURS":
                 short_string = "24 hr.";
                 break;
         }
@@ -288,9 +288,9 @@ class Roll {
             extra_roll_strings += `+${extra_roll.toString()}`;
         });
         if (this.dice == DICE.D20)
-            return `${this.getModifierString()}${extra_roll_strings}`;
+            return `${extra_roll_strings}${this.getModifierString()}`;
         else
-            return `${this.num}${this.dice}${this.getModifierString()}${extra_roll_strings}`;
+            return `${this.num}${this.dice}${extra_roll_strings}${this.getModifierString()}`;
     }
 }
 
@@ -404,25 +404,36 @@ class Spell {
             ${this.effect.save.toString()}
         </button>` : "";
         
-        let spell_attack_damage_button = "";
-        if (this.effect.isAttack()) {
+        let spell_attack_damage_button = [];
+        let is_attack = this.effect.isAttack();
+        if (is_attack) {
             let i = 0;
             for (const damage of this.effect.damage) {
-                spell_attack_damage_button  += `<button label="${this.name}" text="${this.toRoll(false, false, false, false, false, false, false, true, i)}" onclick=roll(event)>
+                let button = `<button label="${this.name}" text="${this.toRoll(false, false, false, false, false, false, false, true, i)}" onclick=roll(event)>
             ${damage.toString()}
         </button>`;
+                if (!spell_attack_damage_button.includes(button))
+                    spell_attack_damage_button.push(button);
                 i++;
             }
         }
-
-        return `<tr ${(this.prepared ? "" : "class=\"unprepared\"")}>
-            <td><button label="${this.name}" text="${this.toRoll(true, true, true, true, true, true, true, true)}" onclick=roll(event)>Cast</button></td>
-            <th onclick="open_description(\`${this.toHTML()}\`)" class="action_label">${this.name}</th>
-            <td>${this.casting_time.toShortString()}</td>
-            <td>${this.range}</td>
-            <td>${spell_attack_to_hit_button}${spell_attack_save}</td>
-            <td>${spell_attack_damage_button}</td>
+        
+        let result = `<tr ${(this.prepared ? "" : "class=\"unprepared\"")}>
+            <td rowspan="${(is_attack ? spell_attack_damage_button.length : 1)}"><button label="${this.name}" text="${this.toRoll(true, true, true, true, true, true, true, true)}" onclick=roll(event)>Cast</button></td>
+            <th rowspan="${(is_attack ? spell_attack_damage_button.length : 1)}" colspan="2" class="item" onclick="open_description(\`${this.toHTML()}\`)" class="action_label">${this.name}</th>
+            <td rowspan="${(is_attack ? spell_attack_damage_button.length : 1)}">${this.casting_time.toShortString()}</td>
+            <td rowspan="${(is_attack ? spell_attack_damage_button.length : 1)}">${this.range}</td>
+            <td rowspan="${(is_attack ? spell_attack_damage_button.length : 1)}">${spell_attack_to_hit_button}${spell_attack_save}</td>
+            <td>${(is_attack ? spell_attack_damage_button[0] : "")}</td>
         </tr>`;
+
+        for (var i = 1; i < spell_attack_damage_button.length; i++) {
+            result += `<tr>
+                <td>${spell_attack_damage_button[i]}</td>
+            </tr>`
+        }
+
+        return result;
     }
 
     toRoll(show_source = false, show_description = false, show_range = false, show_level = false, show_components = false, show_to_hit = false, show_save = false, show_damage = false, advantage = false, disadvantage = false, damage = 0) {

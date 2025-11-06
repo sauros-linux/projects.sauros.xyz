@@ -26,7 +26,7 @@
                     "name": "Magic Initiate (Wizard)",
                     "spells": [
                         ["XPHB", "True Strike", true],
-                        ["XGE",  "Control Flames", true],
+                        ["XPHB", "Prestidigitation", true],
                         ["XPHB", "Find Familiar", true]
                     ],
                     "spellcasting_ability": 5
@@ -79,8 +79,8 @@
                         "name": "Magician",
                         "type": "spellcasting",
                         "spells": [
-                            ["TCE",  "Green-Flame Blade", true],
-                            ["OTTG", "Retrieve", true]
+                            ["OTTG", "Retrieve", true],
+                            ["OTTG", "Task", true]
                         ],
                         "spellcasting_ability": 5
                     }

@@ -69,7 +69,7 @@ function add_sign(value) {
         return `-${value}`;
 }
 
-function get_armor_class() {
+async function get_armor_class() {
 
     var base_ac = 10;
     var modifier = get_stat_modifier(get_stat("dex"));
@@ -83,11 +83,15 @@ function get_armor_class() {
         }
     }
 
-    if (has_spell("Mage Armor") && document.getElementById("mage_armor").checked)
-        base_ac = 13;
+    if (await has_spell("Mage Armor")) {
+        if (document.getElementById("mage_armor").checked)
+            base_ac = 13;
+    }
 
-    if (has_feature("Bladesong") && document.getElementById("bladesong").checked)
-        modifier += get_stat_modifier(get_stat("int"));
+    if (await has_spell("Bladesong")) {
+        if (document.getElementById("bladesong").checked)
+            modifier += get_stat_modifier(get_stat("int"));
+    }
 
     return base_ac + modifier;
 }
@@ -847,7 +851,7 @@ async function parse_character() {
 }
 
 async function refresh() {
-    document.getElementById('armor_class').innerText = get_armor_class();
+    document.getElementById('armor_class').innerText = await get_armor_class();
     await refresh_attacks();
     await refresh_buttons();
 }

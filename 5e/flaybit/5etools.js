@@ -56,6 +56,11 @@ async function get_spell(source, name) {
             result.casting_time = new ActivationTime(
                 `${(SPELL.time[0].number > 1 ? SPELL.time[0].number + " " : "")}Bonus action`,
             );
+        } else if (SPELL.time[0].unit == "reaction") {
+            result.casting_time = new ActivationTime(
+                `${(SPELL.time[0].number > 1 ? SPELL.time[0].number + " " : "")}Reaction`,
+                SPELL.time[0].condition
+            );
         }
 
         result.components = new SpellComponents(

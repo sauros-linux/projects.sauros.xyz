@@ -69,7 +69,7 @@ function add_sign(value) {
         return `-${value}`;
 }
 
-function get_armor_class() {
+async function get_armor_class() {
 
     var base_ac = 10;
     var modifier = get_stat_modifier(get_stat("dex"));
@@ -83,11 +83,15 @@ function get_armor_class() {
         }
     }
 
-    if (has_spell("Mage Armor") && document.getElementById("mage_armor").checked)
-        base_ac = 13;
+    if (await has_spell("Mage Armor")) {
+        if (document.getElementById("mage_armor").checked)
+            base_ac = 13;
+    }
 
-    if (has_feature("Bladesong") && document.getElementById("bladesong").checked)
-        modifier += get_stat_modifier(get_stat("int"));
+    if (await has_spell("Bladesong")) {
+        if (document.getElementById("bladesong").checked)
+            modifier += get_stat_modifier(get_stat("int"));
+    }
 
     return base_ac + modifier;
 }
@@ -98,6 +102,36 @@ function get_character_level() {
         level += character["class"][i]["level"];
     }
     return level;
+}
+
+function get_features() {
+    var features = [];
+
+    for (const character_class of character["class"]) {
+        if ("features" in character_class) {
+            for (const feature of character_class["features"]) {
+                features.push(feature);
+            }
+        }
+    }
+
+    for (const item of character["equipment"]) {
+        if ("features" in item) {
+            for (const feature of item["features"]) {
+                features.push(feature);
+            }
+        }
+    }
+
+    for (const feature of character["background"]["features"]) {
+        features.push(feature);
+    }
+
+    for (const feature of character["features"]) {
+        features.push(feature);
+    }
+
+    return features;
 }
 
 function get_initiative_bonus() {
@@ -198,10 +232,12 @@ function get_max_spell_slots(spell_level) {
 }
 
 function get_proficiency_bonus() {
-    return Math.round((get_character_level() + 1) / 4) + 1;
+    return (Math.round((get_character_level() + 1) / 4) + 1);
 }
 
 function get_skill_modifier(skill) {
+    let features = get_features();
+
     let base_modifier = 0;
     switch (skill) {
         case "Athletics":
@@ -236,6 +272,16 @@ function get_skill_modifier(skill) {
 
     let modifier = base_modifier + (is_proficient(skill) ? get_proficiency_bonus() : 0);
     modifier += (is_expert(skill) ? get_proficiency_bonus() : 0);
+
+    features.forEach(feature => {
+        if ("bonus" in feature) {
+            feature["bonus"].forEach(bonus => {
+                if (bonus["ability"] == skill) {
+                    modifier += bonus["bonus"];
+                }
+            });
+        }
+    });
 
     return modifier;
 }
@@ -312,34 +358,20 @@ function get_non_roll_template(button) {
 }
 
 function has_feature(feature_name) {
-    for (var i = 0; i < character["class"].length; i++) {
-        for (var j = 0; j < character["class"][i]["features"].length; j++) {
-            if (character["class"][i]["features"][j]["name"] == feature_name && character["class"][i]["level"] >= character["class"][i]["features"][j]["level"])
-                return true;
+    for (const feature of get_features()) {
+        if (feature["name"] == feature_name) {
+            return true;
         }
     }
 
     return false;
 }
 
-function has_spell(spell_name) {
-    for (const character_class of character["class"]) {
-        for (const feature of character_class["features"]) {
-            if (feature["type"] == "spellcasting" && "spells" in feature) {
-                for (const spell of feature["spells"]) {
-                    if (spell[1] == spell_name) {
-                        return true;
-                    }
-                }
-            }
-
-            if (feature["type"] == "feat" && "spells" in feature["feat"]) {
-                for (const spell of feature["feat"]["spells"]) {
-                    if (spell[1] == spell_name) {
-                        return true;
-                    }
-                }
-            }
+async function has_spell(spell_name) {
+    let spells = await parse_spells();
+    for (let i = 0; i < spells.length; i++) {
+        if (spells[i].name == spell_name) {
+            return true;
         }
     }
     
@@ -347,21 +379,7 @@ function has_spell(spell_name) {
 }
 
 function is_expert(skill) {
-    for (const character_class of character["class"]) {
-        for (const feature of character_class["features"]) {
-            if ("expertise" in feature && feature["expertise"].includes(skill)) {
-                return true;
-            }
-        }
-    }
-
-    for (const feature of character["background"]["features"]) {
-        if ("expertise" in feature && feature["expertise"].includes(skill)) {
-            return true;
-        }
-    }
-
-    for (const feature of character["features"]) {
+    for (const feature of get_features()) {
         if ("expertise" in feature && feature["expertise"].includes(skill)) {
             return true;
         }
@@ -371,21 +389,7 @@ function is_expert(skill) {
 }
 
 function is_proficient(skill) {
-    for (const character_class of character["class"]) {
-        for (const feature of character_class["features"]) {
-            if ("proficiencies" in feature && feature["proficiencies"].includes(skill)) {
-                return true;
-            }
-        }
-    }
-
-    for (const feature of character["background"]["features"]) {
-        if ("proficiencies" in feature && feature["proficiencies"].includes(skill)) {
-            return true;
-        }
-    }
-
-    for (const feature of character["features"]) {
+    for (const feature of get_features()) {
         if ("proficiencies" in feature && feature["proficiencies"].includes(skill)) {
             return true;
         }
@@ -449,7 +453,21 @@ async function parse_attacks(spells) {
                     attack_mod = "dex";
                 }
 
+                to_hit_roll = new Roll();
+                // if proficient
+                    to_hit_roll.modifiers.push(get_proficiency_bonus());
+
+                if (has_feature("Bladesong") && document.getElementById("bladesong") != null && document.getElementById("bladesong").checked) {
+                    var str_score = get_stat("str");
+                    var dex_score = get_stat("dex");
+                    var int_score = get_stat("int");
+
+                    if (int_score > str_score && int_score > dex_score)
+                        attack_mod = "int";
+                }
+
                 attack_mod = get_stat_modifier(get_stat(attack_mod));
+                to_hit_roll.modifiers.push(attack_mod);
 
                 if (item["properties"].includes("+1"))
                     attack_mod += 1;
@@ -457,11 +475,6 @@ async function parse_attacks(spells) {
                     attack_mod += 2;
                 if (item["properties"].includes("+3"))
                     attack_mod += 3;
-
-                to_hit_roll = new Roll();
-                // if proficient
-                    to_hit_roll.modifiers.push(get_proficiency_bonus());
-                to_hit_roll.modifiers.push(attack_mod);
 
                 let damage_rolls = [];
                 for (var j = 0; j < item["damage"].length; j++) {
@@ -536,6 +549,19 @@ async function parse_attacks(spells) {
                             }
 
                             damage_rolls_spell.push(damage_roll_spell.toString());
+                            if (booming_blade != null) {
+                                let extra_damage_roll = new Roll();
+                                extra_damage_roll.dice = DICE.D8;
+                                extra_damage_roll.num = 1;
+                                if (get_character_level() >= 17) {
+                                    extra_damage_roll.num = 4;
+                                } else if (get_character_level() >= 11) {
+                                    extra_damage_roll.num = 3;
+                                } else if (get_character_level() >= 5) {
+                                    extra_damage_roll.num = 2;
+                                }
+                                damage_rolls_spell.push(extra_damage_roll);
+                            }
                         }
 
                         if (green_flame_blade != null) {
@@ -611,11 +637,14 @@ async function parse_spells() {
 
             for (const spell of feature["feat"]["spells"]) {
                 let class_spell = await get_spell(spell[0], spell[1]);
-                class_spell.casting_stat = get_stat(abilityToString(spellcasting_ability, true).toLowerCase());
-                class_spell.proficiency_bonus = character.getProficiencyBonus();
-                class_spell.prepared = spell[2] ?? false;
-        
-                spells.push(class_spell);
+                
+                if (class_spell != null) {
+                    class_spell.casting_stat = get_stat(abilityToString(spellcasting_ability, true).toLowerCase());
+                    class_spell.proficiency_bonus = get_proficiency_bonus();
+                    class_spell.prepared = spell[2] ?? false;
+
+                    spells.push(class_spell);
+                }
             }
         }
     }
@@ -632,7 +661,7 @@ async function parse_spells() {
 
                     if (class_spell != null) {
                         class_spell.casting_stat = get_stat(abilityToString(spellcasting_ability, true).toLowerCase());
-                        class_spell.proficiency_bonus = character.getProficiencyBonus();
+                        class_spell.proficiency_bonus = get_proficiency_bonus();
                         class_spell.prepared = spell[2] ?? false;
 
                         spells.push(class_spell);
@@ -645,10 +674,10 @@ async function parse_spells() {
 
                 for (const spell of feature["feat"]["spells"]) {
                     let class_spell = await get_spell(spell[0], spell[1]);
-                    
+                    console.log(class_spell);
                     if (class_spell != null) {
                         class_spell.casting_stat = get_stat(abilityToString(spellcasting_ability, true).toLowerCase());
-                        class_spell.proficiency_bonus = character.getProficiencyBonus();
+                        class_spell.proficiency_bonus = get_proficiency_bonus();
                         class_spell.prepared = spell[2] ?? false;
                 
                         spells.push(class_spell);
@@ -684,7 +713,12 @@ async function parse_character() {
         for (let j = 0; j < current_class["features"].length; j++) {
             let current_feature = current_class["features"][j];
 
-            features += `<tr><td>${current_feature["name"]}</td></tr>`;
+            features += `<tr>
+                <td style="text-align: left;">
+                    <h3>${current_feature["name"]}</h3>
+                    <p>${render_description(current_feature["description"] ?? "", "</p><p>")}</p>
+                </td>
+            </tr>`;
         }
 
         document.getElementById("class-features").innerHTML += `<div class="flex">
@@ -758,57 +792,6 @@ async function parse_character() {
     }
     document.getElementById("max_hp").children[0].value = max_hp;
 
-    let spells = await parse_spells();
-    var attacks = await parse_attacks(spells);
-
-    document.getElementById("attacks").parentElement.innerHTML = `<table id="attacks">
-                            <tr>
-                                <th colspan="6">ATTACKS</th>
-                            </tr>
-                        </table>`;
-
-    document.getElementById("spells").parentElement.innerHTML = `<table id="spells">
-                            <tr>
-                                <th colspan="6">SPELLS</th>
-                            </tr>
-                            <tr>
-                                <td colspan="5"><b>CANTRIPS</b></td>
-                                <td></td>
-                            </tr>
-                        </table>`;
-
-    attacks.forEach(attack => {
-        let to_hit_buttons = "";
-        let damage_buttons = "";
-        let notes = "";
-        
-        to_hit_buttons = `<button title="${attack["name"]}" label="To Hit" type="To Hit" class="rollable">${attack["to_hit"]}</button>`;
-        for (var i = 0; i < attack["damage"].length; i++) {
-            damage_buttons += `<button title="${attack["name"]}" label="Damage" type="Damage" class="rollable">${attack["damage"][i]}</button>`;
-        }
-
-        document.getElementById("attacks").children[0].innerHTML += `<tr>
-                <td></td>
-                <th colspan="2" class="action_label">${attack["name"]}${(attack["weapon"] != undefined ? ` (${attack["weapon"]})` : "")}</th>
-                <td>${notes}</td>
-                <td>${to_hit_buttons}</td>
-                <td>${damage_buttons}</td>
-            </tr>`;
-    });
-    
-    var previous_spell_level = 0;
-    spells.forEach(spell => {
-        if (spell["level"] != previous_spell_level) {
-            previous_spell_level = spell["level"];
-
-            document.getElementById("spells").children[0].innerHTML += `<tr>
-                <td colspan="5"><b>LEVEL ${spell["level"]} SPELLS</b></td>
-                <th><input type="number" min="0" max="${get_max_spell_slots(spell["level"])}" value="${get_max_spell_slots(spell["level"])}"/></th>
-            </tr>`;
-        }
-        document.getElementById("spells").children[0].innerHTML += spell.toShortHTML();
-    });
-
     let skills = [
         "Acrobatics",
         "Animal Handling",
@@ -841,33 +824,95 @@ async function parse_character() {
     document.getElementById("passive_investigation").innerText  = 10 + get_skill_modifier("Investigation");
     document.getElementById("passive_insight").innerText        = 10 + get_skill_modifier("Insight");
 
-    if (has_spell("Mage Armor")) {
-        document.getElementById("ac_table").innerHTML = `<tr>
-            <td>
-                <label for="mage_armor">Mage Armor?</label>
-                <input type="checkbox" id="mage_armor" name="mage_armor" onchange="document.getElementById('armor_class').innerText = get_armor_class()">
-            </td>
-        </tr>`;
+    let mage_armor = await has_spell("Mage Armor");
+    let bladesong = has_feature("Bladesong");
+
+    if (mage_armor || bladesong) {
+        let ac_table = `<p>`;
+
+        if (mage_armor) {
+            ac_table += `<label for="mage_armor">Mage Armor?</label>
+                <input type="checkbox" id="mage_armor" name="mage_armor" onchange="refresh()">`;
+        }
+        if (mage_armor && bladesong) {
+            ac_table += `</p><p>`;
+        }
+        if (bladesong) {
+            ac_table += `<label for="bladesong">Bladesong?</label>
+                <input type="checkbox" id="bladesong" name="bladesong" onchange="refresh()">`;
+        }
+        ac_table += `</p>`;
+        document.getElementById("defenses").innerHTML = ac_table;
     }
-    
-    if (has_feature("Bladesong")) {
-        document.getElementById("ac_table").innerHTML += `<tr>
-            <td>
-                <label for="bladesong">Bladesong?</label>
-                <input type="checkbox" id="bladesong" name="bladesong" onchange="document.getElementById('armor_class').innerText = get_armor_class()">
-            </td>
-        </tr>`;
-    }
-    
-    document.getElementById("ac_table").innerHTML += `<tr>
-                                <td>
-                                    <span class="stat_modifier" id="armor_class"></span>
-                                </td>
-                            </tr>`;
-    document.getElementById("armor_class").innerText = get_armor_class();
 
     await parse_inventory();
 
+    await refresh();
+}
+
+async function refresh() {
+    document.getElementById('armor_class').innerText = await get_armor_class();
+    await refresh_attacks();
+    await refresh_buttons();
+}
+
+async function refresh_attacks() {
+    let spells = await parse_spells();
+    var attacks = await parse_attacks(spells);
+
+    document.getElementById("attacks").parentElement.innerHTML = `<table id="attacks">
+                            <tr>
+                                <th class="heading" colspan="7">ATTACKS</th>
+                            </tr>
+                        </table>`;
+
+    document.getElementById("spells").parentElement.innerHTML = `<table id="spells">
+                            <tr>
+                                <th class="heading" colspan="7">SPELLS</th>
+                            </tr>
+                            <tr>
+                                <td colspan="7">CANTRIPS</td>
+                            </tr>
+                        </table>`;
+
+    attacks.forEach(attack => {
+        let to_hit_buttons = "";
+        let damage_buttons = [];
+        
+        to_hit_buttons = `<button title="${attack["name"]}" label="To Hit" type="To Hit" class="rollable">${attack["to_hit"]}</button>`;
+        for (var i = 0; i < attack["damage"].length; i++) {
+            damage_buttons.push(`<button title="${attack["name"]}" label="Damage" type="Damage" class="rollable">${attack["damage"][i]}</button>`);
+        }
+
+        document.getElementById("attacks").children[0].innerHTML += `<tr>
+                <td rowspan="${attack["damage"].length}"></td>
+                <th rowspan="${attack["damage"].length}" colspan="4" class="item">${(attack["weapon"] != undefined ? `${attack["weapon"]} (${attack["name"]})` : attack["name"])}</th>
+                <td rowspan="${attack["damage"].length}">${to_hit_buttons}</td>
+                <td>${damage_buttons[0]}</td>
+            </tr>`;
+        for (var i = 1; i < attack["damage"].length; i++) {
+            document.getElementById("attacks").children[0].innerHTML += `<tr>
+                <td>${damage_buttons[i]}</td>
+            </tr>`;
+        }
+        
+    });
+
+    var previous_spell_level = 0;
+    spells.forEach(spell => {
+        if (spell["level"] != previous_spell_level) {
+            previous_spell_level = spell["level"];
+
+            document.getElementById("spells").children[0].innerHTML += `<tr>
+                <td colspan="6">LEVEL ${spell["level"]} SPELLS</td>
+                <th><input type="number" min="0" max="${get_max_spell_slots(spell["level"])}" value="${get_max_spell_slots(spell["level"])}"/></th>
+            </tr>`;
+        }
+        document.getElementById("spells").children[0].innerHTML += spell.toShortHTML();
+    });
+}
+
+async function refresh_buttons() {
     var rollable_buttons = document.getElementsByClassName("rollable");
 
     for (let i = 0; i < rollable_buttons.length; i++) {
@@ -914,14 +959,14 @@ function roll(e) {
 }
 
 function collapsible_on_click(event) {
-    event.currentTarget.classList.toggle("expanded");
+    event.currentTarget.parentElement.parentElement.classList.toggle("expanded");
 }
 
 function update_collapsible(name) {
     if (typeof name == "string") {
-        document.getElementById(name).addEventListener("click", collapsible_on_click);
+        document.getElementById(name).children[0].addEventListener("click", collapsible_on_click);
     } else {
-        name.addEventListener("click", collapsible_on_click);
+        name.children[0].children[0].addEventListener("click", collapsible_on_click);
     }
 }
 
