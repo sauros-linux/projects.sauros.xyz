@@ -121,6 +121,48 @@
             ]
         },
         {
+            "type": "melee_weapon",
+            "name": "Kitchen Knife",
+            "damage": [
+                {
+                    "dice": "d4",
+                    "num": "1"
+                }
+            ],
+            "damage_type": "Slashing",
+            "properties": [
+                "Range"
+            ]
+        },
+        {
+            "type": "melee_weapon",
+            "name": "Serving Fork",
+            "damage": [
+                {
+                    "dice": "d4",
+                    "num": "1"
+                }
+            ],
+            "damage_type": "Piercing",
+            "properties": [
+                "Range"
+            ]
+        },
+        {
+            "type": "melee_weapon",
+            "name": "Metal Ladel",
+            "damage": [
+                {
+                    "dice": "d4",
+                    "num": "1"
+                }
+            ],
+            "damage_type": "Bludgeoning",
+            "properties": [
+                "Range"
+            ]
+        },
+        {
             "type": "ranged_weapon",
             "name": "Light Crossbow",
             "damage": [
