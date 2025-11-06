@@ -67,7 +67,7 @@
                     "type": "spellcasting",
                     "spells": [
                         ["XPHB", "Cure Wounds", true],
-                        ["OTTG", "Pacify Person", true]
+                        ["TPM",  "Popping Corn", true]
                     ],
                     "spellcasting_ability": 5
                 },
