@@ -496,6 +496,13 @@ async function parse_attacks(spells) {
                 let true_strike = spells.find((spell) => spell.name == "True Strike");
                 if (true_strike != null) {
                     let spellcasting_mod = Math.floor((true_strike.casting_stat - 10) / 2);
+
+                    if (item["properties"].includes("+1"))
+                        spellcasting_mod += 1;
+                    if (item["properties"].includes("+2"))
+                        spellcasting_mod += 2;
+                    if (item["properties"].includes("+3"))
+                        spellcasting_mod += 3;
                     
                     to_hit_roll_spell = new Roll();
                     // if proficient

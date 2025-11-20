@@ -2,9 +2,10 @@
     "name": "Chef Flaybit",
     "ability_scores": [ 12, 14, 15, 12, 14, 16],
     "hit_dice": [
-        8
+        8,
+        5
     ],
-    "level": 1,
+    "level": 2,
     "background": {
         "name": "Chef",
         "description": "",
@@ -122,7 +123,30 @@
         },
         {
             "type": "melee_weapon",
-            "name": "Kitchen Knife",
+            "name": "Travel Wok",
+            "damage": [
+                {
+                    "dice": "d6",
+                    "num": "1"
+                },
+                {
+                    "dice": "d8",
+                    "num": "1"
+                },
+                {
+                    "dice": "d4",
+                    "num": "1"
+                }
+            ],
+            "damage_type": "Bludgeoning",
+            "properties": [
+                "+1",
+                "Versatile (1d8)"
+            ]
+        },
+        {
+            "type": "melee_weapon",
+            "name": "Metal Ladel / Serving Fork / Kitchen Knife",
             "damage": [
                 {
                     "dice": "d4",
@@ -130,34 +154,6 @@
                 }
             ],
             "damage_type": "Slashing",
-            "properties": [
-                "Range"
-            ]
-        },
-        {
-            "type": "melee_weapon",
-            "name": "Serving Fork",
-            "damage": [
-                {
-                    "dice": "d4",
-                    "num": "1"
-                }
-            ],
-            "damage_type": "Piercing",
-            "properties": [
-                "Range"
-            ]
-        },
-        {
-            "type": "melee_weapon",
-            "name": "Metal Ladel",
-            "damage": [
-                {
-                    "dice": "d4",
-                    "num": "1"
-                }
-            ],
-            "damage_type": "Bludgeoning",
             "properties": [
                 "Range"
             ]
@@ -187,6 +183,7 @@
         }
     ],
     "inventory": {
+        "gp": 12,
         "equipment": [
             ["PHB",  "Abacus",      2,      1,  2],
             ["XPHB", "Bolts",       0.075,  20, 0.05],
@@ -202,7 +199,10 @@
             ["XPHB", "Rope",        5,  1,  1],
             ["XPHB", "Tinderbox",   1,  1,  0.5],
             ["XPHB", "Torch",       1,  10, 0.01],
-            ["XPHB", "Waterskin",   5,  1,  0.2]
+            ["XPHB", "Waterskin",   5,  1,  0.2],
+            ["OTTG", "Bashu Powder",    0,  2,  0],
+            ["OTTG", "Clay Snake",      0,  1,  0],
+            ["OTTG", "Earwax",          0,  2,  0]
         ]
     },
     "features": [
