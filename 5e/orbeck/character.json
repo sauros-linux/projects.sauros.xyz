@@ -9,7 +9,7 @@
         6,
         6
     ],
-    "level": 1,
+    "level": 8,
     "background": {
         "name": "Spy",
         "description": "You are an experienced criminal with a history of breaking the law. You have spent a lot of time among other criminals and still have contacts within the criminal underworld. You're far closer than most people to the world of murder, theft, and violence that pervades the underbelly of civilization, and you have survived up to this point by flouting the rules and regulations of society.",
@@ -79,7 +79,7 @@
         },
         {
             "name": "Wizard",
-            "level": 5,
+            "level": 7,
             "features": [
                 {
                     "name": "Spellcasting",
@@ -103,7 +103,8 @@
                         ["XPHB", "Blade Ward", true],
                         ["TCE",  "Booming Blade", true],
                         ["TCE",  "Lightning Lure", true],
-                        ["XPHB", "Message", true],
+                        ["XPHB", "True Strike", true],
+                        ["XPHB", "Absorb Elements", false],
                         ["XPHB", "Alarm", false],
                         ["XPHB", "Charm Person", false],
                         ["XPHB", "Chromatic Orb", false],
@@ -127,7 +128,11 @@
                         ["XPHB", "Misty Step", true],
                         ["XPHB", "Rope Trick", false],
                         ["XGE",  "Shadow Blade", true],
-                        ["XPHB", "Lightning Bolt", true]
+                        ["XPHB", "Shatter", false],
+                        ["XPHB", "Fireball", false],
+                        ["XPHB", "Lightning Bolt", true],
+                        ["XPHB", "Thunder Step", false],
+                        ["XPHB", "Charm Monster", false]
                     ],
                     "spellcasting_ability": 3
                 },
