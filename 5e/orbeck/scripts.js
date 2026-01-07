@@ -88,7 +88,7 @@ async function get_armor_class() {
             base_ac = 13;
     }
 
-    if (await has_spell("Bladesong")) {
+    if (await has_feature("Bladesong")) {
         if (document.getElementById("bladesong").checked)
             modifier += get_stat_modifier(get_stat("int"));
     }
