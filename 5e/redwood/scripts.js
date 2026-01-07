@@ -84,7 +84,7 @@ function send_roll(button, type = "normal") {
 }
 
 async function init() {
-    var character_json = await getData("https://projects.sauros.xyz/5e/redwood/redwood.json");
+    var character_json = await getData("https://sauros.xyz/projects/5e/redwood/redwood.json");
 
     document.getElementById("name").innerText = character_json["name"];
 
