@@ -1,10 +1,10 @@
 {
     "menu": [
         {
-            "name": "Karaage",
+            "name": "Howler Stew",
             "cost": 1.5,
-            "description": "deep fried chicken with a unique arcane oil heated by the signature arcane blue flame",
-            "img": "https://www.zeldadungeon.net/wiki/images/thumb/f/fc/Gourmet_Spiced_Meat_Skewer_-_TotK_icon.png/160px-Gourmet_Spiced_Meat_Skewer_-_TotK_icon.png"
+            "description": "simmered stew with meat from fresh howlers heated by the signature arcane blue flame",
+            "img": "https://media.discordapp.net/attachments/1036656160385806336/1458953768824737813/image0.png?ex=69618414&is=69603294&hm=e09b5959d5d5a5db5d5ef8907f02133f846558a62225207f8843f720cc4a27a1&=&format=webp&quality=lossless"
         },
         {
             "name": "Curry Onigiri",
@@ -19,13 +19,55 @@
             "img": "https://www.zeldadungeon.net/wiki/images/thumb/b/bf/Cream_of_Vegetable_Soup_-_TotK_icon.png/160px-Cream_of_Vegetable_Soup_-_TotK_icon.png"
         },
         {
-            "name": "Ichigo Sando",
+            "name": "Taiyaki",
             "cost": 0.2,
-            "description": "fresh strawberries and whipped cream on thinly sliced sweet bread",
-            "img": "https://www.zeldadungeon.net/wiki/images/thumb/2/2a/Fruitcake_-_TotK_icon.png/144px-Fruitcake_-_TotK_icon.png"
+            "description": "red bean paste wrapped in a thin cake layer",
+            "img": "https://media.discordapp.net/attachments/1036656160385806336/1458955188483260589/image0.jpg?ex=69618567&is=696033e7&hm=1e4bc500daec5c9c7c1034034e0ae5b49ca13d4c3339174b53111fe3237d6bf6&=&format=webp"
         }
     ],
     "stock": [
+        {
+            "name": "Potion of Healing",
+            "cost": 50,
+            "count": 1,
+            "img": "https://static.wikia.nocookie.net/zelda_gamepedia_en/images/7/7a/MM3D_Red_Potion.png/revision/latest?cb=20150209051213&format=original"
+        },
+        {
+            "name": "Caltrops",
+            "cost": 1,
+            "count": 12,
+            "img": "https://s.bazaardb.gg/v0/z10.0/item/c4e12383633236b7749e555a5c5eedeff8b5afcc@400.webp"
+        },
+        {
+            "name": "Chain",
+            "cost": 5,
+            "count": 2,
+            "img": "https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fwww.pngall.com%2Fwp-content%2Fuploads%2F2016%2F04%2FChain-Free-Download-PNG.png&f=1&nofb=1&ipt=9a1d6968a3aff5f066299c2a15b462504e2c6ba5f62dd0fdaffb53e20f7325c1"
+        },
+        {
+            "name": "Flask",
+            "cost": 0.02,
+            "count": 5,
+            "img": "https://static.wikia.nocookie.net/zelda_gamepedia_en/images/a/a5/SSHD_Empty_Bottle_Icon.png/revision/latest?cb=20210908163005&format=original"
+        },
+        {
+            "name": "Ladder",
+            "cost": 0.1,
+            "count": 8,
+            "img": "https://www.zeldadungeon.net/wiki/images/thumb/6/63/Ladder.png/125px-Ladder.png"
+        },
+        {
+            "name": "Lock",
+            "cost": 10,
+            "count": 1,
+            "img": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.gamersdecide.com%2Fsites%2Fdefault%2Ffiles%2Fauthors%2Fu153695%2Flock_of_trickery.jpg&f=1&nofb=1&ipt=68993f36a4d008b138571b8c0f52a22ae39eaa4a4cdf1a5757f47846ef2af756"
+        },
+        {
+            "name": "Manacles",
+            "cost": 2,
+            "count": 1,
+            "img": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmythical.ink%2Fimg%2Ficons%2Fdnd5e%2Fmanacles.png&f=1&nofb=1&ipt=40b8abe7da40617552ebe86c7ad2fc3d98d1942529416bebee6fd7efd5b5d598"
+        },
         {
             "name": "Torch",
             "cost": 0.01,
